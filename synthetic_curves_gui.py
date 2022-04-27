@@ -1,4 +1,5 @@
 from collections import namedtuple
+from typing import Tuple
 import os
 
 import tkinter as tk
@@ -11,6 +12,7 @@ import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.collections import LineCollection
 
 class MainWindow(ttk.Frame):
 	"""A GUI to create and compare synthetic force volumes."""
@@ -18,21 +20,24 @@ class MainWindow(ttk.Frame):
 		self.root = root
 		self.root.title("Create Synthetic Force Volumes")
 
+		self.forceVolumes = []
+
 		self._init_parameter_variables()
+		self._init_default_materials()
 		self._create_main_window()
 
-	def _init_parameter_variables(self):
+	def _init_parameter_variables(self) -> None:
 		"""Initialise all parameter variables."""
 		# Material parameters
 		self.kc = tk.StringVar(self.root, value="")
-		self.raidus = tk.StringVar(self.root, value="")
+		self.radius = tk.StringVar(self.root, value="")
 		self.etot = tk.StringVar(self.root, value="")
 		self.hamaker = tk.StringVar(self.root, value="")
-		self.jtc = tk.StringVar(self.root, value="")
 
 		# Measurement parameters
 		self.z0 = tk.StringVar(self.root, value="")
 		self.dZ = tk.StringVar(self.root, value="")
+		self.etip = tk.StringVar(self.root, value="")
 		self.maximumDeflection = tk.StringVar(self.root, value="")
 
 		# Force Volume parameters
@@ -41,13 +46,39 @@ class MainWindow(ttk.Frame):
 		self.virtualDeflection = tk.StringVar(self.root, value="")
 		self.topography = tk.StringVar(self.root, value="")
 
-	def _create_main_window(self): 
+		self.parameters = [
+			self.kc,
+			self.radius,
+			self.etot,
+			self.hamaker,
+			self.z0,
+			self.dZ,
+			self.etip,
+			self.maximumDeflection,
+			self.numberOfCurves,
+			self.noise,
+			self.virtualDeflection,
+			self.topography
+		]
+
+	def _init_default_materials(self) -> None:
+		"""Initialise all default material parameter."""
+		self.defaultMaterials = {
+			"Testmaterial": {
+				"kc": "40",
+				"radius": "1e-6",
+				"etot": "3e9",
+				"hamaker": "66e-21"
+			}
+		}
+
+	def _create_main_window(self) -> None: 
 		"""Define all elements within the main window."""
 		self._create_frame_parameters()
 		self._create_frame_lineplot()
 		self._create_frame_control()
 
-	def _create_frame_parameters(self):
+	def _create_frame_parameters(self) -> None:
 		"""Define all elements within the parameter frame."""
 		frameParameters = ttk.Labelframe(
 			self.root, 
@@ -58,7 +89,18 @@ class MainWindow(ttk.Frame):
 
 		# First row
 		labelCategoryMaterial = ttk.Label(frameParameters, text="Material", font="bold")
-		labelCategoryMaterial.grid(row=0, column=0, columnspan=2, sticky=W, pady=(0, 10))
+		labelCategoryMaterial.grid(row=0, column=0, sticky=W, pady=(0, 10))
+
+		self.defaultMaterial = tk.StringVar(self.root, value="Default Material")
+		dropdownForceVolumes = ttk.OptionMenu(
+			frameParameters, 
+			self.defaultMaterial, 
+			"",
+			*self.defaultMaterials.keys(), 
+			command=self._set_default_material_parameters,
+			bootstyle=""
+		)
+		dropdownForceVolumes.grid(row=0, column=1, sticky=W, pady=(0, 10))
 
 		labelCategoryMeasurement = ttk.Label(frameParameters, text="Measurement", font="bold")
 		labelCategoryMeasurement.grid(row=0, column=2, columnspan=2, sticky=W, pady=(0, 10))
@@ -89,7 +131,7 @@ class MainWindow(ttk.Frame):
 		labelRadius = ttk.Label(frameParameters, text="Radius:")
 		labelRadius.grid(row=2, column=0, sticky=W, pady=(0, 5))
 
-		entryRadius = ttk.Entry(frameParameters, textvariable=self.raidus)
+		entryRadius = ttk.Entry(frameParameters, textvariable=self.radius)
 		entryRadius.grid(row=2, column=1, pady=(0, 5))
 
 		labelDZ = ttk.Label(frameParameters, text="dZ:")
@@ -111,11 +153,11 @@ class MainWindow(ttk.Frame):
 		entryEtot = ttk.Entry(frameParameters, textvariable=self.etot)
 		entryEtot.grid(row=3, column=1, pady=(0, 5))
 
-		labelMaximumDeflection = ttk.Label(frameParameters, text="Maximum Deflection:")
-		labelMaximumDeflection.grid(row=3, column=2, sticky=W, pady=(0, 5))
+		labelEtip = ttk.Label(frameParameters, text="Etip:")
+		labelEtip.grid(row=3, column=2, sticky=W, pady=(0, 5))
 
-		entryMaximumDeflection = ttk.Entry(frameParameters, textvariable=self.maximumDeflection)
-		entryMaximumDeflection.grid(row=3, column=3, pady=(0, 5))
+		entryEtip = ttk.Entry(frameParameters, textvariable=self.etip)
+		entryEtip.grid(row=3, column=3, pady=(0, 5))
 
 		labelVirtualDeflection = ttk.Label(frameParameters, text="Virtual Deflection:")
 		labelVirtualDeflection.grid(row=3, column=4, sticky=W, pady=(0, 5))
@@ -130,13 +172,19 @@ class MainWindow(ttk.Frame):
 		entryHamaker = ttk.Entry(frameParameters, textvariable=self.hamaker)
 		entryHamaker.grid(row=4, column=1, pady=(0, 5))
 
+		labelMaximumDeflection = ttk.Label(frameParameters, text="Maximum Deflection:")
+		labelMaximumDeflection.grid(row=4, column=2, sticky=W, pady=(0, 5))
+
+		entryMaximumDeflection = ttk.Entry(frameParameters, textvariable=self.maximumDeflection)
+		entryMaximumDeflection.grid(row=4, column=3, pady=(0, 5))
+
 		labelTopography = ttk.Label(frameParameters, text="Topography:")
 		labelTopography.grid(row=4, column=4, sticky=W, pady=(0, 5))
 
 		entryTopography = ttk.Entry(frameParameters, textvariable=self.topography)
 		entryTopography.grid(row=4, column=5)
 
-	def _create_frame_lineplot(self):
+	def _create_frame_lineplot(self) -> None:
 		"""Define all elements within the line plot frame."""
 		frameLinePlot = ttk.Labelframe(self.root, text="Presentation", padding=15)
 		frameLinePlot.pack(side=LEFT, padx=15, pady=15)
@@ -145,7 +193,7 @@ class MainWindow(ttk.Frame):
 		self.holderFigureLinePlot = FigureCanvasTkAgg(figureLinePlot, frameLinePlot)
 		self.holderFigureLinePlot.get_tk_widget().pack()
 
-	def _create_frame_control(self):
+	def _create_frame_control(self) -> None:
 		"""Define all elements within the control frame."""
 		frameControl = ttk.Labelframe(self.root, text="Control", padding=15)
 		frameControl.pack(side=RIGHT, fill=X, expand=YES, anchor=N, padx=15, pady=15)
@@ -189,25 +237,122 @@ class MainWindow(ttk.Frame):
 		)
 		buttonDeleteForceVolume.pack(pady=(10, 0))
 
-	def _create_force_volume(self):
+	def _set_default_material_parameters(self, defaultMerial) -> None:
 		""""""
-		pass
+		self.kc.set(self.defaultMaterials[defaultMerial]["kc"])
+		self.radius.set(self.defaultMaterials[defaultMerial]["radius"])
+		self.etot.set(self.defaultMaterials[defaultMerial]["etot"])
+		self.hamaker.set(self.defaultMaterials[defaultMerial]["hamaker"])
+
+	def _create_force_volume(self) -> None:
+		""""""
+		validParameters = self._check_parameters()
+		if not validParameters:
+			return 
+		parameterMaterial, parameterMeasurement, parameterForcevolume = self._get_parameters()
+
+	def _check_parameters(self) -> bool:
+		"""
+
+		"""
+		for parameter in self.parameters:
+			try:
+				float(parameter.get())
+			except ValueError:
+				self._reset_parameters()
+				messagebox.showerror(
+					"Error", 
+					"."
+				)
+				return False
+
+		return True
+
+	def _reset_parameters(self):
+		""""""
+		for parameter in self.parameters:
+			parameter.set("")
+
+		self.defaultMaterial.set("Default Materials")
+
+	def _get_parameters(self) -> Tuple:
+		"""
+		
+		Returns:
+			parameterMaterial(namedtuple):
+			parameterMeasurement(namedtuple):
+			parameterForcevolume(namedtuple):
+		"""
+		ParameterMaterial = namedtuple(
+			"ParameterMaterial",
+			[
+				"kc",
+				"radius",
+				"Etot",
+				"Hamaker",
+				"jtc"
+			]
+		)
+		ParameterMeasurement = namedtuple(
+			"ParameterMeasurement",
+			[
+				"Z0",
+				"dZ",
+				"etip"
+				"maximumdeflection"
+			]
+		)
+		ParameterForcevolume = namedtuple(
+			"parameterForcevolume",
+			[
+				"numberOfCurves",
+				"noise",
+				"virtualDeflection",
+				"topography"
+			]
+		)
+		jtc = - (
+			(
+				(float(self.hamaker.get())*float(self.radius.get()))
+				/(3*float(self.kc.get()))
+			)**(1/3)
+		)
+
+		parameterMaterial = ParameterMaterial(
+			kc=float(self.kc.get()),
+			radius=float(self.radius.get()),
+			Hamaker=float(self.hamaker.get()),
+			Etot=float(self.etot.get()),
+			jtc=jtc,
+		)
+
+		parameterMeasurement = ParameterMeasurement(
+			Z0=float(self.z0.get()),
+			dZ=float(self.dZ.get()),
+			etip=float(self.etip.get()),
+			maximumdeflection=float(self.maximumdeflection.get()),	
+		)
+
+		parameterForcevolume = ParameterForcevolume(
+			numberOfCurves=float(self.numberOfCurves.get()),
+			noise=float(self.noise.get()),
+			virtualDeflection=float(self.virtualDeflection.get()),
+			topography=float(self.topography.get())
+		)
+
+		return parameterMaterial, parameterMeasurement, parameterForcevolume
 
 	def _save_force_volume(self):
 		""""""
 		pass
 
-	def _compare_force_volume(self):
+	def _delete_force_volume(self) -> None:
 		""""""
 		pass
 
-	def _delete_force_volume(self):
+	def _update_force_volume(self, forceVolume) -> None:
 		""""""
-		pass
-
-	def _update_force_volume(self):
-		""""""
-		pass
+		print(forceVolume)
 
 if __name__ == "__main__":
 	app = ttk.Window()
