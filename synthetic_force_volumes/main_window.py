@@ -25,6 +25,11 @@ class MainWindow(ttk.Frame):
 
 		self.forceVolumes = {}
 
+		self.colorActiveCurves = "#00c3ff"
+		self.colorActiveIdealCurve = "#006f91"
+		self.colorInactiveCurves = "#b0b0b0"
+		self.colorInactiveIdealCurve = "#757575"
+
 		self._init_parameter_variables()
 		self._create_main_window()
 
@@ -445,11 +450,22 @@ class MainWindow(ttk.Frame):
 
 	def _save_force_volume(self):
 		""""""
-		pass
+		if self.forceVolume.get() not in self.forceVolumes:
+			return messagebox.showerror(
+				"Error", 
+				"Please select a Force Volume."
+			)
 
 	def _delete_force_volume(self) -> None:
 		""""""
-		pass
+		if self.forceVolume.get() not in self.forceVolumes:
+			return messagebox.showerror(
+				"Error", 
+				"Please select a Force Volume."
+			)		
+
+		self.forceVolumes.remove(self.forceVolume.get())
+		self.forceVolume.set("Force Volumes")
 
 	def _update_force_volume(self, forceVolume) -> None:
 		""""""

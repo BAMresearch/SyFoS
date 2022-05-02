@@ -1,7 +1,3 @@
-pylatex
 numpy
-scipy
 matplotlib
-igor
-pandas
 ttkbootstrap
