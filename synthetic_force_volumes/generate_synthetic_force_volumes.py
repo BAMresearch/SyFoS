@@ -1,74 +1,10 @@
-from collections import namedtuple
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.collections import LineCollection
 
-def get_parameters():
-	"""
-
-	"""
-	ParameterMaterial = namedtuple(
-		"ParameterMaterial",
-		[
-			"kc",
-			"radius",
-			"Etot",
-			"Hamaker",
-			"jtc"
-		]
-	)
-	ParameterMeasurement = namedtuple(
-		"ParameterMeasurement",
-		[
-			"Z0",
-			"dZ",
-			"maximumdeflection"
-		]
-	)
-	ParameterForcevolume = namedtuple(
-		"parameterForcevolume",
-		[
-			"numberOfCurves",
-			"noise",
-			"virtualDeflection",
-			"topography"
-		]
-	)
-
-	Etot = 3e9
-	Hamaker = 66e-21
-	kc = 40
-	radius = 1e-6
-	jtc = -(((Hamaker*radius)/(3*kc))**(1/3))
-
-	parameterMaterial = ParameterMaterial(
-		kc=kc,
-		radius=radius,
-		Hamaker=Hamaker,
-		Etot=Etot,
-		jtc=jtc,
-	)
-
-	Z0 = -10e-9
-	dZ = 0.2e-9
-	maximumdeflection = 30e-9
-
-	parameterMeasurement = ParameterMeasurement(
-		Z0=Z0,
-		dZ=dZ,
-		maximumdeflection=maximumdeflection,	
-	)
-
-	parameterForcevolume = ParameterForcevolume(
-		numberOfCurves=2,
-		noise=1e-10,
-		virtualDeflection=3e-9,
-		topography=10e-9
-	)
-
-	return parameterMaterial, parameterMeasurement, parameterForcevolume
-
-def create_synthetic_curve(parameterMaterial, parameterMeasurement, parameterForcevolume):
+def create_synthetic_curve(
+	parameterMaterial, 
+	parameterMeasurement, 
+	parameterForcevolume
+):
 	"""Creates a set of synthetic curves from given parameters, including a noise level, virtuell deflection and topography offset.
 
 	Parameters:
@@ -77,21 +13,28 @@ def create_synthetic_curve(parameterMaterial, parameterMeasurement, parameterFor
 		parameterForcevolume(nametupel):
 	
 	Returns:
-		synForcevolume(np.ndarray): set of synthetic curves from given parameters, including a noise level, virtuell deflection and topography offset
+		syntheticForcevolume(np.ndarray): set of synthetic curves from given parameters, including a noise level, virtuell deflection and topography offset
 	"""
 	piezo, deflection = create_ideal_curve(parameterMaterial, parameterMeasurement)
+	
 	shiftedPiezo = np.asarray(piezo) + parameterForcevolume.topography
 	shiftedDeflection = np.asarray(deflection) + parameterForcevolume.virtualDeflection
-	#plt.plot(piezo, deflection)
-	#plt.show()
 
-	noisyCurves = multiply_and_apply_noise_to_ideal_curve(shiftedDeflection, parameterForcevolume)
+	noisyCurves = multiply_and_apply_noise_to_ideal_curve(
+		shiftedDeflection, parameterForcevolume
+	)
 	
-	synForcevolume = arrange_curves_in_forcevolume(deflection, piezo, shiftedPiezo, shiftedDeflection, noisyCurves)
+	syntheticForcevolume = arrange_curves_in_forcevolume(
+		deflection, piezo, shiftedPiezo, 
+		shiftedDeflection, noisyCurves
+	)
 
-	return synForcevolume
+	return syntheticForcevolume
 
-def create_ideal_curve(parameterMaterial, parameterMeasurement):
+def create_ideal_curve(
+	parameterMaterial, 
+	parameterMeasurement
+):
 	""""""
 	deflection = [0]
 	piezo = [parameterMeasurement.Z0]
@@ -136,7 +79,10 @@ def create_ideal_curve(parameterMaterial, parameterMeasurement):
 		
 	return piezo, deflection
 
-def multiply_and_apply_noise_to_ideal_curve(shiftedDeflection, parameterForcevolume):
+def multiply_and_apply_noise_to_ideal_curve(
+	shiftedDeflection, 
+	parameterForcevolume
+):
 	"""applies noise of given extent to shiftedDeflection of ideal curve, shiftedDeflection shifted by virtuell shiftedDeflection, piezo is shifted by topography
 
 	Parameters:
@@ -151,7 +97,10 @@ def multiply_and_apply_noise_to_ideal_curve(shiftedDeflection, parameterForcevol
 		for index in range(parameterForcevolume.numberOfCurves)
 	]
 
-def apply_noise_to_curve(shiftedDeflection, parameterForcevolume):
+def apply_noise_to_curve(
+	shiftedDeflection, 
+	parameterForcevolume
+) -> np.ndarray:
 	"""applies noise to shiftedDeflection
 
 	Parameters:
@@ -166,8 +115,24 @@ def apply_noise_to_curve(shiftedDeflection, parameterForcevolume):
 	return shiftedDeflection + noiseValues
 
 
-def arrange_curves_in_forcevolume(deflection, piezo, shiftedPiezo, shiftedDeflection, noisyCurves):
+def arrange_curves_in_forcevolume(
+	deflection, 
+	piezo, 
+	shiftedPiezo, 
+	shiftedDeflection, 
+	noisyCurves
+) -> np.ndarray:
 	"""
+
+	Parameters:
+		deflection
+		piezo
+		shiftedPiezo
+		shiftedDeflection
+		noisyCurves
+
+	Returns:
+		forceVolume(np.ndarray): .
 	"""
 
 	forceVolume = [
@@ -179,13 +144,3 @@ def arrange_curves_in_forcevolume(deflection, piezo, shiftedPiezo, shiftedDeflec
 	forceVolume.insert(0, np.column_stack((piezo, deflection)))
 
 	return forceVolume
-
-if __name__ == "__main__":
-	parameterMaterial, parameterMeasurement, parameterForcevolume = get_parameters()
-	synForcevolume = create_synthetic_curve(parameterMaterial, parameterMeasurement, parameterForcevolume)
-	
-	fig, ax = plt.subplots()
-	synForcevolumeCollection = LineCollection(synForcevolume)
-	ax.add_collection(synForcevolumeCollection)
-	ax.autoscale_view()
-	plt.show()

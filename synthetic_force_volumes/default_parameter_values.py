@@ -12,10 +12,10 @@ defaultMaterials = {
 # Default Measurement Values
 defaultMeasurements = {
 	"Testmeasurement": {
-		"z0": "40",
-		"dZ": "1e-6",
+		"z0": "-10e-9",
+		"dZ": "0.2e-9",
 		"eSample": "3e9",
 		"possionRatio": "2",
-		"maximumDeflection": "66e-21"
+		"maximumDeflection": "30e-9"
 	}
 }

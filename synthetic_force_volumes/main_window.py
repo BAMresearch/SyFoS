@@ -15,6 +15,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.collections import LineCollection
 
 import default_parameter_values as dpv
+import generate_synthetic_force_volumes as gsfv
 
 class MainWindow(ttk.Frame):
 	"""A GUI to create and compare synthetic force volumes."""
@@ -22,7 +23,7 @@ class MainWindow(ttk.Frame):
 		self.root = root
 		self.root.title("Create Synthetic Force Volumes")
 
-		self.forceVolumes = []
+		self.forceVolumes = {}
 
 		self._init_parameter_variables()
 		self._create_main_window()
@@ -44,10 +45,14 @@ class MainWindow(ttk.Frame):
 		self.maximumDeflection = tk.StringVar(self.root, value="")
 
 		# Force Volume parameters
-		self.numberOfCurves = tk.StringVar(self.root, value="")
-		self.noise = tk.StringVar(self.root, value="")
-		self.virtualDeflection = tk.StringVar(self.root, value="")
-		self.topography = tk.StringVar(self.root, value="")
+		self.numberOfCurves = tk.StringVar(self.root, value="4")
+		self.noise = tk.StringVar(self.root, value="1e-10")
+		self.virtualDeflection = tk.StringVar(self.root, value="3e-9")
+		self.topography = tk.StringVar(self.root, value="10e-9")
+
+		# Calculated parameters
+		self.etot = tk.StringVar(self.root, value="")
+		self.jtc = tk.StringVar(self.root, value="")
 
 		self.parameters = [
 			self.kc,
@@ -65,10 +70,6 @@ class MainWindow(ttk.Frame):
 			self.virtualDeflection,
 			self.topography
 		]
-
-		# Calculated parameters
-		self.etot = tk.StringVar(self.root, value="")
-		self.jtc = tk.StringVar(self.root, value="")
 
 	def _create_main_window(self) -> None: 
 		"""Define all elements within the main window."""
@@ -209,10 +210,28 @@ class MainWindow(ttk.Frame):
 	def _create_frame_lineplot(self) -> None:
 		"""Define all elements within the line plot frame."""
 		frameLinePlot = ttk.Labelframe(self.root, text="Presentation", padding=15)
-		frameLinePlot.pack(side=LEFT, padx=15, pady=15)
+		frameLinePlot.pack(side=LEFT, fill=X, expand=YES, padx=15, pady=15)
+
+		rowVariables = ttk.Frame(frameLinePlot)
+		rowVariables.pack(fill=X, expand=YES, padx=(15, 0), pady=(0, 10))
+
+		labelEtot = ttk.Label(rowVariables, text="etot:")
+		labelEtot.pack(side=LEFT, fill=X, expand=YES)
+
+		entryEtot = ttk.Entry(rowVariables, textvariable=self.etot, state="readonly")
+		entryEtot.pack(side=LEFT, fill=X, expand=YES, padx=(0, 20))
+
+		labelJtc = ttk.Label(rowVariables, text="jtc:")
+		labelJtc.pack(side=LEFT, fill=X, expand=YES)
+
+		entryJtc = ttk.Entry(rowVariables, textvariable=self.jtc, state="readonly")
+		entryJtc.pack(side=LEFT, fill=X, padx=(0, 15), expand=YES)
+
+		rowLinePlot = ttk.Frame(frameLinePlot)
+		rowLinePlot.pack(fill=X, expand=YES)
 
 		figureLinePlot = Figure(figsize=(6, 5), facecolor=("#d3d3d3"))
-		self.holderFigureLinePlot = FigureCanvasTkAgg(figureLinePlot, frameLinePlot)
+		self.holderFigureLinePlot = FigureCanvasTkAgg(figureLinePlot, rowLinePlot)
 		self.holderFigureLinePlot.get_tk_widget().pack()
 
 	def _create_frame_control(self) -> None:
@@ -230,18 +249,17 @@ class MainWindow(ttk.Frame):
 		seperator = ttk.Separator(frameControl)
 		seperator.pack(fill=X, expand=YES, pady=(0, 50))
 
-		self.forceVolume = tk.StringVar(self.root, value="Force Volumes")
-		self.activeForveVolumes = []
+		self.activeForceVolume = tk.StringVar(self.root, value="Force Volumes")
 		
-		dropdownForceVolumes = ttk.OptionMenu(
+		self.dropdownForceVolumes = ttk.OptionMenu(
 			frameControl, 
-			self.forceVolume, 
+			self.activeForceVolume, 
 			"",
-			*self.activeForveVolumes, 
+			*self.forceVolumes.keys(), 
 			command=self._update_force_volume,
 			bootstyle=""
 		)
-		dropdownForceVolumes.pack()
+		self.dropdownForceVolumes.pack()
 
 		buttonSaveForceVolume = ttk.Button(
 			frameControl,
@@ -282,6 +300,18 @@ class MainWindow(ttk.Frame):
 			return 
 		parameterMaterial, parameterMeasurement, parameterForcevolume = self._get_parameters()
 
+		syntheticForcevolume = gsfv.create_synthetic_curve(
+			parameterMaterial, 
+			parameterMeasurement, 
+			parameterForcevolume
+		)
+
+		self._add_force_volume(
+			syntheticForcevolume,
+			parameterMaterial.Etot,
+			parameterMaterial.jtc
+		)
+
 	def _check_parameters(self) -> bool:
 		"""
 
@@ -290,10 +320,11 @@ class MainWindow(ttk.Frame):
 			try:
 				float(parameter.get())
 			except ValueError:
+				print(parameter.get())
 				self._reset_parameters()
 				messagebox.showerror(
 					"Error", 
-					"."
+					"Please select valid parameters."
 				)
 				return False
 
@@ -352,6 +383,7 @@ class MainWindow(ttk.Frame):
 			4 
 			/ (3 * ((1 - float(self.possionRatioTip.get())**2) / float(self.eTip.get()) + (1 - float(self.possionRatioSample.get())**2) / float(self.eSample.get())))
 		)
+		etot = 3e9
 
 		parameterMaterial = ParameterMaterial(
 			kc=float(self.kc.get()),
@@ -364,17 +396,52 @@ class MainWindow(ttk.Frame):
 		parameterMeasurement = ParameterMeasurement(
 			Z0=float(self.z0.get()),
 			dZ=float(self.dZ.get()),
-			maximumdeflection=float(self.maximumdeflection.get()),	
+			maximumdeflection=float(self.maximumDeflection.get()),	
 		)
 
 		parameterForcevolume = ParameterForcevolume(
-			numberOfCurves=float(self.numberOfCurves.get()),
+			numberOfCurves=int(self.numberOfCurves.get()),
 			noise=float(self.noise.get()),
 			virtualDeflection=float(self.virtualDeflection.get()),
 			topography=float(self.topography.get())
 		)
 
 		return parameterMaterial, parameterMeasurement, parameterForcevolume
+
+	def _add_force_volume(self, syntheticForcevolume, etot, jtc):
+		""""""
+		newForcevolume = {
+			"lineCollection": LineCollection(syntheticForcevolume),
+			"etot": etot,
+			"jtc": jtc
+		}
+		nameNewForcevolume = "Force Volume " + str(len(self.forceVolumes) + 1)
+		self.forceVolumes[nameNewForcevolume] = newForcevolume
+
+		self.etot.set(str(etot))
+		self.jtc.set(str(jtc))
+
+		self.dropdownForceVolumes.set_menu("", *self.forceVolumes.keys())
+		self.activeForceVolume.set(nameNewForcevolume)
+
+		self._update_line_plot(LineCollection(syntheticForcevolume))
+
+	def _update_line_plot(self, syntheticForcevolume):
+		""""""
+		ax = self._get_axes()
+
+		ax.add_collection(syntheticForcevolume)
+
+		ax.autoscale_view()
+
+		self.holderFigureLinePlot.draw()
+
+	def _get_axes(self):
+		""""""
+		try:
+			return self.holderFigureLinePlot.figure.get_axes()[0]
+		except IndexError:
+			return self.holderFigureLinePlot.figure.add_subplot(111)
 
 	def _save_force_volume(self):
 		""""""
@@ -387,8 +454,3 @@ class MainWindow(ttk.Frame):
 	def _update_force_volume(self, forceVolume) -> None:
 		""""""
 		print(forceVolume)
-
-if __name__ == "__main__":
-	app = ttk.Window()
-	MainWindow(app)
-	app.mainloop()
