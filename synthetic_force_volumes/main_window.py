@@ -28,7 +28,6 @@ class MainWindow(ttk.Frame):
 		self.colorActiveCurves = "#00c3ff"
 		self.colorActiveIdealCurve = "#006f91"
 		self.colorInactiveCurves = "#b0b0b0"
-		self.colorInactiveIdealCurve = "#757575"
 
 		self._init_parameter_variables()
 		self._create_main_window()
@@ -282,16 +281,24 @@ class MainWindow(ttk.Frame):
 		)
 		buttonDeleteForceVolume.pack(pady=(10, 0))
 
-	def _set_default_material_parameters(self, defaultMerial) -> None:
-		""""""
+	def _set_default_material_parameters(self, defaultMerial:str) -> None:
+		"""
+
+		Parameter:
+			defaultMerial(): .
+		"""
 		self.kc.set(dpv.defaultMaterials[defaultMerial]["kc"])
 		self.radius.set(dpv.defaultMaterials[defaultMerial]["radius"])
 		self.eSample.set(dpv.defaultMaterials[defaultMerial]["eTip"])
 		self.possionRatioSample.set(dpv.defaultMaterials[defaultMerial]["possionRatio"])
 		self.hamaker.set(dpv.defaultMaterials[defaultMerial]["hamaker"])
 
-	def _set_default_measurement_parameters(self, defaultMeasurement) -> None:
-		""""""
+	def _set_default_measurement_parameters(self, defaultMeasurement:str) -> None:
+		"""
+
+		Parameter:
+			defaultMeasurement(): .
+		"""
 		self.z0.set(dpv.defaultMeasurements[defaultMeasurement]["z0"])
 		self.dZ.set(dpv.defaultMeasurements[defaultMeasurement]["dZ"])
 		self.eTip.set(dpv.defaultMeasurements[defaultMeasurement]["eSample"])
@@ -318,9 +325,7 @@ class MainWindow(ttk.Frame):
 		)
 
 	def _check_parameters(self) -> bool:
-		"""
-
-		"""
+		""""""
 		for parameter in self.parameters:
 			try:
 				float(parameter.get())
@@ -377,16 +382,18 @@ class MainWindow(ttk.Frame):
 				"topography"
 			]
 		)
-		jtc = - (
-			(
-				(float(self.hamaker.get())*float(self.radius.get()))
-				/(3*float(self.kc.get()))
-			)**(1/3)
+		
+		jtc = gsfv.calculate_jtc(
+			float(self.hamaker.get()),
+			float(self.radius.get()),
+			float(self.kc.get())
 		)
 
-		etot = (
-			4 
-			/ (3 * ((1 - float(self.possionRatioTip.get())**2) / float(self.eTip.get()) + (1 - float(self.possionRatioSample.get())**2) / float(self.eSample.get())))
+		etot = gsfv.calculate_etot(
+			float(self.possionRatioTip.get()),
+			float(self.eTip.get()),
+			float(self.possionRatioSample.get()),
+			float(self.eSample.get())
 		)
 		etot = 3e9
 
@@ -442,7 +449,11 @@ class MainWindow(ttk.Frame):
 		self.holderFigureLinePlot.draw()
 
 	def _get_axes(self):
-		""""""
+		"""Create or get axis of the line plot holder.
+
+		Returns:
+			axes(axes): New or existing axes of the line plot holder.
+		"""
 		try:
 			return self.holderFigureLinePlot.figure.get_axes()[0]
 		except IndexError:
@@ -450,7 +461,7 @@ class MainWindow(ttk.Frame):
 
 	def _save_force_volume(self):
 		""""""
-		if self.forceVolume.get() not in self.forceVolumes:
+		if self.activeForceVolume.get() not in self.forceVolumes:
 			return messagebox.showerror(
 				"Error", 
 				"Please select a Force Volume."
@@ -458,14 +469,14 @@ class MainWindow(ttk.Frame):
 
 	def _delete_force_volume(self) -> None:
 		""""""
-		if self.forceVolume.get() not in self.forceVolumes:
+		if self.activeForceVolume.get() not in self.forceVolumes:
 			return messagebox.showerror(
 				"Error", 
 				"Please select a Force Volume."
 			)		
 
 		self.forceVolumes.remove(self.forceVolume.get())
-		self.forceVolume.set("Force Volumes")
+		self.activeForceVolume.set("Force Volumes")
 
 	def _update_force_volume(self, forceVolume) -> None:
 		""""""

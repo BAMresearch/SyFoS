@@ -1,19 +1,65 @@
+from typing import NamedTuple, Tuple, List
+
 import numpy as np
 
-def create_synthetic_curve(
-	parameterMaterial, 
-	parameterMeasurement, 
-	parameterForcevolume
-):
-	"""Creates a set of synthetic curves from given parameters, including a noise level, virtuell deflection and topography offset.
+def calculate_jtc(
+	hamaker: float, 
+	radius: float, 
+	kc: float
+) -> float:
+	"""Calculate the jtc 
 
 	Parameters:
-		parameterMaterial(nametupel): contains all parameters describing the material and geometriy of the virtuell measuring system
+		hamaker(float): .
+		radius(float): .
+		kd(float): .
+
+	Returns:
+		jtc(float): .
+	"""
+	return -(
+		(
+			(hamaker * radius) / (3 * kc)
+		)**(1/3)
+	)
+
+def calculate_etot(
+	possionRatioTip: float, 
+	eTip: float, 
+	possionRatioSample: float,
+	eSample: float,
+) -> float:
+	"""Calculate etot
+
+	Parameters:
+		possionRatioTip(float): .
+		eTip(float): .
+		possionRatioSample(float): .
+		eSample(float): .
+
+	Returns:
+		etot(float): .
+	"""
+	return (
+		4 
+		/ (3 * ((1 - possionRatioTip**2) / eTip + (1 - possionRatioSample**2) / eSample))
+	)
+
+def create_synthetic_curve(
+	parameterMaterial: NamedTuple, 
+	parameterMeasurement: NamedTuple, 
+	parameterForcevolume: NamedTuple
+) -> np.ndarray:
+	"""Create a set of synthetic curves from given parameters, 
+	   including a noise level, virtuell deflection and topography offset.
+
+	Parameters:
+		parameterMaterial(nametupel): Contains all parameters describing the material and geometriy of the virtuell measuring system
 		parameterMeasuerement(nametupel): 
 		parameterForcevolume(nametupel):
 	
 	Returns:
-		syntheticForcevolume(np.ndarray): set of synthetic curves from given parameters, including a noise level, virtuell deflection and topography offset
+		syntheticForcevolume(np.ndarray): set of synthetic curves 
 	"""
 	piezo, deflection = create_ideal_curve(parameterMaterial, parameterMeasurement)
 	
@@ -32,10 +78,19 @@ def create_synthetic_curve(
 	return syntheticForcevolume
 
 def create_ideal_curve(
-	parameterMaterial, 
-	parameterMeasurement
-):
-	""""""
+	parameterMaterial: NamedTuple, 
+	parameterMeasurement: NamedTuple
+) -> Tuple[List, List]:
+	"""
+
+	Parameters:
+		parameterMaterial(nametupel): .
+		parameterMeasurement(nametupel): .
+
+	Returns:
+		piezo(list): .
+		deflection(list): . 
+	"""
 	deflection = [0]
 	piezo = [parameterMeasurement.Z0]
 	index = 0
@@ -80,17 +135,17 @@ def create_ideal_curve(
 	return piezo, deflection
 
 def multiply_and_apply_noise_to_ideal_curve(
-	shiftedDeflection, 
-	parameterForcevolume
-):
-	"""applies noise of given extent to shiftedDeflection of ideal curve, shiftedDeflection shifted by virtuell shiftedDeflection, piezo is shifted by topography
+	shiftedDeflection: List, 
+	parameterForcevolume: NamedTuple
+) -> List[np.ndarray]:
+	"""Applies noise of given extent to the shifted deflection of ideal curve, shiftedDeflection shifted by virtuell shiftedDeflection, piezo is shifted by topography
 
 	Parameters:
 		shiftedDeflection(list): shifted ideal deflection
 		parameterForcevolume(nametupel): contains numberOfCurves, noise, virtualDeflection and topography
 
 	Returns:
-		noisyCurves
+		noisyCurves(list): .
 	"""
 	return [
 		apply_noise_to_curve(shiftedDeflection, parameterForcevolume)
@@ -98,8 +153,8 @@ def multiply_and_apply_noise_to_ideal_curve(
 	]
 
 def apply_noise_to_curve(
-	shiftedDeflection, 
-	parameterForcevolume
+	shiftedDeflection: List, 
+	parameterForcevolume: NamedTuple
 ) -> np.ndarray:
 	"""applies noise to shiftedDeflection
 
@@ -116,11 +171,11 @@ def apply_noise_to_curve(
 
 
 def arrange_curves_in_forcevolume(
-	deflection, 
-	piezo, 
-	shiftedPiezo, 
-	shiftedDeflection, 
-	noisyCurves
+	deflection: List, 
+	piezo: List, 
+	shiftedPiezo: np.ndarray, 
+	shiftedDeflection: np.ndarray, 
+	noisyCurves: List
 ) -> np.ndarray:
 	"""
 
