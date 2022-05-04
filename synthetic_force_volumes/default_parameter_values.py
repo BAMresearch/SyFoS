@@ -6,7 +6,7 @@ defaultMaterials = {
 		"eTip": "3e9",
 		"possionRatio": "2",
 		"hamaker": "66e-21"
-	}
+	},
 }
 
 # Default Measurement Values
@@ -17,5 +17,5 @@ defaultMeasurements = {
 		"eSample": "3e9",
 		"possionRatio": "2",
 		"maximumDeflection": "30e-9"
-	}
+	},
 }

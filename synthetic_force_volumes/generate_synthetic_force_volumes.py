@@ -54,7 +54,8 @@ def create_synthetic_curve(
 	   including a noise level, virtuell deflection and topography offset.
 
 	Parameters:
-		parameterMaterial(nametupel): Contains all parameters describing the material and geometriy of the virtuell measuring system
+		parameterMaterial(nametupel): Contains all parameters describing the material 
+									  and geometriy of the virtuell measuring system
 		parameterMeasuerement(nametupel): 
 		parameterForcevolume(nametupel):
 	
@@ -176,26 +177,26 @@ def arrange_curves_in_forcevolume(
 	shiftedPiezo: np.ndarray, 
 	shiftedDeflection: np.ndarray, 
 	noisyCurves: List
-) -> np.ndarray:
+) -> List[np.ndarray]:
 	"""
 
 	Parameters:
-		deflection
-		piezo
-		shiftedPiezo
-		shiftedDeflection
-		noisyCurves
+		deflection(list):
+		piezo(list):
+		shiftedPiezo(np.ndarray):
+		shiftedDeflection(np.ndarray):
+		noisyCurves(list): .
 
 	Returns:
 		forceVolume(np.ndarray): .
 	"""
 
 	forceVolume = [
-		np.column_stack((shiftedPiezo, oneNoisyCurve))
+		[shiftedPiezo, oneNoisyCurve]
 		for oneNoisyCurve in noisyCurves
 	]
 
-	forceVolume.insert(0, np.column_stack((shiftedPiezo, shiftedDeflection)))
-	forceVolume.insert(0, np.column_stack((piezo, deflection)))
+	forceVolume.insert(0, [shiftedPiezo, shiftedDeflection])
+	forceVolume.insert(0, [piezo, deflection])
 
-	return forceVolume
+	return np.asarray(forceVolume)

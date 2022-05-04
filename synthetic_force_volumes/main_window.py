@@ -1,6 +1,8 @@
 from collections import namedtuple
-from typing import Tuple
+from typing import Tuple, List, Dict
 import os
+
+import numpy as np
 
 import tkinter as tk
 from tkinter import filedialog as fd
@@ -12,7 +14,7 @@ import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.collections import LineCollection
+from matplotlib.lines import Line2D
 
 import default_parameter_values as dpv
 import generate_synthetic_force_volumes as gsfv
@@ -26,7 +28,7 @@ class MainWindow(ttk.Frame):
 		self.forceVolumes = {}
 
 		self.colorActiveCurves = "#00c3ff"
-		self.colorActiveIdealCurve = "#006f91"
+		self.colorActiveIdealCurve = "#fc0008"
 		self.colorInactiveCurves = "#b0b0b0"
 
 		self._init_parameter_variables()
@@ -281,23 +283,23 @@ class MainWindow(ttk.Frame):
 		)
 		buttonDeleteForceVolume.pack(pady=(10, 0))
 
-	def _set_default_material_parameters(self, defaultMerial:str) -> None:
-		"""
+	def _set_default_material_parameters(self, defaultMaterial:str) -> None:
+		"""Set the values of different default materials.
 
 		Parameter:
-			defaultMerial(): .
+			defaultMaterial(str): Name of the chosen default material.
 		"""
-		self.kc.set(dpv.defaultMaterials[defaultMerial]["kc"])
-		self.radius.set(dpv.defaultMaterials[defaultMerial]["radius"])
-		self.eSample.set(dpv.defaultMaterials[defaultMerial]["eTip"])
-		self.possionRatioSample.set(dpv.defaultMaterials[defaultMerial]["possionRatio"])
-		self.hamaker.set(dpv.defaultMaterials[defaultMerial]["hamaker"])
+		self.kc.set(dpv.defaultMaterials[defaultMaterial]["kc"])
+		self.radius.set(dpv.defaultMaterials[defaultMaterial]["radius"])
+		self.eSample.set(dpv.defaultMaterials[defaultMaterial]["eTip"])
+		self.possionRatioSample.set(dpv.defaultMaterials[defaultMaterial]["possionRatio"])
+		self.hamaker.set(dpv.defaultMaterials[defaultMaterial]["hamaker"])
 
 	def _set_default_measurement_parameters(self, defaultMeasurement:str) -> None:
-		"""
+		"""Set the the values of different default measurement settings.
 
 		Parameter:
-			defaultMeasurement(): .
+			defaultMeasurement(str): Name of the chosen default measurement settings.
 		"""
 		self.z0.set(dpv.defaultMeasurements[defaultMeasurement]["z0"])
 		self.dZ.set(dpv.defaultMeasurements[defaultMeasurement]["dZ"])
@@ -306,7 +308,7 @@ class MainWindow(ttk.Frame):
 		self.maximumDeflection.set(dpv.defaultMeasurements[defaultMeasurement]["maximumDeflection"])
 
 	def _create_force_volume(self) -> None:
-		""""""
+		"""Create and display a synthetic force volume with the chosen parameters."""
 		validParameters = self._check_parameters()
 		if not validParameters:
 			return 
@@ -324,13 +326,20 @@ class MainWindow(ttk.Frame):
 			parameterMaterial.jtc
 		)
 
+		self._update_line_plot(
+			self.forceVolumes[self.activeForceVolume.get()]["lineCollection"]
+		)
+
 	def _check_parameters(self) -> bool:
-		""""""
+		"""Check wether all input parameters are valid.
+
+		Returns:
+			checkParameters(bool): True if all input parameters are numbers otherwise false.
+		"""
 		for parameter in self.parameters:
 			try:
 				float(parameter.get())
 			except ValueError:
-				print(parameter.get())
 				self._reset_parameters()
 				messagebox.showerror(
 					"Error", 
@@ -340,18 +349,19 @@ class MainWindow(ttk.Frame):
 
 		return True
 
-	def _reset_parameters(self):
-		""""""
+	def _reset_parameters(self) -> None:
+		"""Reset all input parameter."""
 		for parameter in self.parameters:
 			parameter.set("")
 
 		self.defaultMaterial.set("Default Materials")
+		self.defaultMeasurement.set("Default Measurement")
 
 	def _get_parameters(self) -> Tuple:
-		"""
+		"""Get the input parameters and combine them into namedtuples.
 		
 		Returns:
-			parameterMaterial(namedtuple):
+			parameterMaterial(namedtuple): 
 			parameterMeasurement(namedtuple):
 			parameterForcevolume(namedtuple):
 		"""
@@ -420,10 +430,18 @@ class MainWindow(ttk.Frame):
 
 		return parameterMaterial, parameterMeasurement, parameterForcevolume
 
-	def _add_force_volume(self, syntheticForcevolume, etot, jtc):
+	def _add_force_volume(
+		self, 
+		syntheticForcevolume: np.ndarray, 
+		etot: float, 
+		jtc: float
+	) -> None:
 		""""""
+		lineCollection = self._create_line_collection(syntheticForcevolume)
+
 		newForcevolume = {
-			"lineCollection": LineCollection(syntheticForcevolume),
+			"data": syntheticForcevolume,
+			"lineCollection": lineCollection,
 			"etot": etot,
 			"jtc": jtc
 		}
@@ -436,13 +454,36 @@ class MainWindow(ttk.Frame):
 		self.dropdownForceVolumes.set_menu("", *self.forceVolumes.keys())
 		self.activeForceVolume.set(nameNewForcevolume)
 
-		self._update_line_plot(LineCollection(syntheticForcevolume))
-
-	def _update_line_plot(self, syntheticForcevolume):
+	def _create_line_collection(self, syntheticForcevolume):
 		""""""
+		return [
+			self._create_line(line, self.colorActiveIdealCurve, 1)
+			if index < 2
+			else self._create_line(line, self.colorActiveCurves, -1)
+			for index, line in enumerate(syntheticForcevolume)
+		]
+
+	@staticmethod
+	def _create_line(line, color, zorder):
+		""""""
+		return Line2D(
+			line[0], 
+			line[1], 
+			c=color,
+			linewidth=0.5, 
+			zorder=zorder
+		)
+
+	def _update_line_plot(self, lineCollection: List) -> None:
+		"""
+
+		Parameters:
+			syntheticForcevolume(LineCollection)
+		"""
 		ax = self._get_axes()
 
-		ax.add_collection(syntheticForcevolume)
+		for line in lineCollection:
+			ax.add_line(line)
 
 		ax.autoscale_view()
 
@@ -459,7 +500,7 @@ class MainWindow(ttk.Frame):
 		except IndexError:
 			return self.holderFigureLinePlot.figure.add_subplot(111)
 
-	def _save_force_volume(self):
+	def _save_force_volume(self) -> None:
 		""""""
 		if self.activeForceVolume.get() not in self.forceVolumes:
 			return messagebox.showerror(
@@ -475,8 +516,23 @@ class MainWindow(ttk.Frame):
 				"Please select a Force Volume."
 			)		
 
-		self.forceVolumes.remove(self.forceVolume.get())
+		self._delete_lines(
+			self.forceVolumes[self.activeForceVolume.get()]["lineCollection"]
+		)
+
+		del self.forceVolumes[self.activeForceVolume.get()]
+		self.dropdownForceVolumes.set_menu("", *self.forceVolumes.keys())
 		self.activeForceVolume.set("Force Volumes")
+
+		self.etot.set("")
+		self.jtc.set("")
+
+	def _delete_lines(self, lineCollection: List) -> None:
+		""""""
+		for line in lineCollection:
+			line.remove()
+
+		self.holderFigureLinePlot.draw()
 
 	def _update_force_volume(self, forceVolume) -> None:
 		""""""
