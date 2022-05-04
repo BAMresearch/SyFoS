@@ -45,6 +45,21 @@ def calculate_etot(
 		/ (3 * ((1 - possionRatioTip**2) / eTip + (1 - possionRatioSample**2) / eSample))
 	)
 
+def calculate_hamaker(
+	hamakerTip: float, 
+	hamakerSample: float, 
+) -> float:
+	"""Calculate the hamaker as
+
+	Parameters:
+		hamakerTip(float): .
+		hamakerSample(float): .
+
+	Returns:
+		hamaker(float): .
+	"""
+	return (hamakerTip + hamakerSample) / 2
+
 def create_synthetic_force_volume(
 	parameterMaterial: NamedTuple, 
 	parameterMeasurement: NamedTuple, 

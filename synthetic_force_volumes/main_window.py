@@ -41,13 +41,14 @@ class MainWindow(ttk.Frame):
 		self.radius = tk.StringVar(self.root, value="")
 		self.eSample = tk.StringVar(self.root, value="")
 		self.possionRatioSample = tk.StringVar(self.root, value="")
-		self.hamaker = tk.StringVar(self.root, value="")
+		self.hamakerSample = tk.StringVar(self.root, value="")
 
 		# Measurement parameters
 		self.z0 = tk.StringVar(self.root, value="")
 		self.dZ = tk.StringVar(self.root, value="")
 		self.eTip = tk.StringVar(self.root, value="")
 		self.possionRatioTip = tk.StringVar(self.root, value="")
+		self.hamakerTip = tk.StringVar(self.root, value="")
 		self.maximumDeflection = tk.StringVar(self.root, value="")
 
 		# Force Volume parameters
@@ -59,13 +60,15 @@ class MainWindow(ttk.Frame):
 		# Calculated parameters
 		self.etot = tk.StringVar(self.root, value="")
 		self.jtc = tk.StringVar(self.root, value="")
+		self.hamaker = tk.StringVar(self.root, value="")
 
 		self.parameters = [
 			self.kc,
 			self.radius,
 			self.eSample,
 			self.possionRatioSample,
-			self.hamaker,
+			self.hamakerTip,
+			self.hamakerSample,
 			self.z0,
 			self.dZ,
 			self.eTip,
@@ -125,17 +128,17 @@ class MainWindow(ttk.Frame):
 		labelCategoryForceVolume.grid(row=0, column=4, columnspan=2, sticky=W, pady=(0, 10))
 
 		# Second row
-		labelKc = ttk.Label(frameParameters, text="kc:")
-		labelKc.grid(row=1, column=0, sticky=W, pady=(0, 5))
+		labelETip = ttk.Label(frameParameters, text="ETip:")
+		labelETip.grid(row=1, column=0, sticky=W, pady=(0, 5))
 
-		entryKc = ttk.Entry(frameParameters, textvariable=self.kc)
-		entryKc.grid(row=1, column=1, pady=(0, 5))
+		entryETip = ttk.Entry(frameParameters, textvariable=self.eTip)
+		entryETip.grid(row=1, column=1, pady=(0, 5))
 
-		labelZ0 = ttk.Label(frameParameters, text="z0:")
-		labelZ0.grid(row=1, column=2, sticky=W, pady=(0, 5))
+		labelESample = ttk.Label(frameParameters, text="ESample:")
+		labelESample.grid(row=1, column=2, sticky=W, pady=(0, 5))
 
-		entryZ0 = ttk.Entry(frameParameters, textvariable=self.z0)
-		entryZ0.grid(row=1, column=3, pady=(0, 5))
+		entryESample = ttk.Entry(frameParameters, textvariable=self.eSample)
+		entryESample.grid(row=1, column=3, pady=(0, 5))
 
 		labelNumberOfCurves = ttk.Label(frameParameters, text="Number of Curves:")
 		labelNumberOfCurves.grid(row=1, column=4, sticky=W, pady=(0, 5))
@@ -144,17 +147,17 @@ class MainWindow(ttk.Frame):
 		entryNumberOfCurves.grid(row=1, column=5, pady=(0, 5))
 
 		# Third row
-		labelRadius = ttk.Label(frameParameters, text="Radius:")
-		labelRadius.grid(row=2, column=0, sticky=W, pady=(0, 5))
+		labelPossionRatioTip = ttk.Label(frameParameters, text="Possion Ratio:")
+		labelPossionRatioTip.grid(row=2, column=0, sticky=W, pady=(0, 5))
 
-		entryRadius = ttk.Entry(frameParameters, textvariable=self.radius)
-		entryRadius.grid(row=2, column=1, pady=(0, 5))
+		entryPossionRatioTip = ttk.Entry(frameParameters, textvariable=self.possionRatioTip)
+		entryPossionRatioTip.grid(row=2, column=1, pady=(0, 5))
 
-		labelDZ = ttk.Label(frameParameters, text="dZ:")
-		labelDZ.grid(row=2, column=2, sticky=W, pady=(0, 5))
+		labelPossionRatioSample = ttk.Label(frameParameters, text="Possion Ratio:")
+		labelPossionRatioSample.grid(row=2, column=2, sticky=W, pady=(0, 5))
 
-		entryDZ = ttk.Entry(frameParameters, textvariable=self.dZ)
-		entryDZ.grid(row=2, column=3, pady=(0, 5))
+		entryPossionRatioSample = ttk.Entry(frameParameters, textvariable=self.possionRatioSample)
+		entryPossionRatioSample.grid(row=2, column=3, pady=(0, 5))
 
 		labelNoise = ttk.Label(frameParameters, text="Noise:")
 		labelNoise.grid(row=2, column=4, sticky=W, pady=(0, 5))
@@ -163,17 +166,17 @@ class MainWindow(ttk.Frame):
 		entryNoise.grid(row=2, column=5, pady=(0, 5))
 
 		# Fourth row
-		labelESample = ttk.Label(frameParameters, text="ESample:")
-		labelESample.grid(row=3, column=0, sticky=W, pady=(0, 5))
+		labelHamakerTip = ttk.Label(frameParameters, text="Hamaker:")
+		labelHamakerTip.grid(row=3, column=0, sticky=W, pady=(0, 5))
 
-		entryESample = ttk.Entry(frameParameters, textvariable=self.eSample)
-		entryESample.grid(row=3, column=1, pady=(0, 5))
+		entryHamakerTip = ttk.Entry(frameParameters, textvariable=self.hamakerTip)
+		entryHamakerTip.grid(row=3, column=1, pady=(0, 5))
 
-		labelETip = ttk.Label(frameParameters, text="ETip:")
-		labelETip.grid(row=3, column=2, sticky=W, pady=(0, 5))
+		labelHamakerSample = ttk.Label(frameParameters, text="Hamaker:")
+		labelHamakerSample.grid(row=3, column=2, sticky=W, pady=(0, 5))
 
-		entryETip = ttk.Entry(frameParameters, textvariable=self.eTip)
-		entryETip.grid(row=3, column=3, pady=(0, 5))
+		entryHamakerSample = ttk.Entry(frameParameters, textvariable=self.hamakerSample)
+		entryHamakerSample.grid(row=3, column=3, pady=(0, 5))
 
 		labelVirtualDeflection = ttk.Label(frameParameters, text="Virtual Deflection:")
 		labelVirtualDeflection.grid(row=3, column=4, sticky=W, pady=(0, 5))
@@ -182,17 +185,17 @@ class MainWindow(ttk.Frame):
 		entryVirtualDeflection.grid(row=3, column=5, pady=(0, 5))
 
 		# Fifth row
-		labelPossionRatioSample = ttk.Label(frameParameters, text="Possion Ratio:")
-		labelPossionRatioSample.grid(row=4, column=0, sticky=W, pady=(0, 5))
+		labelKc = ttk.Label(frameParameters, text="kc:")
+		labelKc.grid(row=4, column=0, sticky=W, pady=(0, 5))
 
-		entryPossionRatioSample = ttk.Entry(frameParameters, textvariable=self.possionRatioSample)
-		entryPossionRatioSample.grid(row=4, column=1, pady=(0, 5))
+		entryKc = ttk.Entry(frameParameters, textvariable=self.kc)
+		entryKc.grid(row=4, column=1, pady=(0, 5))
+		
+		labelMaximumDeflection = ttk.Label(frameParameters, text="Maximum Deflection:")
+		labelMaximumDeflection.grid(row=4, column=2, sticky=W, pady=(0, 5))
 
-		labelPossionRatioTip = ttk.Label(frameParameters, text="Possion Ratio:")
-		labelPossionRatioTip.grid(row=4, column=2, sticky=W, pady=(0, 5))
-
-		entryPossionRatioTip = ttk.Entry(frameParameters, textvariable=self.possionRatioTip)
-		entryPossionRatioTip.grid(row=4, column=3, pady=(0, 5))
+		entryMaximumDeflection = ttk.Entry(frameParameters, textvariable=self.maximumDeflection)
+		entryMaximumDeflection.grid(row=4, column=3, pady=(0, 5))
 
 		labelTopography = ttk.Label(frameParameters, text="Topography:")
 		labelTopography.grid(row=4, column=4, sticky=W, pady=(0, 5))
@@ -201,17 +204,24 @@ class MainWindow(ttk.Frame):
 		entryTopography.grid(row=4, column=5)
 
 		# Sixth row
-		labelHamaker = ttk.Label(frameParameters, text="Hamaker:")
-		labelHamaker.grid(row=5, column=0, sticky=W, pady=(0, 5))
+		labelRadius = ttk.Label(frameParameters, text="Radius:")
+		labelRadius.grid(row=5, column=0, sticky=W, pady=(0, 5))
 
-		entryHamaker = ttk.Entry(frameParameters, textvariable=self.hamaker)
-		entryHamaker.grid(row=5, column=1, pady=(0, 5))
+		entryRadius = ttk.Entry(frameParameters, textvariable=self.radius)
+		entryRadius.grid(row=5, column=1, pady=(0, 5))
 
-		labelMaximumDeflection = ttk.Label(frameParameters, text="Maximum Deflection:")
-		labelMaximumDeflection.grid(row=5, column=2, sticky=W, pady=(0, 5))
+		labelZ0 = ttk.Label(frameParameters, text="z0:")
+		labelZ0.grid(row=5, column=2, sticky=W, pady=(0, 5))
 
-		entryMaximumDeflection = ttk.Entry(frameParameters, textvariable=self.maximumDeflection)
-		entryMaximumDeflection.grid(row=5, column=3, pady=(0, 5))
+		entryZ0 = ttk.Entry(frameParameters, textvariable=self.z0)
+		entryZ0.grid(row=5, column=3, pady=(0, 5))
+
+		# Seventh row
+		labelDZ = ttk.Label(frameParameters, text="dZ:")
+		labelDZ.grid(row=6, column=2, sticky=W, pady=(0, 5))
+
+		entryDZ = ttk.Entry(frameParameters, textvariable=self.dZ)
+		entryDZ.grid(row=6, column=3, pady=(0, 5))		
 
 	def _create_frame_lineplot(self) -> None:
 		"""Define all elements within the line plot frame."""
@@ -232,6 +242,12 @@ class MainWindow(ttk.Frame):
 
 		entryJtc = ttk.Entry(rowVariables, textvariable=self.jtc, state="readonly")
 		entryJtc.pack(side=LEFT, fill=X, padx=(0, 15), expand=YES)
+
+		labelHamaker = ttk.Label(rowVariables, text="hamaker:")
+		labelHamaker.pack(side=LEFT, fill=X, expand=YES)
+
+		entryHamaker = ttk.Entry(rowVariables, textvariable=self.hamaker, state="readonly")
+		entryHamaker.pack(side=LEFT, fill=X, padx=(0, 15), expand=YES)
 
 		rowLinePlot = ttk.Frame(frameLinePlot)
 		rowLinePlot.pack(fill=X, expand=YES)
@@ -289,11 +305,11 @@ class MainWindow(ttk.Frame):
 		Parameter:
 			defaultMaterial(str): Name of the chosen default material.
 		"""
+		self.eTip.set(dpv.defaultMaterials[defaultMaterial]["e"])
+		self.possionRatioTip.set(dpv.defaultMaterials[defaultMaterial]["possionRatio"])
+		self.hamakerTip.set(dpv.defaultMaterials[defaultMaterial]["hamaker"])
 		self.kc.set(dpv.defaultMaterials[defaultMaterial]["kc"])
 		self.radius.set(dpv.defaultMaterials[defaultMaterial]["radius"])
-		self.eSample.set(dpv.defaultMaterials[defaultMaterial]["eTip"])
-		self.possionRatioSample.set(dpv.defaultMaterials[defaultMaterial]["possionRatio"])
-		self.hamaker.set(dpv.defaultMaterials[defaultMaterial]["hamaker"])
 
 	def _set_default_measurement_parameters(self, defaultMeasurement:str) -> None:
 		"""Set the the values of different default measurement settings.
@@ -301,11 +317,12 @@ class MainWindow(ttk.Frame):
 		Parameter:
 			defaultMeasurement(str): Name of the chosen default measurement settings.
 		"""
+		self.eSample.set(dpv.defaultMeasurements[defaultMeasurement]["e"])
+		self.possionRatioSample.set(dpv.defaultMeasurements[defaultMeasurement]["possionRatio"])
+		self.hamakerSample.set(dpv.defaultMeasurements[defaultMeasurement]["hamaker"])
+		self.maximumDeflection.set(dpv.defaultMeasurements[defaultMeasurement]["maximumDeflection"])
 		self.z0.set(dpv.defaultMeasurements[defaultMeasurement]["z0"])
 		self.dZ.set(dpv.defaultMeasurements[defaultMeasurement]["dZ"])
-		self.eTip.set(dpv.defaultMeasurements[defaultMeasurement]["eSample"])
-		self.possionRatioTip.set(dpv.defaultMeasurements[defaultMeasurement]["possionRatio"])
-		self.maximumDeflection.set(dpv.defaultMeasurements[defaultMeasurement]["maximumDeflection"])
 
 	def _create_force_volume(self) -> None:
 		"""Create a synthetic force volume with the chosen parameters and display it."""
@@ -324,7 +341,8 @@ class MainWindow(ttk.Frame):
 		self._add_force_volume(
 			syntheticForcevolume,
 			parameterMaterial.Etot,
-			parameterMaterial.jtc
+			parameterMaterial.jtc,
+			parameterMaterial.Hamaker
 		)
 
 		self._update_line_plot(
@@ -393,9 +411,14 @@ class MainWindow(ttk.Frame):
 				"topography"
 			]
 		)
+
+		hamaker = gsfv.calculate_hamaker(
+			float(self.hamakerTip.get()),
+			float(self.hamakerSample.get())
+		)
 		
 		jtc = gsfv.calculate_jtc(
-			float(self.hamaker.get()),
+			hamaker,
 			float(self.radius.get()),
 			float(self.kc.get())
 		)
@@ -406,12 +429,11 @@ class MainWindow(ttk.Frame):
 			float(self.possionRatioSample.get()),
 			float(self.eSample.get())
 		)
-		etot = 3e9
 
 		parameterMaterial = ParameterMaterial(
 			kc=float(self.kc.get()),
 			radius=float(self.radius.get()),
-			Hamaker=float(self.hamaker.get()),
+			Hamaker=hamaker,
 			Etot=etot,
 			jtc=jtc,
 		)
@@ -435,7 +457,8 @@ class MainWindow(ttk.Frame):
 		self, 
 		syntheticForcevolume: np.ndarray, 
 		etot: float, 
-		jtc: float
+		jtc: float,
+		hamaker: float
 	) -> None:
 		""""""
 		lineCollection = self._create_line_collection(syntheticForcevolume)
@@ -444,13 +467,15 @@ class MainWindow(ttk.Frame):
 			"data": syntheticForcevolume,
 			"lineCollection": lineCollection,
 			"etot": etot,
-			"jtc": jtc
+			"jtc": jtc,
+			"hamaker": hamaker
 		}
 		nameNewForcevolume = "Force Volume " + str(len(self.forceVolumes) + 1)
 		self.forceVolumes[nameNewForcevolume] = newForcevolume
 
 		self.etot.set(str(etot))
 		self.jtc.set(str(jtc))
+		self.hamaker.set(str(hamaker))
 
 		self.dropdownForceVolumes.set_menu("", *self.forceVolumes.keys())
 		self.activeForceVolume.set(nameNewForcevolume)
@@ -543,6 +568,7 @@ class MainWindow(ttk.Frame):
 
 		self.etot.set("")
 		self.jtc.set("")
+		self.hamaker.set("")
 
 	def _delete_lines(self, lineCollection: List) -> None:
 		""""""
@@ -558,6 +584,9 @@ class MainWindow(ttk.Frame):
 		)
 		self.jtc.set(
 			self.forceVolumes[self.activeForceVolume.get()]["jtc"]
+		)
+		self.hamaker.set(
+			self.forceVolumes[self.activeForceVolume.get()]["hamaker"]
 		)
 
 		for forceVolumeName, forceVolumeData in self.forceVolumes.items():
