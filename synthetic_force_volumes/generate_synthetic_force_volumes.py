@@ -7,7 +7,7 @@ def calculate_jtc(
 	radius: float, 
 	kc: float
 ) -> float:
-	"""Calculate the jtc 
+	"""Calculate the jtc as
 
 	Parameters:
 		hamaker(float): .
@@ -29,7 +29,7 @@ def calculate_etot(
 	possionRatioSample: float,
 	eSample: float,
 ) -> float:
-	"""Calculate etot
+	"""Calculate etot as
 
 	Parameters:
 		possionRatioTip(float): .
@@ -45,7 +45,7 @@ def calculate_etot(
 		/ (3 * ((1 - possionRatioTip**2) / eTip + (1 - possionRatioSample**2) / eSample))
 	)
 
-def create_synthetic_curve(
+def create_synthetic_force_volume(
 	parameterMaterial: NamedTuple, 
 	parameterMeasurement: NamedTuple, 
 	parameterForcevolume: NamedTuple

@@ -262,7 +262,7 @@ class MainWindow(ttk.Frame):
 			self.activeForceVolume, 
 			"",
 			*self.forceVolumes.keys(), 
-			command=self._update_force_volume,
+			command=self._change_active_force_volume,
 			bootstyle=""
 		)
 		self.dropdownForceVolumes.pack()
@@ -308,13 +308,14 @@ class MainWindow(ttk.Frame):
 		self.maximumDeflection.set(dpv.defaultMeasurements[defaultMeasurement]["maximumDeflection"])
 
 	def _create_force_volume(self) -> None:
-		"""Create and display a synthetic force volume with the chosen parameters."""
+		"""Create a synthetic force volume with the chosen parameters and display it."""
 		validParameters = self._check_parameters()
 		if not validParameters:
 			return 
+
 		parameterMaterial, parameterMeasurement, parameterForcevolume = self._get_parameters()
 
-		syntheticForcevolume = gsfv.create_synthetic_curve(
+		syntheticForcevolume = gsfv.create_synthetic_force_volume(
 			parameterMaterial, 
 			parameterMeasurement, 
 			parameterForcevolume
@@ -454,7 +455,10 @@ class MainWindow(ttk.Frame):
 		self.dropdownForceVolumes.set_menu("", *self.forceVolumes.keys())
 		self.activeForceVolume.set(nameNewForcevolume)
 
-	def _create_line_collection(self, syntheticForcevolume):
+	def _create_line_collection(
+		self, 
+		syntheticForcevolume: np.ndarray
+	) -> List[Line2D]:
 		""""""
 		return [
 			self._create_line(line, self.colorActiveIdealCurve, 1)
@@ -464,8 +468,21 @@ class MainWindow(ttk.Frame):
 		]
 
 	@staticmethod
-	def _create_line(line, color, zorder):
-		""""""
+	def _create_line(
+		line: List, 
+		color: str, 
+		zorder: int
+	) -> Line2D:
+		"""Create a Matplotlib Line2D with the given Arguments.
+
+		Parameters:
+			line(List):
+			color(str):
+			zorder(int):
+
+		Returns:
+			line(Line2D):
+		"""
 		return Line2D(
 			line[0], 
 			line[1], 
@@ -534,6 +551,34 @@ class MainWindow(ttk.Frame):
 
 		self.holderFigureLinePlot.draw()
 
-	def _update_force_volume(self, forceVolume) -> None:
+	def _change_active_force_volume(self, forceVolume) -> None:
 		""""""
-		print(forceVolume)
+		self.etot.set(
+			self.forceVolumes[self.activeForceVolume.get()]["etot"]
+		)
+		self.jtc.set(
+			self.forceVolumes[self.activeForceVolume.get()]["jtc"]
+		)
+
+		for forceVolumeName, forceVolumeData in self.forceVolumes.items():
+			if forceVolumeName == self.activeForceVolume.get():
+				self._set_active_line_colors(
+					forceVolumeData["lineCollection"]
+				)
+			else:
+				self._set_inative_line_colors(
+					forceVolumeData["lineCollection"]
+				)
+
+	def _set_active_line_colors(self, lineCollection) -> None: 
+		""""""
+		for line in lineCollection[:2]:
+			line.set_color(self.colorActiveIdealCurve)
+
+		for line in lineCollection[2:]:
+			line.set_color(self.colorActiveCurves)
+
+	def _set_inative_line_colors(self, lineCollection) -> None:
+		""""""
+		for line in lineCollection:
+			line.set_color(self.colorInactiveCurves)
