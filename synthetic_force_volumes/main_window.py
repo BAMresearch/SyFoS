@@ -13,7 +13,7 @@ from ttkbootstrap.constants import *
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.lines import Line2D
 
 import default_parameter_values as dpv
@@ -97,7 +97,7 @@ class MainWindow(ttk.Frame):
 
 		# First row
 		labelCategoryMaterial = ttk.Label(frameParameters, text="Material", font="bold")
-		labelCategoryMaterial.grid(row=0, column=0, sticky=W, pady=(0, 10))
+		labelCategoryMaterial.grid(row=0, column=0, sticky=W, pady=(0, 5))
 
 		self.defaultMaterial = tk.StringVar(self.root, value="Default Material")
 		dropdownDefaultMaterial = ttk.OptionMenu(
@@ -108,10 +108,10 @@ class MainWindow(ttk.Frame):
 			command=self._set_default_material_parameters,
 			bootstyle=""
 		)
-		dropdownDefaultMaterial.grid(row=0, column=1, sticky=W, pady=(0, 10))
+		dropdownDefaultMaterial.grid(row=0, column=1, sticky=W, pady=(0, 5))
 
 		labelCategoryMeasurement = ttk.Label(frameParameters, text="Measurement", font="bold")
-		labelCategoryMeasurement.grid(row=0, column=2, sticky=W, pady=(0, 10))
+		labelCategoryMeasurement.grid(row=0, column=2, sticky=W, pady=(0, 5))
 
 		self.defaultMeasurement = tk.StringVar(self.root, value="Default Measurement")
 		dropdownDefaultMeasurement = ttk.OptionMenu(
@@ -122,106 +122,121 @@ class MainWindow(ttk.Frame):
 			command=self._set_default_measurement_parameters,
 			bootstyle=""
 		)
-		dropdownDefaultMeasurement.grid(row=0, column=3, sticky=W, pady=(0, 10))
+		dropdownDefaultMeasurement.grid(row=0, column=3, sticky=W, pady=(0, 5))
 
 		labelCategoryForceVolume = ttk.Label(frameParameters, text="Force Volume", font="bold")
-		labelCategoryForceVolume.grid(row=0, column=4, columnspan=2, sticky=W, pady=(0, 10))
+		labelCategoryForceVolume.grid(row=0, column=4, columnspan=2, sticky=W, pady=(0, 5))
 
 		# Second row
 		labelETip = ttk.Label(frameParameters, text="ETip:")
-		labelETip.grid(row=1, column=0, sticky=W, pady=(0, 5))
+		labelETip.grid(row=1, column=0, sticky=W)
 
 		entryETip = ttk.Entry(frameParameters, textvariable=self.eTip)
-		entryETip.grid(row=1, column=1, pady=(0, 5))
+		entryETip.grid(row=1, column=1)
 
 		labelESample = ttk.Label(frameParameters, text="ESample:")
-		labelESample.grid(row=1, column=2, sticky=W, pady=(0, 5))
+		labelESample.grid(row=1, column=2, sticky=W)
 
 		entryESample = ttk.Entry(frameParameters, textvariable=self.eSample)
-		entryESample.grid(row=1, column=3, pady=(0, 5))
+		entryESample.grid(row=1, column=3)
 
 		labelNumberOfCurves = ttk.Label(frameParameters, text="Number of Curves:")
-		labelNumberOfCurves.grid(row=1, column=4, sticky=W, pady=(0, 5))
+		labelNumberOfCurves.grid(row=1, column=4, sticky=W)
 
 		entryNumberOfCurves = ttk.Entry(frameParameters, textvariable=self.numberOfCurves)
-		entryNumberOfCurves.grid(row=1, column=5, pady=(0, 5))
+		entryNumberOfCurves.grid(row=1, column=5)
 
 		# Third row
 		labelPossionRatioTip = ttk.Label(frameParameters, text="Possion Ratio:")
-		labelPossionRatioTip.grid(row=2, column=0, sticky=W, pady=(0, 5))
+		labelPossionRatioTip.grid(row=2, column=0, sticky=W)
 
 		entryPossionRatioTip = ttk.Entry(frameParameters, textvariable=self.possionRatioTip)
-		entryPossionRatioTip.grid(row=2, column=1, pady=(0, 5))
+		entryPossionRatioTip.grid(row=2, column=1)
 
 		labelPossionRatioSample = ttk.Label(frameParameters, text="Possion Ratio:")
-		labelPossionRatioSample.grid(row=2, column=2, sticky=W, pady=(0, 5))
+		labelPossionRatioSample.grid(row=2, column=2, sticky=W)
 
 		entryPossionRatioSample = ttk.Entry(frameParameters, textvariable=self.possionRatioSample)
-		entryPossionRatioSample.grid(row=2, column=3, pady=(0, 5))
+		entryPossionRatioSample.grid(row=2, column=3)
 
 		labelNoise = ttk.Label(frameParameters, text="Noise:")
-		labelNoise.grid(row=2, column=4, sticky=W, pady=(0, 5))
+		labelNoise.grid(row=2, column=4, sticky=W)
 
 		entryNoise = ttk.Entry(frameParameters, textvariable=self.noise)
-		entryNoise.grid(row=2, column=5, pady=(0, 5))
+		entryNoise.grid(row=2, column=5)
 
 		# Fourth row
 		labelHamakerTip = ttk.Label(frameParameters, text="Hamaker:")
-		labelHamakerTip.grid(row=3, column=0, sticky=W, pady=(0, 5))
+		labelHamakerTip.grid(row=3, column=0, sticky=W)
 
 		entryHamakerTip = ttk.Entry(frameParameters, textvariable=self.hamakerTip)
-		entryHamakerTip.grid(row=3, column=1, pady=(0, 5))
+		entryHamakerTip.grid(row=3, column=1)
 
 		labelHamakerSample = ttk.Label(frameParameters, text="Hamaker:")
-		labelHamakerSample.grid(row=3, column=2, sticky=W, pady=(0, 5))
+		labelHamakerSample.grid(row=3, column=2, sticky=W)
 
 		entryHamakerSample = ttk.Entry(frameParameters, textvariable=self.hamakerSample)
-		entryHamakerSample.grid(row=3, column=3, pady=(0, 5))
+		entryHamakerSample.grid(row=3, column=3)
 
 		labelVirtualDeflection = ttk.Label(frameParameters, text="Virtual Deflection:")
-		labelVirtualDeflection.grid(row=3, column=4, sticky=W, pady=(0, 5))
+		labelVirtualDeflection.grid(row=3, column=4, sticky=W)
 
 		entryVirtualDeflection = ttk.Entry(frameParameters, textvariable=self.virtualDeflection)
-		entryVirtualDeflection.grid(row=3, column=5, pady=(0, 5))
+		entryVirtualDeflection.grid(row=3, column=5)
 
 		# Fifth row
 		labelKc = ttk.Label(frameParameters, text="kc:")
-		labelKc.grid(row=4, column=0, sticky=W, pady=(0, 5))
+		labelKc.grid(row=4, column=0, sticky=W)
 
 		entryKc = ttk.Entry(frameParameters, textvariable=self.kc)
-		entryKc.grid(row=4, column=1, pady=(0, 5))
+		entryKc.grid(row=4, column=1)
 		
 		labelMaximumDeflection = ttk.Label(frameParameters, text="Maximum Deflection:")
-		labelMaximumDeflection.grid(row=4, column=2, sticky=W, pady=(0, 5))
+		labelMaximumDeflection.grid(row=4, column=2, sticky=W)
 
 		entryMaximumDeflection = ttk.Entry(frameParameters, textvariable=self.maximumDeflection)
-		entryMaximumDeflection.grid(row=4, column=3, pady=(0, 5))
+		entryMaximumDeflection.grid(row=4, column=3)
 
 		labelTopography = ttk.Label(frameParameters, text="Topography:")
-		labelTopography.grid(row=4, column=4, sticky=W, pady=(0, 5))
+		labelTopography.grid(row=4, column=4, sticky=W)
 
 		entryTopography = ttk.Entry(frameParameters, textvariable=self.topography)
 		entryTopography.grid(row=4, column=5)
 
 		# Sixth row
 		labelRadius = ttk.Label(frameParameters, text="Radius:")
-		labelRadius.grid(row=5, column=0, sticky=W, pady=(0, 5))
+		labelRadius.grid(row=5, column=0, sticky=W)
 
 		entryRadius = ttk.Entry(frameParameters, textvariable=self.radius)
-		entryRadius.grid(row=5, column=1, pady=(0, 5))
+		entryRadius.grid(row=5, column=1)
 
 		labelZ0 = ttk.Label(frameParameters, text="z0:")
-		labelZ0.grid(row=5, column=2, sticky=W, pady=(0, 5))
+		labelZ0.grid(row=5, column=2, sticky=W)
 
 		entryZ0 = ttk.Entry(frameParameters, textvariable=self.z0)
-		entryZ0.grid(row=5, column=3, pady=(0, 5))
+		entryZ0.grid(row=5, column=3)
 
 		# Seventh row
 		labelDZ = ttk.Label(frameParameters, text="dZ:")
-		labelDZ.grid(row=6, column=2, sticky=W, pady=(0, 5))
+		labelDZ.grid(row=6, column=2, sticky=W)
 
 		entryDZ = ttk.Entry(frameParameters, textvariable=self.dZ)
-		entryDZ.grid(row=6, column=3, pady=(0, 5))		
+		entryDZ.grid(row=6, column=3)	
+
+		frameParameters.grid_columnconfigure(0, weight=1, pad=3)
+		frameParameters.grid_columnconfigure(1, weight=1, pad=3)
+		frameParameters.grid_columnconfigure(2, weight=1, pad=3)
+		frameParameters.grid_columnconfigure(3, weight=1, pad=3)
+		frameParameters.grid_columnconfigure(4, weight=1, pad=3)
+		frameParameters.grid_columnconfigure(5, weight=1, pad=3)
+
+		frameParameters.grid_rowconfigure(0, weight=1, pad=3)
+		frameParameters.grid_rowconfigure(1, weight=1, pad=3)
+		frameParameters.grid_rowconfigure(2, weight=1, pad=3)
+		frameParameters.grid_rowconfigure(3, weight=1, pad=3)
+		frameParameters.grid_rowconfigure(4, weight=1, pad=3)
+		frameParameters.grid_rowconfigure(5, weight=1, pad=3)
+		frameParameters.grid_rowconfigure(6, weight=1, pad=3)
 
 	def _create_frame_lineplot(self) -> None:
 		"""Define all elements within the line plot frame."""
@@ -278,7 +293,7 @@ class MainWindow(ttk.Frame):
 			self.activeForceVolume, 
 			"",
 			*self.forceVolumes.keys(), 
-			command=self._change_active_force_volume,
+			command=self._set_active_force_volume,
 			bootstyle=""
 		)
 		self.dropdownForceVolumes.pack()
@@ -343,10 +358,6 @@ class MainWindow(ttk.Frame):
 			parameterMaterial.Etot,
 			parameterMaterial.jtc,
 			parameterMaterial.Hamaker
-		)
-
-		self._update_line_plot(
-			self.forceVolumes[self.activeForceVolume.get()]["lineCollection"]
 		)
 
 	def _check_parameters(self) -> bool:
@@ -473,12 +484,14 @@ class MainWindow(ttk.Frame):
 		nameNewForcevolume = "Force Volume " + str(len(self.forceVolumes) + 1)
 		self.forceVolumes[nameNewForcevolume] = newForcevolume
 
-		self.etot.set(str(etot))
-		self.jtc.set(str(jtc))
-		self.hamaker.set(str(hamaker))
-
 		self.dropdownForceVolumes.set_menu("", *self.forceVolumes.keys())
 		self.activeForceVolume.set(nameNewForcevolume)
+
+		self._add_force_volume_to_plot(
+			lineCollection
+		)
+
+		self._set_active_force_volume()
 
 	def _create_line_collection(
 		self, 
@@ -486,24 +499,18 @@ class MainWindow(ttk.Frame):
 	) -> List[Line2D]:
 		""""""
 		return [
-			self._create_line(line, self.colorActiveIdealCurve, 1)
-			if index < 2
-			else self._create_line(line, self.colorActiveCurves, -1)
-			for index, line in enumerate(syntheticForcevolume)
+			self._create_line(line)
+			for line in syntheticForcevolume
 		]
 
 	@staticmethod
 	def _create_line(
 		line: List, 
-		color: str, 
-		zorder: int
 	) -> Line2D:
-		"""Create a Matplotlib Line2D with the given Arguments.
+		""".
 
 		Parameters:
 			line(List):
-			color(str):
-			zorder(int):
 
 		Returns:
 			line(Line2D):
@@ -511,23 +518,26 @@ class MainWindow(ttk.Frame):
 		return Line2D(
 			line[0], 
 			line[1], 
-			c=color,
 			linewidth=0.5, 
-			zorder=zorder
 		)
 
-	def _update_line_plot(self, lineCollection: List) -> None:
+	def _add_force_volume_to_plot(
+		self, 
+		lineCollection: List[Line2D]
+	) -> None:
 		"""
 
 		Parameters:
-			syntheticForcevolume(LineCollection)
+			lineCollection(list)
 		"""
 		ax = self._get_axes()
 
 		for line in lineCollection:
 			ax.add_line(line)
 
-		ax.autoscale_view()
+		self._set_current_view_limits(
+			ax
+		)
 
 		self.holderFigureLinePlot.draw()
 
@@ -542,14 +552,6 @@ class MainWindow(ttk.Frame):
 		except IndexError:
 			return self.holderFigureLinePlot.figure.add_subplot(111)
 
-	def _save_force_volume(self) -> None:
-		""""""
-		if self.activeForceVolume.get() not in self.forceVolumes:
-			return messagebox.showerror(
-				"Error", 
-				"Please select a Force Volume."
-			)
-
 	def _delete_force_volume(self) -> None:
 		""""""
 		if self.activeForceVolume.get() not in self.forceVolumes:
@@ -558,7 +560,7 @@ class MainWindow(ttk.Frame):
 				"Please select a Force Volume."
 			)		
 
-		self._delete_lines(
+		self._delete_force_volume_from_plot(
 			self.forceVolumes[self.activeForceVolume.get()]["lineCollection"]
 		)
 
@@ -566,48 +568,121 @@ class MainWindow(ttk.Frame):
 		self.dropdownForceVolumes.set_menu("", *self.forceVolumes.keys())
 		self.activeForceVolume.set("Force Volumes")
 
-		self.etot.set("")
-		self.jtc.set("")
-		self.hamaker.set("")
+		self._set_calculated_parameters()
 
-	def _delete_lines(self, lineCollection: List) -> None:
+	def _delete_force_volume_from_plot(
+		self, 
+		lineCollection: List[Line2D]
+	) -> None:
 		""""""
 		for line in lineCollection:
 			line.remove()
 
+		self._set_current_view_limits(
+			self._get_axes()
+		)
+
 		self.holderFigureLinePlot.draw()
 
-	def _change_active_force_volume(self, forceVolume) -> None:
+	@staticmethod
+	def _set_current_view_limits(ax):
 		""""""
-		self.etot.set(
-			self.forceVolumes[self.activeForceVolume.get()]["etot"]
-		)
-		self.jtc.set(
-			self.forceVolumes[self.activeForceVolume.get()]["jtc"]
-		)
-		self.hamaker.set(
-			self.forceVolumes[self.activeForceVolume.get()]["hamaker"]
+		ax.relim()
+		ax.autoscale_view()
+
+	def _set_active_force_volume(self, forceVolume: str = "") -> None:
+		""""""
+		self._set_calculated_parameters(
+			self._round_parameter_presentation(
+				self.forceVolumes[self.activeForceVolume.get()]["etot"]
+			),
+			self._round_parameter_presentation(
+				self.forceVolumes[self.activeForceVolume.get()]["jtc"]
+			),
+			self._round_parameter_presentation(
+				self.forceVolumes[self.activeForceVolume.get()]["hamaker"]
+			)
 		)
 
 		for forceVolumeName, forceVolumeData in self.forceVolumes.items():
 			if forceVolumeName == self.activeForceVolume.get():
-				self._set_active_line_colors(
+				self._set_active_line_collection(
 					forceVolumeData["lineCollection"]
 				)
 			else:
-				self._set_inative_line_colors(
+				self._set_inative_line_collection(
 					forceVolumeData["lineCollection"]
 				)
 
-	def _set_active_line_colors(self, lineCollection) -> None: 
-		""""""
+	@staticmethod
+	def _round_parameter_presentation(
+		parameterValue: float
+	) -> str: 
+		"""
+
+		Parameters:
+			parameterValue(float): .
+
+		Returns:
+			roundedParameterRepresentation(str): .
+		"""
+		return '{:.3e}'.format(parameterValue)
+
+	def _set_calculated_parameters(
+		self, 
+		etot: str = "",
+		jtc: str = "",
+		hamaker: str = ""
+	) -> None:
+		"""
+
+		Parameters:
+			etot(str): .
+			jtc(str): .
+			hamaker(str): .
+		"""
+		self.etot.set(etot)
+		self.jtc.set(jtc)
+		self.hamaker.set(hamaker)
+
+	def _set_active_line_collection(
+		self, 
+		lineCollection: List[Line2D]
+	) -> None: 
+		""".
+
+		Parameters:
+			lineCollection(list): .
+		"""
 		for line in lineCollection[:2]:
 			line.set_color(self.colorActiveIdealCurve)
+			line.set_zorder(1)
 
 		for line in lineCollection[2:]:
 			line.set_color(self.colorActiveCurves)
+			line.set_zorder(-1)
 
-	def _set_inative_line_colors(self, lineCollection) -> None:
-		""""""
+		self.holderFigureLinePlot.draw()
+
+	def _set_inative_line_collection(
+		self, 
+		lineCollection: List[Line2D]
+	) -> None:
+		""".
+
+		Parameters:
+			lineCollection(list): .
+		"""
 		for line in lineCollection:
 			line.set_color(self.colorInactiveCurves)
+			line.set_zorder(-1)
+
+		self.holderFigureLinePlot.draw()
+
+	def _save_force_volume(self) -> None:
+		""""""
+		if self.activeForceVolume.get() not in self.forceVolumes:
+			return messagebox.showerror(
+				"Error", 
+				"Please select a Force Volume."
+			)

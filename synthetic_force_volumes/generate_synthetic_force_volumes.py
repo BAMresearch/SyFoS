@@ -49,7 +49,7 @@ def calculate_hamaker(
 	hamakerTip: float, 
 	hamakerSample: float, 
 ) -> float:
-	"""Calculate the hamaker as
+	"""Calculate hamaker as
 
 	Parameters:
 		hamakerTip(float): .
@@ -58,7 +58,7 @@ def calculate_hamaker(
 	Returns:
 		hamaker(float): .
 	"""
-	return (hamakerTip + hamakerSample) / 2
+	return np.sqrt(hamakerTip) * np.sqrt(hamakerSample)
 
 def create_synthetic_force_volume(
 	parameterMaterial: NamedTuple, 
@@ -75,7 +75,7 @@ def create_synthetic_force_volume(
 		parameterForcevolume(nametupel):
 	
 	Returns:
-		syntheticForcevolume(np.ndarray): set of synthetic curves 
+		syntheticForcevolume(np.ndarray): Set of generated synthetic curves. 
 	"""
 	piezo, deflection = create_ideal_curve(parameterMaterial, parameterMeasurement)
 	
@@ -138,7 +138,7 @@ def create_ideal_curve(
 		piezo.append(parameterMeasurement.Z0 + parameterMeasurement.dZ * index)
 		c = piezo[-1]
 		deflection.append(
-			- (kc ** 2 - 3*b**2*c)/(3*b**2)-(2**(1/3)*(((6*kc**2*c)
+			- (kc**2-3*b**2*c)/(3*b**2)-(2**(1/3)*(((6*kc**2*c)
 			/ (b**2))-kc**4/b**4))/(3*(-((2*kc**6)/(b**6))
 			+ ((18*kc**4*c)/(b**4))-((27*kc**2*c**2)*(b**2))
 			+ ((3*np.sqrt(3)*np.sqrt(27*(kc**4)*(b**2)*(c**4)-4*(kc**6)
@@ -154,7 +154,9 @@ def multiply_and_apply_noise_to_ideal_curve(
 	shiftedDeflection: List, 
 	parameterForcevolume: NamedTuple
 ) -> List[np.ndarray]:
-	"""Applies noise of given extent to the shifted deflection of ideal curve, shiftedDeflection shifted by virtuell shiftedDeflection, piezo is shifted by topography
+	"""Applies noise of given extent to the shifted deflection of ideal curve, 
+	   shiftedDeflection shifted by virtuell shiftedDeflection, piezo is 
+	   shifted by topography.
 
 	Parameters:
 		shiftedDeflection(list): shifted ideal deflection
