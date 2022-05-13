@@ -18,6 +18,7 @@ from matplotlib.lines import Line2D
 
 import default_parameter_values as dpv
 import generate_synthetic_force_volumes as gsfv
+from toolbar_line_plot import ToolbarLinePlot
 
 class MainWindow(ttk.Frame):
 	"""A GUI to create and compare synthetic force volumes."""
@@ -269,7 +270,14 @@ class MainWindow(ttk.Frame):
 
 		figureLinePlot = Figure(figsize=(6, 5), facecolor=("#d3d3d3"))
 		self.holderFigureLinePlot = FigureCanvasTkAgg(figureLinePlot, rowLinePlot)
-		self.holderFigureLinePlot.get_tk_widget().pack()
+		toolbarLinePlot = ToolbarLinePlot(
+			self.holderFigureLinePlot, 
+			rowLinePlot,
+		)
+		self.holderFigureLinePlot.get_tk_widget().pack(
+			side=TOP, fill=BOTH, expand=YES
+		)
+		toolbarLinePlot.pack(side=BOTTOM, fill=X)
 
 	def _create_frame_control(self) -> None:
 		"""Define all elements within the control frame."""
