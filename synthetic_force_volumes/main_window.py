@@ -19,6 +19,7 @@ from matplotlib.lines import Line2D
 import default_parameter_values as dpv
 import generate_synthetic_force_volumes as gsfv
 from toolbar_line_plot import ToolbarLinePlot
+from export_window import ExportWindow
 
 class MainWindow(ttk.Frame):
 	"""A GUI to create and compare synthetic force volumes."""
@@ -694,3 +695,5 @@ class MainWindow(ttk.Frame):
 				"Error", 
 				"Please select a Force Volume."
 			)
+
+		ExportWindow()
