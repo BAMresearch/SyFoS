@@ -24,11 +24,15 @@ from tkinter import messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
+import export_data as exp_data
+
 class ExportWindow(ttk.Frame):
 	"""A subwindow to handle the data export."""
-	def __init__(self):
+	def __init__(self, dataForceVolume):
 		self.window = tk.Toplevel()
 		self.window.title("Export Force Curve")
+
+		self.dataForceVolume = dataForceVolume
 
 		self._create_window()
 
@@ -80,34 +84,21 @@ class ExportWindow(ttk.Frame):
 		frameDataTypes.pack(fill=X, expand=YES, anchor=N, padx=15, pady=5)
 
 		self.exportToTxt = tk.BooleanVar(self.window, value=0)
-		self.exportToHdf5 = tk.BooleanVar(self.window, value=0)
+		self.exportToCSV = tk.BooleanVar(self.window, value=0)
 		self.exportToExcel = tk.BooleanVar(self.window, value=0)
 
-		# Export to txt
-		rowExportToTxt = ttk.Frame(frameDataTypes)
-		rowExportToTxt.pack(fill=X, expand=YES)
+		# Export to csv
+		rowExportToCSV = ttk.Frame(frameDataTypes)
+		rowExportToCSV.pack(fill=X, expand=YES)
 
-		checkbuttonExportToTxt = ttk.Checkbutton(
-			rowExportToTxt,
-			text="export to txt",
-			variable=self.exportToTxt,
+		checkbuttonExportToCSV = ttk.Checkbutton(
+			rowExportToCSV,
+			text="export to csv",
+			variable=self.exportToCSV,
 			onvalue=True,
 			offvalue=False
 		)
-		checkbuttonExportToTxt.pack(side=LEFT, padx=(15, 0), pady=5)
-
-		# Export to hdf5
-		rowExportToHdf5 = ttk.Frame(frameDataTypes)
-		rowExportToHdf5.pack(fill=X, expand=YES)
-
-		checkbuttonExportToHdf5 = ttk.Checkbutton(
-			rowExportToHdf5,
-			text="export to hdf5",
-			variable=self.exportToHdf5,
-			onvalue=True,
-			offvalue=False
-		)
-		checkbuttonExportToHdf5.pack(side=LEFT, padx=(15, 0), pady=5)
+		checkbuttonExportToCSV.pack(side=LEFT, padx=(15, 0), pady=5)
 
 		# Export to excel
 		rowExportToExcel = ttk.Frame(frameDataTypes)
@@ -168,15 +159,15 @@ class ExportWindow(ttk.Frame):
 			userFeedback(messagebox): Informs the user whether the data could be saved or not.
 		"""
 		# Check if a folder name is selected.
-		if not self.folderName.get():
+		if not self.fileName.get():
 			return messagebox.showerror(
 				"Error", 
-				"Please specify a name for the ouput folder.", 
+				"Please specify a name for the ouput file.", 
 				parent=self.window
 			)
 
 		# Check if a output folder is selected.
-		if not os.path.isdir(self.folderPath.get()):
+		if not os.path.isdir(self.filePath.get()):
 			return messagebox.showerror(
 				"Error", 
 				"Please specify a location to save your data.", 
@@ -186,8 +177,8 @@ class ExportWindow(ttk.Frame):
 		selectedExportParameters = self._create_selected_export_parameters()
 
 		exp_data.export_data(
-			self.dataHandler,
 			selectedExportParameters,
+			self.dataForceVolume,
 			self.progressbar,
 			self.progressbarCurrentLabel
 		)
@@ -205,18 +196,19 @@ class ExportWindow(ttk.Frame):
 		ExportOptions = namedtuple(
 			"ExportOptions",
 			[
-				"folderName",
-				"folderPath",
-				"exportToTxt",
-				"exportToHdf5",
+				"pathOutputFile",
+				"exportToCSV",
 				"exportToExcel"
 			]	
 		)
 
+		pathOutputFile = os.path.join(
+			self.filePath.get(),
+			self.fileName.get()
+		)
+
 		return ExportOptions(
-			folderName=self.folderName.get(),
-			folderPath=self.folderPath.get(),
-			exportToTxt=self.exportToTxt.get(),
-			exportToHdf5=self.exportToHdf5.get(),
+			pathOutputFile=pathOutputFile,
+			exportToCSV=self.exportToCSV.get(),
 			exportToExcel=self.exportToExcel.get()
 		)

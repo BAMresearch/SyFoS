@@ -98,7 +98,11 @@ class MainWindow(ttk.Frame):
 		frameParameters.pack(fill=X, expand=YES, padx=15, pady=15)
 
 		# First row
-		labelCategoryMaterial = ttk.Label(frameParameters, text="Material", font="bold")
+		labelCategoryMaterial = ttk.Label(
+			frameParameters, 
+			text="Material", 
+			font="bold"
+		)
 		labelCategoryMaterial.grid(row=0, column=0, sticky=W, pady=(0, 5))
 
 		self.defaultMaterial = tk.StringVar(self.root, value="Default Material")
@@ -112,7 +116,11 @@ class MainWindow(ttk.Frame):
 		)
 		dropdownDefaultMaterial.grid(row=0, column=1, sticky=W, pady=(0, 5))
 
-		labelCategoryMeasurement = ttk.Label(frameParameters, text="Measurement", font="bold")
+		labelCategoryMeasurement = ttk.Label(
+			frameParameters, 
+			text="Measurement", 
+			font="bold"
+		)
 		labelCategoryMeasurement.grid(row=0, column=2, sticky=W, pady=(0, 5))
 
 		self.defaultMeasurement = tk.StringVar(self.root, value="Default Measurement")
@@ -126,103 +134,174 @@ class MainWindow(ttk.Frame):
 		)
 		dropdownDefaultMeasurement.grid(row=0, column=3, sticky=W, pady=(0, 5))
 
-		labelCategoryForceVolume = ttk.Label(frameParameters, text="Force Volume", font="bold")
+		labelCategoryForceVolume = ttk.Label(
+			frameParameters, 
+			text="Force Volume", 
+			font="bold"
+		)
 		labelCategoryForceVolume.grid(row=0, column=4, columnspan=2, sticky=W, pady=(0, 5))
 
 		# Second row
 		labelETip = ttk.Label(frameParameters, text="ETip:")
 		labelETip.grid(row=1, column=0, sticky=W)
 
-		entryETip = ttk.Entry(frameParameters, textvariable=self.eTip)
+		entryETip = ttk.Entry(
+			frameParameters, 
+			textvariable=self.eTip, 
+			validate="focusout", 
+			validatecommand=self._set_material_label
+		)
 		entryETip.grid(row=1, column=1)
 
 		labelESample = ttk.Label(frameParameters, text="ESample:")
 		labelESample.grid(row=1, column=2, sticky=W)
 
-		entryESample = ttk.Entry(frameParameters, textvariable=self.eSample)
+		entryESample = ttk.Entry(
+			frameParameters, 
+			textvariable=self.eSample, 
+			validate="focusout", 
+			validatecommand=self._set_measurement_label
+		)
 		entryESample.grid(row=1, column=3)
 
 		labelNumberOfCurves = ttk.Label(frameParameters, text="Number of Curves:")
 		labelNumberOfCurves.grid(row=1, column=4, sticky=W)
 
-		entryNumberOfCurves = ttk.Entry(frameParameters, textvariable=self.numberOfCurves)
+		entryNumberOfCurves = ttk.Entry(
+			frameParameters, 
+			textvariable=self.numberOfCurves
+		)
 		entryNumberOfCurves.grid(row=1, column=5)
 
 		# Third row
 		labelPossionRatioTip = ttk.Label(frameParameters, text="Possion Ratio:")
 		labelPossionRatioTip.grid(row=2, column=0, sticky=W)
 
-		entryPossionRatioTip = ttk.Entry(frameParameters, textvariable=self.possionRatioTip)
+		entryPossionRatioTip = ttk.Entry(
+			frameParameters, 
+			textvariable=self.possionRatioTip, 
+			validate="focusout", 
+			validatecommand=self._set_material_label
+		)
 		entryPossionRatioTip.grid(row=2, column=1)
 
 		labelPossionRatioSample = ttk.Label(frameParameters, text="Possion Ratio:")
 		labelPossionRatioSample.grid(row=2, column=2, sticky=W)
 
-		entryPossionRatioSample = ttk.Entry(frameParameters, textvariable=self.possionRatioSample)
+		entryPossionRatioSample = ttk.Entry(
+			frameParameters, 
+			textvariable=self.possionRatioSample, 
+			validate="focusout", 
+			validatecommand=self._set_measurement_label
+		)
 		entryPossionRatioSample.grid(row=2, column=3)
 
 		labelNoise = ttk.Label(frameParameters, text="Noise:")
 		labelNoise.grid(row=2, column=4, sticky=W)
 
-		entryNoise = ttk.Entry(frameParameters, textvariable=self.noise)
+		entryNoise = ttk.Entry(
+			frameParameters, 
+			textvariable=self.noise
+		)
 		entryNoise.grid(row=2, column=5)
 
 		# Fourth row
 		labelHamakerTip = ttk.Label(frameParameters, text="Hamaker:")
 		labelHamakerTip.grid(row=3, column=0, sticky=W)
 
-		entryHamakerTip = ttk.Entry(frameParameters, textvariable=self.hamakerTip)
+		entryHamakerTip = ttk.Entry(
+			frameParameters, 
+			textvariable=self.hamakerTip, 
+			validate="focusout", 
+			validatecommand=self._set_material_label
+		)
 		entryHamakerTip.grid(row=3, column=1)
 
 		labelHamakerSample = ttk.Label(frameParameters, text="Hamaker:")
 		labelHamakerSample.grid(row=3, column=2, sticky=W)
 
-		entryHamakerSample = ttk.Entry(frameParameters, textvariable=self.hamakerSample)
+		entryHamakerSample = ttk.Entry(
+			frameParameters, 
+			textvariable=self.hamakerSample, 
+			validate="focusout", 
+			validatecommand=self._set_measurement_label
+		)
 		entryHamakerSample.grid(row=3, column=3)
 
 		labelVirtualDeflection = ttk.Label(frameParameters, text="Virtual Deflection:")
 		labelVirtualDeflection.grid(row=3, column=4, sticky=W)
 
-		entryVirtualDeflection = ttk.Entry(frameParameters, textvariable=self.virtualDeflection)
+		entryVirtualDeflection = ttk.Entry(
+			frameParameters, 
+			textvariable=self.virtualDeflection
+		)
 		entryVirtualDeflection.grid(row=3, column=5)
 
 		# Fifth row
 		labelKc = ttk.Label(frameParameters, text="kc:")
 		labelKc.grid(row=4, column=0, sticky=W)
 
-		entryKc = ttk.Entry(frameParameters, textvariable=self.kc)
+		entryKc = ttk.Entry(
+			frameParameters, 
+			textvariable=self.kc, 
+			validate="focusout", 
+			validatecommand=self._set_material_label
+		)
 		entryKc.grid(row=4, column=1)
 		
 		labelMaximumDeflection = ttk.Label(frameParameters, text="Maximum Deflection:")
 		labelMaximumDeflection.grid(row=4, column=2, sticky=W)
 
-		entryMaximumDeflection = ttk.Entry(frameParameters, textvariable=self.maximumDeflection)
+		entryMaximumDeflection = ttk.Entry(
+			frameParameters, 
+			textvariable=self.maximumDeflection, 
+			validate="focusout", 
+			validatecommand=self._set_measurement_label
+		)
 		entryMaximumDeflection.grid(row=4, column=3)
 
 		labelTopography = ttk.Label(frameParameters, text="Topography:")
 		labelTopography.grid(row=4, column=4, sticky=W)
 
-		entryTopography = ttk.Entry(frameParameters, textvariable=self.topography)
+		entryTopography = ttk.Entry(
+			frameParameters, 
+			textvariable=self.topography
+		)
 		entryTopography.grid(row=4, column=5)
 
 		# Sixth row
 		labelRadius = ttk.Label(frameParameters, text="Radius:")
 		labelRadius.grid(row=5, column=0, sticky=W)
 
-		entryRadius = ttk.Entry(frameParameters, textvariable=self.radius)
+		entryRadius = ttk.Entry(
+			frameParameters, 
+			textvariable=self.radius, 
+			validate="focusout", 
+			validatecommand=self._set_material_label
+		)
 		entryRadius.grid(row=5, column=1)
 
 		labelZ0 = ttk.Label(frameParameters, text="z0:")
 		labelZ0.grid(row=5, column=2, sticky=W)
 
-		entryZ0 = ttk.Entry(frameParameters, textvariable=self.z0)
+		entryZ0 = ttk.Entry(
+			frameParameters, 
+			textvariable=self.z0, 
+			validate="focusout", 
+			validatecommand=self._set_measurement_label
+		)
 		entryZ0.grid(row=5, column=3)
 
 		# Seventh row
 		labelDZ = ttk.Label(frameParameters, text="dZ:")
 		labelDZ.grid(row=6, column=2, sticky=W)
 
-		entryDZ = ttk.Entry(frameParameters, textvariable=self.dZ)
+		entryDZ = ttk.Entry(
+			frameParameters, 
+			textvariable=self.dZ,
+			validate="focusout", 
+			validatecommand=self._set_measurement_label
+		)
 		entryDZ.grid(row=6, column=3)	
 
 		frameParameters.grid_columnconfigure(0, weight=1, pad=3)
@@ -323,6 +402,14 @@ class MainWindow(ttk.Frame):
 		)
 		buttonDeleteForceVolume.pack(pady=(10, 0))
 
+	def _set_material_label(self) -> None:
+		"""Change the """
+		self.defaultMaterial.set("Custom Material")
+
+	def _set_measurement_label(self) -> None:
+		""""""
+		self.defaultMeasurement.set("Custom Measurement")
+
 	def _set_default_material_parameters(self, defaultMaterial:str) -> None:
 		"""Set the values of different default materials.
 
@@ -348,19 +435,31 @@ class MainWindow(ttk.Frame):
 		self.z0.set(dpv.defaultMeasurements[defaultMeasurement]["z0"])
 		self.dZ.set(dpv.defaultMeasurements[defaultMeasurement]["dZ"])
 
-	def _create_force_volume(self) -> None:
+	def _create_force_volume(self):
 		"""Create a synthetic force volume with the chosen parameters and display it."""
-		validParameters = self._check_parameters()
-		if not validParameters:
-			return 
+		try:
+			self._check_parameters()
+		except ValueError:
+			self._reset_parameters()
+			return messagebox.showerror(
+				"Error", 
+				"Please select valid parameters."
+			)
 
 		parameterMaterial, parameterMeasurement, parameterForcevolume = self._get_parameters()
 
-		syntheticForcevolume = gsfv.create_synthetic_force_volume(
-			parameterMaterial, 
-			parameterMeasurement, 
-			parameterForcevolume
-		)
+		try:
+			syntheticForcevolume = gsfv.create_synthetic_force_volume(
+				parameterMaterial, 
+				parameterMeasurement, 
+				parameterForcevolume
+			)
+		except ValueError:
+			self._reset_parameters()
+			return messagebox.showerror(
+				"Error", 
+				"Failed to generate a synthetic force volume. Please change the input parameters."
+			)
 
 		self._add_force_volume(
 			syntheticForcevolume,
@@ -369,24 +468,18 @@ class MainWindow(ttk.Frame):
 			parameterMaterial.Hamaker
 		)
 
-	def _check_parameters(self) -> bool:
-		"""Check wether all input parameters are valid.
+		return messagebox.showinfo(
+			"Success", 
+			"Added synthetic force volume."
+		)
 
-		Returns:
-			checkParameters(bool): True if all input parameters are numbers otherwise false.
-		"""
+	def _check_parameters(self) -> None:
+		"""Check wether all input parameters are valid."""
 		for parameter in self.parameters:
 			try:
 				float(parameter.get())
 			except ValueError:
-				self._reset_parameters()
-				messagebox.showerror(
-					"Error", 
-					"Please select valid parameters."
-				)
-				return False
-
-		return True
+				raise ValueError("Invalid input parameters!")
 
 	def _reset_parameters(self) -> None:
 		"""Reset all input parameter."""
@@ -696,4 +789,6 @@ class MainWindow(ttk.Frame):
 				"Please select a Force Volume."
 			)
 
-		ExportWindow()
+		ExportWindow(
+			self.forceVolumes[self.activeForceVolume.get()]
+		)
