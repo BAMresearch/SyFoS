@@ -1,3 +1,9 @@
+"""
+This file contains all predefined values 
+for different materials and measurement
+settings. 
+"""
+
 # Default Meterial Values
 defaultMaterials = {
 	"silicon": {

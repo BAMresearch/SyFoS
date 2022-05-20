@@ -1,19 +1,3 @@
-"""
-This file is part of SOFA.
-SOFA is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-SOFA is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with SOFA.  If not, see <http://www.gnu.org/licenses/>.
-"""
-
 from collections import namedtuple
 import os
 from typing import NamedTuple
@@ -152,11 +136,11 @@ class ExportWindow(ttk.Frame):
 		if filePath:
 			self.filePath.set(filePath)
 
-	def _export_data(self) -> messagebox:
-		"""Export the current state of the data with the selected options.
+	def _export_data(self) -> tk.messagebox:
+		"""Export the current force volume with the selected parameters and options.
 
 		Returns:
-			userFeedback(messagebox): Informs the user whether the data could be saved or not.
+			userFeedback(tk.messagebox): Informs the user whether the data could be saved or not.
 		"""
 		# Check if a folder name is selected.
 		if not self.fileName.get():
@@ -179,10 +163,9 @@ class ExportWindow(ttk.Frame):
 		exp_data.export_data(
 			selectedExportParameters,
 			self.dataForceVolume,
-			self.progressbar,
-			self.progressbarCurrentLabel
+			self.update_progressbar
 		)
-		# Close window
+
 		self.window.destroy()
 
 		return messagebox.showinfo("Success", "Data is saved.")
@@ -212,3 +195,25 @@ class ExportWindow(ttk.Frame):
 			exportToCSV=self.exportToCSV.get(),
 			exportToExcel=self.exportToExcel.get()
 		)
+
+	def update_progressbar(
+		self, 
+		start: bool=False, 
+		stop: bool=False, 
+		newLabel: str=""
+	) -> None:
+		"""Update the progressbar to show the export progress 
+		   and indicate the current process.
+
+		Parameter:
+			start(bool): If selected start the indeterminate progressbar.
+			stop(bool): If selected stop the indeterminate progressbar.
+			newLabel(str): Indicates the current process step.
+		"""
+		if start:
+			self.progressbar.start()
+
+		if stop:
+			self.progressbar.stop()
+
+		self.progressbarCurrentLabel.set(newLabel)

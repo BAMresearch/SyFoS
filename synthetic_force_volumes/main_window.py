@@ -403,11 +403,13 @@ class MainWindow(ttk.Frame):
 		buttonDeleteForceVolume.pack(pady=(10, 0))
 
 	def _set_material_label(self) -> None:
-		"""Change the """
+		"""Change the material label if the user changes 
+		   any of it's parameters."""
 		self.defaultMaterial.set("Custom Material")
 
 	def _set_measurement_label(self) -> None:
-		""""""
+		"""Change the measurement label if the user changes 
+		   any of it's parameters."""
 		self.defaultMeasurement.set("Custom Measurement")
 
 	def _set_default_material_parameters(self, defaultMaterial:str) -> None:
@@ -435,8 +437,12 @@ class MainWindow(ttk.Frame):
 		self.z0.set(dpv.defaultMeasurements[defaultMeasurement]["z0"])
 		self.dZ.set(dpv.defaultMeasurements[defaultMeasurement]["dZ"])
 
-	def _create_force_volume(self):
-		"""Create a synthetic force volume with the chosen parameters and display it."""
+	def _create_force_volume(self) -> tk.messagebox:
+		"""Create a synthetic force volume with the chosen parameters and display it.
+
+		Returns:
+			userFeedback(tk.messagebox): Informs the user whether the force volume could be created or not.
+		"""
 		try:
 			self._check_parameters()
 		except ValueError:
@@ -493,9 +499,9 @@ class MainWindow(ttk.Frame):
 		"""Get the input parameters and combine them into namedtuples.
 		
 		Returns:
-			parameterMaterial(namedtuple): 
-			parameterMeasurement(namedtuple):
-			parameterForcevolume(namedtuple):
+			parameterMaterial(namedtuple): Combines the material parameters.
+			parameterMeasurement(namedtuple): Combines the measurment parameters.
+			parameterForcevolume(namedtuple): Combines the force volume parameters.
 		"""
 		ParameterMaterial = namedtuple(
 			"ParameterMaterial",
@@ -568,12 +574,19 @@ class MainWindow(ttk.Frame):
 
 	def _add_force_volume(
 		self, 
-		syntheticForcevolume: np.ndarray, 
+		syntheticForcevolume: List, 
 		etot: float, 
 		jtc: float,
 		hamaker: float
 	) -> None:
-		""""""
+		"""
+		
+		Parameters:
+			syntheticForcevolume(list): .
+			etot(float): .
+			jtc(float): .
+			hamaler(float): .
+		"""
 		lineCollection = self._create_line_collection(syntheticForcevolume)
 
 		newForcevolume = {
@@ -597,9 +610,16 @@ class MainWindow(ttk.Frame):
 
 	def _create_line_collection(
 		self, 
-		syntheticForcevolume: np.ndarray
+		syntheticForcevolume: List
 	) -> List[Line2D]:
-		""""""
+		"""
+
+		Parameters:
+			syntheticForcevolume(list): .
+
+		Returns:
+			lineCollection(list): .
+		"""
 		return [
 			self._create_line(line)
 			for line in syntheticForcevolume
@@ -676,7 +696,11 @@ class MainWindow(ttk.Frame):
 		self, 
 		lineCollection: List[Line2D]
 	) -> None:
-		""""""
+		"""
+
+		Parameters:
+			lineCollection(list): .
+		"""
 		for line in lineCollection:
 			line.remove()
 
@@ -692,8 +716,12 @@ class MainWindow(ttk.Frame):
 		ax.relim()
 		ax.autoscale_view()
 
-	def _set_active_force_volume(self, forceVolume: str = "") -> None:
-		""""""
+	def _set_active_force_volume(self, forceVolume: str="") -> None:
+		"""
+
+		Parameters:
+			forceVolume
+		"""
 		self._set_calculated_parameters(
 			self._round_parameter_presentation(
 				self.forceVolumes[self.activeForceVolume.get()]["etot"]
