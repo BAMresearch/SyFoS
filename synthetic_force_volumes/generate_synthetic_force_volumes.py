@@ -77,14 +77,25 @@ def create_synthetic_force_volume(
 	Returns:
 		syntheticForcevolume(np.ndarray): Set of generated synthetic curves. 
 	"""
-	piezo, deflection = create_ideal_curve(parameterMaterial, parameterMeasurement)
+	try:
+		piezo, deflection = create_ideal_curve(
+			parameterMaterial, 
+			parameterMeasurement
+		)
+	except ValueError:
+		raise ValueError("") from error 
 	
 	shiftedPiezo = np.asarray(piezo) + parameterForcevolume.topography
 	shiftedDeflection = np.asarray(deflection) + parameterForcevolume.virtualDeflection
 
-	noisyCurves = multiply_and_apply_noise_to_ideal_curve(
-		shiftedDeflection, parameterForcevolume
-	)
+	try:
+		noisyCurves = multiply_and_apply_noise_to_ideal_curve(
+			shiftedDeflection, parameterForcevolume
+		)
+	except ValueError:
+		raise ValueError(
+			"Could not create a synthetic force volume due to negative noise value."
+		) from error
 	
 	syntheticForcevolume = arrange_curves_in_forcevolume(
 		deflection, piezo, shiftedPiezo, 
@@ -110,45 +121,161 @@ def create_ideal_curve(
 	deflection = [0]
 	piezo = [parameterMeasurement.Z0]
 	index = 0
-	# Create curve until the jtc.
-	while(deflection[-1] >= parameterMaterial.jtc):
-		index += 1
-		piezo.append(parameterMeasurement.Z0 + parameterMeasurement.dZ * index)
-		deflection.append(
-			- (parameterMaterial.Hamaker * parameterMaterial.radius)
-			/ (6 * ((deflection[-1] - piezo[-1]) ** 2)) * (1 / parameterMaterial.kc)
-		)
+	
+	index = create_ideal_curve_approach_part(
+		piezo,
+		deflection,
+		index,
+		parameterMaterial,
+		parameterMeasurement
+	)
 
 	index -= 1
 	piezo = piezo[:-1]
 	deflection = deflection[:-1]
 
-	# Create curve until the poc.
+	index = create_ideal_curve_attraction_part(
+		piezo,
+		deflection,
+		index,
+		parameterMeasurement
+	)
+	
+	create_ideal_curve_contact_part(
+		piezo,
+		deflection,
+		index,
+		parameterMaterial,
+		parameterMeasurement
+	)
+
+	return piezo, deflection
+		
+def create_ideal_curve_approach_part(
+	piezo: List,
+	deflection: List,
+	index: int,
+	parameterMaterial: NamedTuple,
+	parameterMeasurement: NamedTuple
+)-> None: 
+	""""""
+	while(deflection[-1] >= parameterMaterial.jtc):
+		index += 1
+		piezo.append(
+			calculate_piezo_value(
+				parameterMeasurement.Z0,
+				parameterMeasurement.dZ,
+				index
+			)
+		)
+		deflection.append(
+			calculate_deflection_approach_part(
+				parameterMaterial.Hamaker,
+				parameterMaterial.radius,
+				parameterMaterial.kc,
+				piezo[-1],
+				deflection[-1]
+			)
+		)
+
+	return index
+
+def create_ideal_curve_attraction_part(
+	piezo: List,
+	deflection: List,
+	index: int,
+	parameterMeasurement: NamedTuple
+)-> None: 
+	""""""
 	while(deflection[index] <= 0):
 		index += 1
-		piezo.append(parameterMeasurement.Z0 + parameterMeasurement.dZ * index)
-		deflection.append(piezo[index])
-	
+		piezo.append(
+			calculate_piezo_value(
+				parameterMeasurement.Z0,
+				parameterMeasurement.dZ,
+				index
+			)
+		)
+		deflection.append(
+			calculate_deflection_attraction_part(
+				piezo[-1]
+			)
+		)
+
+	return index
+
+def create_ideal_curve_contact_part(
+	piezo: List,
+	deflection: List,
+	index: int,
+	parameterMaterial: NamedTuple,
+	parameterMeasurement: NamedTuple
+)-> None: 
+	""""""
 	b = np.sqrt(parameterMaterial.radius) * parameterMaterial.Etot
 	kc = parameterMaterial.kc
 
-	# Create contact line until trigger.
 	while(deflection[-1] <= parameterMeasurement.maximumdeflection):
 		index += 1
-		piezo.append(parameterMeasurement.Z0 + parameterMeasurement.dZ * index)
+		piezo.append(
+			calculate_piezo_value(
+				parameterMeasurement.Z0,
+				parameterMeasurement.dZ,
+				index
+			)
+		)
 		c = piezo[-1]
 		deflection.append(
-			- (kc**2-3*b**2*c)/(3*b**2)-(2**(1/3)*(((6*kc**2*c)
-			/ (b**2))-kc**4/b**4))/(3*(-((2*kc**6)/(b**6))
-			+ ((18*kc**4*c)/(b**4))-((27*kc**2*c**2)*(b**2))
-			+ ((3*np.sqrt(3)*np.sqrt(27*(kc**4)*(b**2)*(c**4)-4*(kc**6)
-			* (c**3)))/(b**3))**(1/3)))+(((-((2*kc**6)/(b**6))+((18*(kc**4)*c)
-			/ (b**4))-((27*(kc**2)*(c**2))/(b**2))+((3*np.sqrt(3)
-			* np.sqrt(27*(kc**4)*(b**2)*(c**4)-4*(kc**6)*(c**3)))
-			/ (b**3)))**(1/3)))/(32**(1/3))	
+			calculate_deflection_contact_part(
+				b,
+				kc,
+				c
+			)
 		)
-		
-	return piezo, deflection
+
+def calculate_piezo_value(
+	z0: float,
+	dz: float,
+	index: int
+) -> float:
+	""""""
+	return z0 + dz * index
+
+def calculate_deflection_approach_part(
+	hamaker: float,
+	radius: float, 
+	kc: float, 
+	currentPiezoValue: float,
+	lastDeflectionValue: float
+) -> float:
+	""""""
+	return (
+		- (hamaker * radius)
+		/ (6 * ((lastDeflectionValue - currentPiezoValue) ** 2)) * (1 / kc)
+	)
+
+def calculate_deflection_attraction_part(
+	currentPiezoValue: float
+) -> float:
+	""""""
+	return currentPiezoValue
+
+def calculate_deflection_contact_part(
+	b: float,
+	kc: float,
+	c: float
+) -> float:
+	""""""
+	return (
+		- (kc**2-3*b**2*c)/(3*b**2)-(2**(1/3)*(((6*kc**2*c)
+		/ (b**2))-kc**4/b**4))/(3*(-((2*kc**6)/(b**6))
+		+ ((18*kc**4*c)/(b**4))-((27*kc**2*c**2)*(b**2))
+		+ ((3*np.sqrt(3)*np.sqrt(27*(kc**4)*(b**2)*(c**4)-4*(kc**6)
+		* (c**3)))/(b**3))**(1/3)))+(((-((2*kc**6)/(b**6))+((18*(kc**4)*c)
+		/ (b**4))-((27*(kc**2)*(c**2))/(b**2))+((3*np.sqrt(3)
+		* np.sqrt(27*(kc**4)*(b**2)*(c**4)-4*(kc**6)*(c**3)))
+		/ (b**3)))**(1/3)))/(32**(1/3))
+	)
 
 def multiply_and_apply_noise_to_ideal_curve(
 	shiftedDeflection: List, 
@@ -181,10 +308,14 @@ def apply_noise_to_curve(
 		parameterForcevolume(nametupel): contains numberOfCurves, noise, virtualDeflection and topography
 
 	Returns:
-		one noisy curve
+		(np.ndarray): .
 	"""
 
-	noiseValues = np.random.normal(0, parameterForcevolume.noise, size=len(shiftedDeflection))
+	try:
+		noiseValues = np.random.normal(0, parameterForcevolume.noise, size=len(shiftedDeflection))
+	except ValueError:
+		raise ValueError("Noise value must be positive.")
+
 	return shiftedDeflection + noiseValues
 
 
@@ -207,7 +338,6 @@ def arrange_curves_in_forcevolume(
 	Returns:
 		forceVolume(np.ndarray): .
 	"""
-
 	forceVolume = [
 		[shiftedPiezo, oneNoisyCurve]
 		for oneNoisyCurve in noisyCurves
