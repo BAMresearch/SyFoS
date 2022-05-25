@@ -19,7 +19,7 @@ def export_data(
 	"""
 	update_progressbar(start=True, newLabel="Preparing data")
 	
-	dataFrameForceVolume = create_data_frame(
+	dataFrameForceVolume = create_data_frame_force_volume(
 		dataForceVolume["data"]
 	)
 	dataFrameMetaData = create_data_frame_meta_data(
@@ -45,13 +45,13 @@ def export_data(
 
 	update_progressbar(stop=True)
 
-def create_data_frame(
+def create_data_frame_force_volume(
 	dataForceVolumeCurves: List
 ) -> pd.DataFrame:
 	"""
 
 	Parameters:
-		dataForceVolumeCurves(list): .
+		dataForceVolumeCurves(list): Contains the data of the force Volume.
 
 	Returns:
 		dataFrameForceVolume(pd.dataframe): .
@@ -120,13 +120,13 @@ def export_to_csv(
 	"""
 
 	Parameters:
-		dataFrameForceVolume(pd.dataframe):
-		pathOutputFile(str):
+		dataFrameForceVolume(pd.dataframe): 
+		pathOutputFile(str): Path of the output file.
 	"""
-	pathOutputFileCsv = pathOutputFile + ".csv"
+	pathOutputFileAsCsv = pathOutputFile + ".csv"
 
 	dataFrameForceVolume.to_csv(
-		pathOutputFileCsv,
+		pathOutputFileAsCsv,
 	)
 
 def export_to_excel(
@@ -139,11 +139,11 @@ def export_to_excel(
 	Parameters:
 		dataFrameForceVolume(pd.dataframe):
 		dataFrameMetaData(pd.dataframe):
-		pathOutputFile(str):
+		pathOutputFile(str): Path of the output file.
 	"""
-	pathOutputFileExcel = pathOutputFile + ".xlsx"
+	pathOutputFileAsExcel = pathOutputFile + ".xlsx"
 
-	with pd.ExcelWriter(pathOutputFileExcel) as writer:  
+	with pd.ExcelWriter(pathOutputFileAsExcel) as writer:  
 		dataFrameForceVolume.to_excel(
 			writer, 
 			sheet_name="Data Force Volume"

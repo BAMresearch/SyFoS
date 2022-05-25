@@ -29,12 +29,18 @@ class MainWindow(ttk.Frame):
 
 		self.forceVolumes = {}
 
+		self._init_style_parameters()
+		self._init_parameter_variables()
+		self._create_main_window()
+
+	def _init_style_parameters(self) -> None:
+		"""Initialise all style related parameters."""
 		self.colorActiveCurves = "#00c3ff"
 		self.colorActiveIdealCurve = "#fc0008"
 		self.colorInactiveCurves = "#b0b0b0"
 
-		self._init_parameter_variables()
-		self._create_main_window()
+		style = ttk.Style()
+		style.configure("Subscript.TLabel", font=("Helvetica", 14, "italic"))
 
 	def _init_parameter_variables(self) -> None:
 		"""Initialise all parameter variables."""
@@ -142,7 +148,11 @@ class MainWindow(ttk.Frame):
 		labelCategoryForceVolume.grid(row=0, column=4, columnspan=2, sticky=W, pady=(0, 5))
 
 		# Second row
-		labelETip = ttk.Label(frameParameters, text="ETip:")
+		labelETip = ttk.Label(
+			frameParameters, 
+			text="e\u209C\u1d62\u209a", 
+			style="Subscript.TLabel"
+		)
 		labelETip.grid(row=1, column=0, sticky=W)
 
 		entryETip = ttk.Entry(
@@ -467,7 +477,7 @@ class MainWindow(ttk.Frame):
 				"Failed to generate a synthetic force volume. Please change the input parameters."
 			)
 
-		self._add_force_volume(
+		self._display_force_volume(
 			syntheticForcevolume,
 			parameterMaterial.Etot,
 			parameterMaterial.jtc,
@@ -488,7 +498,7 @@ class MainWindow(ttk.Frame):
 				raise ValueError("Invalid input parameters!")
 
 	def _reset_parameters(self) -> None:
-		"""Reset all input parameter."""
+		"""Reset all input parameters."""
 		for parameter in self.parameters:
 			parameter.set("")
 
@@ -496,12 +506,12 @@ class MainWindow(ttk.Frame):
 		self.defaultMeasurement.set("Default Measurement")
 
 	def _get_parameters(self) -> Tuple:
-		"""Get the input parameters and combine them into namedtuples.
+		"""Combine all input parameters into namedtuples.
 		
 		Returns:
-			parameterMaterial(namedtuple): Combines the material parameters.
-			parameterMeasurement(namedtuple): Combines the measurment parameters.
-			parameterForcevolume(namedtuple): Combines the force volume parameters.
+			parameterMaterial(namedtuple): Contains every material parameter.
+			parameterMeasurement(namedtuple): Contains every measurment parameter.
+			parameterForcevolume(namedtuple): Contains every force volume parameter.
 		"""
 		ParameterMaterial = namedtuple(
 			"ParameterMaterial",
@@ -572,7 +582,7 @@ class MainWindow(ttk.Frame):
 
 		return parameterMaterial, parameterMeasurement, parameterForcevolume
 
-	def _add_force_volume(
+	def _display_force_volume(
 		self, 
 		syntheticForcevolume: List, 
 		etot: float, 
@@ -585,7 +595,7 @@ class MainWindow(ttk.Frame):
 			syntheticForcevolume(list): .
 			etot(float): .
 			jtc(float): .
-			hamaler(float): .
+			hamaker(float): The .
 		"""
 		lineCollection = self._create_line_collection(syntheticForcevolume)
 
@@ -629,13 +639,13 @@ class MainWindow(ttk.Frame):
 	def _create_line(
 		line: List, 
 	) -> Line2D:
-		""".
+		"""Creates a displayable line from x and y curve data.
 
 		Parameters:
-			line(List):
+			line(List): Contains the x and y values of the line.
 
 		Returns:
-			line(Line2D):
+			line(Line2D): A line that can be added to a plot.
 		"""
 		return Line2D(
 			line[0], 
@@ -647,10 +657,11 @@ class MainWindow(ttk.Frame):
 		self, 
 		lineCollection: List[Line2D]
 	) -> None:
-		"""
+		"""Add a the lines of a synthetic vorce volume to the plot
+		   and adjust the view limits.
 
 		Parameters:
-			lineCollection(list)
+			lineCollection(list): Contains all lines of the synthetic force volume.
 		"""
 		ax = self._get_axes()
 
