@@ -103,15 +103,15 @@ class MainWindow(ttk.Frame):
 		)
 		frameParameters.pack(fill=X, expand=YES, padx=15, pady=15)
 
-		# First row
+		# Probe section
 		labelCategoryMaterial = ttk.Label(
 			frameParameters, 
-			text="Material", 
+			text="Probe", 
 			font="bold"
 		)
 		labelCategoryMaterial.grid(row=0, column=0, sticky=W, pady=(0, 5))
 
-		self.defaultMaterial = tk.StringVar(self.root, value="Default Material")
+		self.defaultMaterial = tk.StringVar(self.root, value="Material")
 		dropdownDefaultMaterial = ttk.OptionMenu(
 			frameParameters, 
 			self.defaultMaterial, 
@@ -122,38 +122,34 @@ class MainWindow(ttk.Frame):
 		)
 		dropdownDefaultMaterial.grid(row=0, column=1, sticky=W, pady=(0, 5))
 
-		labelCategoryMeasurement = ttk.Label(
-			frameParameters, 
-			text="Measurement", 
-			font="bold"
-		)
-		labelCategoryMeasurement.grid(row=0, column=2, sticky=W, pady=(0, 5))
+		labelKc = ttk.Label(frameParameters, text="kc:")
+		labelKc.grid(row=1, column=0, sticky=W)
 
-		self.defaultMeasurement = tk.StringVar(self.root, value="Default Measurement")
-		dropdownDefaultMeasurement = ttk.OptionMenu(
+		entryKc = ttk.Entry(
 			frameParameters, 
-			self.defaultMeasurement, 
-			"",
-			*dpv.defaultMaterials.keys(), 
-			command=self._set_default_measurement_parameters,
-			bootstyle=""
+			textvariable=self.kc, 
+			validate="focusout", 
+			validatecommand=self._set_material_label
 		)
-		dropdownDefaultMeasurement.grid(row=0, column=3, sticky=W, pady=(0, 5))
+		entryKc.grid(row=1, column=1)
 
-		labelCategoryForceVolume = ttk.Label(
+		labelRadius = ttk.Label(frameParameters, text="Radius:")
+		labelRadius.grid(row=2, column=0, sticky=W)
+
+		entryRadius = ttk.Entry(
 			frameParameters, 
-			text="Force Volume", 
-			font="bold"
+			textvariable=self.radius, 
+			validate="focusout", 
+			validatecommand=self._set_material_label
 		)
-		labelCategoryForceVolume.grid(row=0, column=4, columnspan=2, sticky=W, pady=(0, 5))
+		entryRadius.grid(row=2, column=1)
 
-		# Second row
 		labelETip = ttk.Label(
 			frameParameters, 
 			text="e\u209C\u1d62\u209a", 
 			style="Subscript.TLabel"
 		)
-		labelETip.grid(row=1, column=0, sticky=W)
+		labelETip.grid(row=3, column=0, sticky=W)
 
 		entryETip = ttk.Entry(
 			frameParameters, 
@@ -161,7 +157,48 @@ class MainWindow(ttk.Frame):
 			validate="focusout", 
 			validatecommand=self._set_material_label
 		)
-		entryETip.grid(row=1, column=1)
+		entryETip.grid(row=3, column=1)
+
+		labelPossionRatioTip = ttk.Label(frameParameters, text="Possion Ratio:")
+		labelPossionRatioTip.grid(row=4, column=0, sticky=W)
+
+		entryPossionRatioTip = ttk.Entry(
+			frameParameters, 
+			textvariable=self.possionRatioTip, 
+			validate="focusout", 
+			validatecommand=self._set_material_label
+		)
+		entryPossionRatioTip.grid(row=4, column=1)
+
+		labelHamakerTip = ttk.Label(frameParameters, text="Hamaker:")
+		labelHamakerTip.grid(row=5, column=0, sticky=W)
+
+		entryHamakerTip = ttk.Entry(
+			frameParameters, 
+			textvariable=self.hamakerTip, 
+			validate="focusout", 
+			validatecommand=self._set_material_label
+		)
+		entryHamakerTip.grid(row=5, column=1)
+
+		# Sample section
+		labelCategoryMeasurement = ttk.Label(
+			frameParameters, 
+			text="Sample", 
+			font="bold"
+		)
+		labelCategoryMeasurement.grid(row=0, column=2, sticky=W, pady=(0, 5))
+
+		self.defaultMeasurement = tk.StringVar(self.root, value="Material")
+		dropdownDefaultMeasurement = ttk.OptionMenu(
+			frameParameters, 
+			self.defaultMeasurement, 
+			"",
+			*dpv.defaultMeasurements.keys(), 
+			command=self._set_default_measurement_parameters,
+			bootstyle=""
+		)
+		dropdownDefaultMeasurement.grid(row=0, column=3, sticky=W, pady=(0, 5))
 
 		labelESample = ttk.Label(frameParameters, text="ESample:")
 		labelESample.grid(row=1, column=2, sticky=W)
@@ -174,27 +211,6 @@ class MainWindow(ttk.Frame):
 		)
 		entryESample.grid(row=1, column=3)
 
-		labelNumberOfCurves = ttk.Label(frameParameters, text="Number of Curves:")
-		labelNumberOfCurves.grid(row=1, column=4, sticky=W)
-
-		entryNumberOfCurves = ttk.Entry(
-			frameParameters, 
-			textvariable=self.numberOfCurves
-		)
-		entryNumberOfCurves.grid(row=1, column=5)
-
-		# Third row
-		labelPossionRatioTip = ttk.Label(frameParameters, text="Possion Ratio:")
-		labelPossionRatioTip.grid(row=2, column=0, sticky=W)
-
-		entryPossionRatioTip = ttk.Entry(
-			frameParameters, 
-			textvariable=self.possionRatioTip, 
-			validate="focusout", 
-			validatecommand=self._set_material_label
-		)
-		entryPossionRatioTip.grid(row=2, column=1)
-
 		labelPossionRatioSample = ttk.Label(frameParameters, text="Possion Ratio:")
 		labelPossionRatioSample.grid(row=2, column=2, sticky=W)
 
@@ -205,27 +221,6 @@ class MainWindow(ttk.Frame):
 			validatecommand=self._set_measurement_label
 		)
 		entryPossionRatioSample.grid(row=2, column=3)
-
-		labelNoise = ttk.Label(frameParameters, text="Noise:")
-		labelNoise.grid(row=2, column=4, sticky=W)
-
-		entryNoise = ttk.Entry(
-			frameParameters, 
-			textvariable=self.noise
-		)
-		entryNoise.grid(row=2, column=5)
-
-		# Fourth row
-		labelHamakerTip = ttk.Label(frameParameters, text="Hamaker:")
-		labelHamakerTip.grid(row=3, column=0, sticky=W)
-
-		entryHamakerTip = ttk.Entry(
-			frameParameters, 
-			textvariable=self.hamakerTip, 
-			validate="focusout", 
-			validatecommand=self._set_material_label
-		)
-		entryHamakerTip.grid(row=3, column=1)
 
 		labelHamakerSample = ttk.Label(frameParameters, text="Hamaker:")
 		labelHamakerSample.grid(row=3, column=2, sticky=W)
@@ -238,29 +233,25 @@ class MainWindow(ttk.Frame):
 		)
 		entryHamakerSample.grid(row=3, column=3)
 
-		labelVirtualDeflection = ttk.Label(frameParameters, text="Virtual Deflection:")
-		labelVirtualDeflection.grid(row=3, column=4, sticky=W)
-
-		entryVirtualDeflection = ttk.Entry(
+		#Experimental section
+		labelCategoryForceVolume = ttk.Label(
 			frameParameters, 
-			textvariable=self.virtualDeflection
+			text="Force Spectroscopy Experiment", 
+			font="bold"
 		)
-		entryVirtualDeflection.grid(row=3, column=5)
+		labelCategoryForceVolume.grid(row=0, column=4, columnspan=2, sticky=W, pady=(0, 5))
 
-		# Fifth row
-		labelKc = ttk.Label(frameParameters, text="kc:")
-		labelKc.grid(row=4, column=0, sticky=W)
+		labelNumberOfCurves = ttk.Label(frameParameters, text="Number of Curves:")
+		labelNumberOfCurves.grid(row=1, column=4, sticky=W)
 
-		entryKc = ttk.Entry(
+		entryNumberOfCurves = ttk.Entry(
 			frameParameters, 
-			textvariable=self.kc, 
-			validate="focusout", 
-			validatecommand=self._set_material_label
+			textvariable=self.numberOfCurves
 		)
-		entryKc.grid(row=4, column=1)
-		
+		entryNumberOfCurves.grid(row=1, column=5)
+
 		labelMaximumDeflection = ttk.Label(frameParameters, text="Maximum Deflection:")
-		labelMaximumDeflection.grid(row=4, column=2, sticky=W)
+		labelMaximumDeflection.grid(row=2, column=4, sticky=W)
 
 		entryMaximumDeflection = ttk.Entry(
 			frameParameters, 
@@ -268,31 +259,10 @@ class MainWindow(ttk.Frame):
 			validate="focusout", 
 			validatecommand=self._set_measurement_label
 		)
-		entryMaximumDeflection.grid(row=4, column=3)
-
-		labelTopography = ttk.Label(frameParameters, text="Topography:")
-		labelTopography.grid(row=4, column=4, sticky=W)
-
-		entryTopography = ttk.Entry(
-			frameParameters, 
-			textvariable=self.topography
-		)
-		entryTopography.grid(row=4, column=5)
-
-		# Sixth row
-		labelRadius = ttk.Label(frameParameters, text="Radius:")
-		labelRadius.grid(row=5, column=0, sticky=W)
-
-		entryRadius = ttk.Entry(
-			frameParameters, 
-			textvariable=self.radius, 
-			validate="focusout", 
-			validatecommand=self._set_material_label
-		)
-		entryRadius.grid(row=5, column=1)
+		entryMaximumDeflection.grid(row=2, column=5)
 
 		labelZ0 = ttk.Label(frameParameters, text="z0:")
-		labelZ0.grid(row=5, column=2, sticky=W)
+		labelZ0.grid(row=3, column=4, sticky=W)
 
 		entryZ0 = ttk.Entry(
 			frameParameters, 
@@ -300,11 +270,10 @@ class MainWindow(ttk.Frame):
 			validate="focusout", 
 			validatecommand=self._set_measurement_label
 		)
-		entryZ0.grid(row=5, column=3)
+		entryZ0.grid(row=3, column=5)
 
-		# Seventh row
 		labelDZ = ttk.Label(frameParameters, text="dZ:")
-		labelDZ.grid(row=6, column=2, sticky=W)
+		labelDZ.grid(row=4, column=4, sticky=W)
 
 		entryDZ = ttk.Entry(
 			frameParameters, 
@@ -312,7 +281,34 @@ class MainWindow(ttk.Frame):
 			validate="focusout", 
 			validatecommand=self._set_measurement_label
 		)
-		entryDZ.grid(row=6, column=3)	
+		entryDZ.grid(row=4, column=5)	
+
+		labelNoise = ttk.Label(frameParameters, text="Noise:")
+		labelNoise.grid(row=5, column=4, sticky=W)
+
+		entryNoise = ttk.Entry(
+			frameParameters, 
+			textvariable=self.noise
+		)
+		entryNoise.grid(row=5, column=5)
+
+		labelVirtualDeflection = ttk.Label(frameParameters, text="Virtual Deflection:")
+		labelVirtualDeflection.grid(row=6, column=4, sticky=W)
+
+		entryVirtualDeflection = ttk.Entry(
+			frameParameters, 
+			textvariable=self.virtualDeflection
+		)
+		entryVirtualDeflection.grid(row=6, column=5)
+
+		labelTopography = ttk.Label(frameParameters, text="Topography:")
+		labelTopography.grid(row=7, column=4, sticky=W)
+
+		entryTopography = ttk.Entry(
+			frameParameters, 
+			textvariable=self.topography
+		)
+		entryTopography.grid(row=7, column=5)
 
 		frameParameters.grid_columnconfigure(0, weight=1, pad=3)
 		frameParameters.grid_columnconfigure(1, weight=1, pad=3)
