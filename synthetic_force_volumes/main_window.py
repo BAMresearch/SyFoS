@@ -13,7 +13,7 @@ from ttkbootstrap.constants import *
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.lines import Line2D
 
 import default_parameter_values as dpv
@@ -134,7 +134,7 @@ class MainWindow(ttk.Frame):
 			frameParameters, 
 			self.defaultMeasurement, 
 			"",
-			*dpv.defaultMeasurements.keys(), 
+			*dpv.defaultMaterials.keys(), 
 			command=self._set_default_measurement_parameters,
 			bootstyle=""
 		)
@@ -440,12 +440,12 @@ class MainWindow(ttk.Frame):
 		Parameter:
 			defaultMeasurement(str): Name of the chosen default measurement settings.
 		"""
-		self.eSample.set(dpv.defaultMeasurements[defaultMeasurement]["e"])
-		self.possionRatioSample.set(dpv.defaultMeasurements[defaultMeasurement]["possionRatio"])
-		self.hamakerSample.set(dpv.defaultMeasurements[defaultMeasurement]["hamaker"])
-		self.maximumDeflection.set(dpv.defaultMeasurements[defaultMeasurement]["maximumDeflection"])
-		self.z0.set(dpv.defaultMeasurements[defaultMeasurement]["z0"])
-		self.dZ.set(dpv.defaultMeasurements[defaultMeasurement]["dZ"])
+		self.eSample.set(dpv.defaultMaterials[defaultMeasurement]["e"])
+		self.possionRatioSample.set(dpv.defaultMaterials[defaultMeasurement]["possionRatio"])
+		self.hamakerSample.set(dpv.defaultMaterials[defaultMeasurement]["hamaker"])
+		self.maximumDeflection.set(dpv.defaultMaterials[defaultMeasurement]["maximumDeflection"])
+		self.z0.set(dpv.defaultMaterials[defaultMeasurement]["z0"])
+		self.dZ.set(dpv.defaultMaterials[defaultMeasurement]["dZ"])
 
 	def _create_force_volume(self) -> tk.messagebox:
 		"""Create a synthetic force volume with the chosen parameters and display it.
