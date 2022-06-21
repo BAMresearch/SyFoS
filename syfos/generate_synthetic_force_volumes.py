@@ -24,17 +24,17 @@ def calculate_jtc(
 	)
 
 def calculate_etot(
-	possionRatioTip: float, 
+	poissonRatioTip: float, 
 	eTip: float, 
-	possionRatioSample: float,
+	poissonRatioSample: float,
 	eSample: float,
 ) -> float:
 	"""Calculate etot as
 
 	Parameters:
-		possionRatioTip(float): .
+		poissonRatioTip(float): .
 		eTip(float): .
-		possionRatioSample(float): .
+		poissonRatioSample(float): .
 		eSample(float): .
 
 	Returns:
@@ -42,7 +42,7 @@ def calculate_etot(
 	"""
 	return (
 		4 
-		/ (3 * ((1 - possionRatioTip**2) / eTip + (1 - possionRatioSample**2) / eSample))
+		/ (3 * ((1 - poissonRatioTip**2) / eTip + (1 - poissonRatioSample**2) / eSample))
 	)
 
 def calculate_hamaker(
@@ -119,7 +119,7 @@ def create_ideal_curve(
 		deflection(list): . 
 	"""
 	deflection = [0]
-	piezo = [parameterMeasurement.Z0]
+	piezo = [parameterMeasurement.initialDistance]
 	index = 0
 	
 	index = create_ideal_curve_approach_part(
@@ -163,8 +163,8 @@ def create_ideal_curve_approach_part(
 		index += 1
 		piezo.append(
 			calculate_piezo_value(
-				parameterMeasurement.Z0,
-				parameterMeasurement.dZ,
+				parameterMeasurement.initialDistance,
+				parameterMeasurement.distanceInterval,
 				index
 			)
 		)
@@ -191,8 +191,8 @@ def create_ideal_curve_attraction_part(
 		index += 1
 		piezo.append(
 			calculate_piezo_value(
-				parameterMeasurement.Z0,
-				parameterMeasurement.dZ,
+				parameterMeasurement.initialDistance,
+				parameterMeasurement.distanceInterval,
 				index
 			)
 		)
@@ -219,8 +219,8 @@ def create_ideal_curve_contact_part(
 		index += 1
 		piezo.append(
 			calculate_piezo_value(
-				parameterMeasurement.Z0,
-				parameterMeasurement.dZ,
+				parameterMeasurement.initialDistance,
+				parameterMeasurement.distanceInterval,
 				index
 			)
 		)
@@ -234,12 +234,12 @@ def create_ideal_curve_contact_part(
 		)
 
 def calculate_piezo_value(
-	z0: float,
-	dz: float,
+	initialDistance: float,
+	distanceInterval: float,
 	index: int
 ) -> float:
 	""""""
-	return z0 + dz * index
+	return initialDistance + distanceInterval * index
 
 def calculate_deflection_approach_part(
 	hamaker: float,

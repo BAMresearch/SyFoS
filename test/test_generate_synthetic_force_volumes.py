@@ -3,9 +3,13 @@ from collections import namedtuple
 import pytest
 import numpy as np
 
-import synthetic_force_volumes.generate_synthetic_force_volumes as gsfv
+import syfos.generate_synthetic_force_volumes as gsfv
 
-def get_parameters_sampleMat_tipMat():
+def test_arrange_curves_in_forcevolume():
+	""""""
+	pass
+
+def get_simple_test_parameters():
 	""""""
 	ParameterMaterial = namedtuple(
 		"ParameterMaterial",
@@ -56,13 +60,15 @@ def get_parameters_sampleMat_tipMat():
 
 	return parameterMaterial, parameterMeasurement, parameterForcevolume
 
-def test_arrange_curves_in_forcevolume():
+def extraxt_parameters(forcevolume):
 	""""""
 	pass
 
 def test_create_synthetic_force_volume():
 	""""""
-	parameterMaterial, parameterMeasurement, parameterForcevolume = get_parameters_sampleMat_tipMat()
+	pass
+	"""
+	parameterMaterial, parameterMeasurement, parameterForcevolume = get_simple_test_parameters()
 
 	syntheticForcevolume = gsfv.create_synthetic_force_volume(
 		parameterMaterial, 
@@ -70,4 +76,12 @@ def test_create_synthetic_force_volume():
 		parameterForcevolume
 	)
 
-	#calculatedParameters = 
+	extractedParameters = extraxt_parameters(syntheticForcevolume)
+
+	np.testing.assert_allclose(
+		[parameterMaterial.Hamaker, parameterMaterial.Etot, parameterMaterial.jtc], 
+		[extractedParameters.Hamaker, extractedParameters.Etot, extractedParameters.jtc], 
+		rtol=1e-5, 
+		atol=0
+	)
+	"""

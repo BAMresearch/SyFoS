@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-import synthetic_force_volumes.generate_synthetic_force_volumes as gsfv
+import syfos.generate_synthetic_force_volumes as gsfv
 
 def test_calculate_jtc():
 	"""."""

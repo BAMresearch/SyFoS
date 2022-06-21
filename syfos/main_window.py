@@ -393,7 +393,7 @@ class MainWindow(ttk.Frame):
 		buttonSaveForceVolume = ttk.Button(
 			frameControl,
 			text="Save Force Volume",
-			command=self._save_force_volume,
+			command=self._export_force_volume,
 			width=20
 		)
 		buttonSaveForceVolume.pack(pady=(20, 0))
@@ -515,8 +515,8 @@ class MainWindow(ttk.Frame):
 		ParameterMeasurement = namedtuple(
 			"ParameterMeasurement",
 			[
-				"Z0",
-				"dZ",
+				"initialDistance",
+				"distanceInterval",
 				"maximumdeflection"
 			]
 		)
@@ -557,8 +557,8 @@ class MainWindow(ttk.Frame):
 		)
 
 		parameterMeasurement = ParameterMeasurement(
-			Z0=float(self.initialDistance.get()),
-			dZ=float(self.distanceInterval.get()),
+			initialDistance=float(self.initialDistance.get()),
+			distanceInterval=float(self.distanceInterval.get()),
 			maximumdeflection=float(self.maximumDeflection.get()),	
 		)
 
@@ -611,13 +611,13 @@ class MainWindow(ttk.Frame):
 		self, 
 		syntheticForcevolume: List
 	) -> List[Line2D]:
-		"""
+		"""Create a list of displayable lines from the 
 
 		Parameters:
 			syntheticForcevolume(list): .
 
 		Returns:
-			lineCollection(list): .
+			lineCollection(list): List that contains .
 		"""
 		return [
 			self._create_line(line)
@@ -626,19 +626,19 @@ class MainWindow(ttk.Frame):
 
 	@staticmethod
 	def _create_line(
-		line: List, 
+		lineData: List, 
 	) -> Line2D:
-		"""Creates a displayable line from x and y curve data.
+		"""Creates a displayable line from x and y line data.
 
 		Parameters:
-			line(List): Contains the x and y values of the line.
+			lineData(List): Contains the x and y values of the line.
 
 		Returns:
 			line(Line2D): A line that can be added to a plot.
 		"""
 		return Line2D(
-			line[0], 
-			line[1], 
+			lineData[0], 
+			lineData[1], 
 			linewidth=0.5, 
 		)
 
@@ -716,11 +716,14 @@ class MainWindow(ttk.Frame):
 		ax.relim()
 		ax.autoscale_view()
 
-	def _set_active_force_volume(self, forceVolume: str="") -> None:
-		"""
+	def _set_active_force_volume(
+		self, 
+		forceVolume: str=""
+	) -> None:
+		""".
 
 		Parameters:
-			forceVolume
+			forceVolume(str): .
 		"""
 		self._set_calculated_parameters(
 			self._round_parameter_presentation(
@@ -751,10 +754,10 @@ class MainWindow(ttk.Frame):
 		"""
 
 		Parameters:
-			parameterValue(float): .
+			parameterValue(float): Calculated parameter value.
 
 		Returns:
-			roundedParameterRepresentation(str): .
+			roundedParameterRepresentation(str): Rounded parameter value in specific format.
 		"""
 		return '{:.3e}'.format(parameterValue)
 
@@ -764,12 +767,12 @@ class MainWindow(ttk.Frame):
 		jtc: str = "",
 		hamaker: str = ""
 	) -> None:
-		"""
+		"""Set the calculated parameters of the active force volume.
 
 		Parameters:
-			etot(str): .
-			jtc(str): .
-			hamaker(str): .
+			etot(str): Calculated and rounded etot value.
+			jtc(str): Calculated and rounded jtc value.
+			hamaker(str): Calculated and rounded hamaker value.
 		"""
 		self.etot.set(etot)
 		self.jtc.set(jtc)
@@ -779,10 +782,10 @@ class MainWindow(ttk.Frame):
 		self, 
 		lineCollection: List[Line2D]
 	) -> None: 
-		""".
+		"""Change the color and z order of the active force volume.
 
 		Parameters:
-			lineCollection(list): .
+			lineCollection(list): Contains all lines of the active force volume.
 		"""
 		for line in lineCollection[:2]:
 			line.set_color(self.colorActiveIdealCurve)
@@ -798,10 +801,10 @@ class MainWindow(ttk.Frame):
 		self, 
 		lineCollection: List[Line2D]
 	) -> None:
-		""".
+		"""Change the color and z order of an inactive force volume.
 
 		Parameters:
-			lineCollection(list): .
+			lineCollection(list): Contains all lines of the inactive force volume.
 		"""
 		for line in lineCollection:
 			line.set_color(self.colorInactiveCurves)
@@ -809,8 +812,8 @@ class MainWindow(ttk.Frame):
 
 		self.holderFigureLinePlot.draw()
 
-	def _save_force_volume(self) -> None:
-		""""""
+	def _export_force_volume(self) -> None:
+		"""Open the export window if a force volume is selected."""
 		if self.activeForceVolume.get() not in self.forceVolumes:
 			return messagebox.showerror(
 				"Error", 
