@@ -16,8 +16,8 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.lines import Line2D
 
-import default_parameter_values as dpv
-import generate_synthetic_force_volumes as gsfv
+import default_materials as dm
+import generate_data as gen_data
 from toolbar_line_plot import ToolbarLinePlot
 from export_window import ExportWindow
 
@@ -25,7 +25,7 @@ class MainWindow(ttk.Frame):
 	"""A GUI to create and compare synthetic force volumes."""
 	def __init__(self, root):
 		self.root = root
-		self.root.title("Create Synthetic Force Volumes")
+		self.root.title("SyFoS")
 
 		self.forceVolumes = {}
 
@@ -35,12 +35,11 @@ class MainWindow(ttk.Frame):
 
 	def _init_style_parameters(self) -> None:
 		"""Initialise all style related parameters."""
+		self.colorPlot = "#e6f7f4"
+
 		self.colorActiveCurves = "#00c3ff"
 		self.colorActiveIdealCurve = "#fc0008"
 		self.colorInactiveCurves = "#b0b0b0"
-
-		style = ttk.Style()
-		style.configure("Subscript.TLabel", font=("Helvetica", 14, "italic"))
 
 	def _init_parameter_variables(self) -> None:
 		"""Initialise all parameter variables."""
@@ -101,7 +100,7 @@ class MainWindow(ttk.Frame):
 			text="Parameters", 
 			padding=15
 		)
-		frameParameters.pack(fill=X, expand=YES, padx=15, pady=15)
+		frameParameters.pack(fill=X, expand=YES, padx=15, pady=(15, 0))
 
 		# Probe section
 		labelProbe = ttk.Label(
@@ -116,11 +115,11 @@ class MainWindow(ttk.Frame):
 			frameParameters, 
 			self.defaultProbe, 
 			"",
-			*dpv.defaultMaterials.keys(), 
+			*dm.defaultMaterials.keys(), 
 			command=self._set_default_probe_parameters,
 			bootstyle=""
 		)
-		dropdownProbe.grid(row=0, column=1, sticky=W, pady=(0, 5))
+		dropdownProbe.grid(row=0, column=1, sticky=W, padx=(7, 0), pady=(0, 5))
 
 		labelKc = ttk.Label(frameParameters, text="kc:")
 		labelKc.grid(row=1, column=0, sticky=W)
@@ -143,11 +142,21 @@ class MainWindow(ttk.Frame):
 			validatecommand=self._set_probe_label
 		)
 		entryRadius.grid(row=2, column=1)
-
-		labelEProbe = ttk.Label(
+		
+		labelEProbe = tk.Text(
 			frameParameters, 
-			text="e\u209A\u1D63\u2092\u1D47\u2091", 
-			style="Subscript.TLabel"
+			width=10, height=1,
+		)
+		labelEProbe.tag_configure(
+			"subscript", 
+			offset=-2, 
+			font=("Helvetica", 8, "italic")
+		)
+		labelEProbe.insert(INSERT, "e", "", "probe", "subscript")
+		labelEProbe.config(
+			state="disabled",
+			borderwidth=0,
+			highlightthickness=0
 		)
 		labelEProbe.grid(row=3, column=0, sticky=W)
 
@@ -194,16 +203,26 @@ class MainWindow(ttk.Frame):
 			frameParameters, 
 			self.defaultSample, 
 			"",
-			*dpv.defaultMaterials.keys(), 
+			*dm.defaultMaterials.keys(), 
 			command=self._set_default_sample_parameters,
 			bootstyle=""
 		)
-		dropdownSample.grid(row=0, column=3, sticky=W, pady=(0, 5))
+		dropdownSample.grid(row=0, column=3, sticky=W, padx=(7, 0), pady=(0, 5))
 
-		labelESample = ttk.Label(
+		labelESample = tk.Text(
 			frameParameters, 
-			text="e\u209B\u2090\u2098\u209A\u2097\u2091", 
-			style="Subscript.TLabel"
+			width=10, height=1,
+		)
+		labelESample.tag_configure(
+			"subscript", 
+			offset=-2, 
+			font=("Helvetica", 8, "italic")
+		)
+		labelESample.insert(INSERT, "e", "", "sample", "subscript")
+		labelESample.config(
+			state="disabled",
+			borderwidth=0,
+			highlightthickness=0
 		)
 		labelESample.grid(row=1, column=2, sticky=W)
 
@@ -333,26 +352,41 @@ class MainWindow(ttk.Frame):
 
 		labelEtot = ttk.Label(rowVariables, text="etot:")
 		labelEtot.pack(side=LEFT, fill=X, expand=YES)
-
-		entryEtot = ttk.Entry(rowVariables, textvariable=self.etot, state="readonly")
+		
+		entryEtot = ttk.Entry(
+			rowVariables, 
+			textvariable=self.etot, 
+			state="readonly", 
+			bootstyle="light"
+		)
 		entryEtot.pack(side=LEFT, fill=X, expand=YES, padx=(0, 20))
 
 		labelJtc = ttk.Label(rowVariables, text="jtc:")
 		labelJtc.pack(side=LEFT, fill=X, expand=YES)
 
-		entryJtc = ttk.Entry(rowVariables, textvariable=self.jtc, state="readonly")
+		entryJtc = ttk.Entry(
+			rowVariables, 
+			textvariable=self.jtc, 
+			state="readonly", 
+			bootstyle="light"
+		)
 		entryJtc.pack(side=LEFT, fill=X, padx=(0, 15), expand=YES)
 
 		labelHamaker = ttk.Label(rowVariables, text="hamaker:")
 		labelHamaker.pack(side=LEFT, fill=X, expand=YES)
 
-		entryHamaker = ttk.Entry(rowVariables, textvariable=self.hamaker, state="readonly")
+		entryHamaker = ttk.Entry(
+			rowVariables, 
+			textvariable=self.hamaker, 
+			state="readonly", 
+			bootstyle="light"
+		)
 		entryHamaker.pack(side=LEFT, fill=X, padx=(0, 15), expand=YES)
 
 		rowLinePlot = ttk.Frame(frameLinePlot)
 		rowLinePlot.pack(fill=X, expand=YES)
 
-		figureLinePlot = Figure(figsize=(6, 5), facecolor=("#d3d3d3"))
+		figureLinePlot = Figure(figsize=(6, 5), facecolor=(self.colorPlot))
 		self.holderFigureLinePlot = FigureCanvasTkAgg(figureLinePlot, rowLinePlot)
 		toolbarLinePlot = ToolbarLinePlot(
 			self.holderFigureLinePlot, 
@@ -422,9 +456,9 @@ class MainWindow(ttk.Frame):
 		Parameter:
 			defaultProbe(str): Name of the chosen default probe.
 		"""
-		self.eProbe.set(dpv.defaultMaterials[defaultProbe]["e"])
-		self.poissonRatioProbe.set(dpv.defaultMaterials[defaultProbe]["poissonRatio"])
-		self.hamakerProbe.set(dpv.defaultMaterials[defaultProbe]["hamaker"])
+		self.eProbe.set(dm.defaultMaterials[defaultProbe]["e"])
+		self.poissonRatioProbe.set(dm.defaultMaterials[defaultProbe]["poissonRatio"])
+		self.hamakerProbe.set(dm.defaultMaterials[defaultProbe]["hamaker"])
 
 	def _set_default_sample_parameters(self, defaultSample:str) -> None:
 		"""Set the the values of different default sample.
@@ -432,9 +466,9 @@ class MainWindow(ttk.Frame):
 		Parameter:
 			defaultSample(str): Name of the chosen default sample.
 		"""
-		self.eSample.set(dpv.defaultMaterials[defaultSample]["e"])
-		self.poissonRatioSample.set(dpv.defaultMaterials[defaultSample]["poissonRatio"])
-		self.hamakerSample.set(dpv.defaultMaterials[defaultSample]["hamaker"])
+		self.eSample.set(dm.defaultMaterials[defaultSample]["e"])
+		self.poissonRatioSample.set(dm.defaultMaterials[defaultSample]["poissonRatio"])
+		self.hamakerSample.set(dm.defaultMaterials[defaultSample]["hamaker"])
 
 	def _create_force_volume(self) -> tk.messagebox:
 		"""Create a synthetic force volume with the chosen parameters and display it.
@@ -454,7 +488,7 @@ class MainWindow(ttk.Frame):
 		parameterMaterial, parameterMeasurement, parameterForcevolume = self._get_parameters()
 
 		try:
-			syntheticForcevolume = gsfv.create_synthetic_force_volume(
+			syntheticForcevolume = gen_data.create_synthetic_force_volume(
 				parameterMaterial, 
 				parameterMeasurement, 
 				parameterForcevolume
@@ -530,18 +564,18 @@ class MainWindow(ttk.Frame):
 			]
 		)
 
-		hamaker = gsfv.calculate_hamaker(
+		hamaker = gen_data.calculate_hamaker(
 			float(self.hamakerProbe.get()),
 			float(self.hamakerSample.get())
 		)
 		
-		jtc = gsfv.calculate_jtc(
+		jtc = gen_data.calculate_jtc(
 			hamaker,
 			float(self.radius.get()),
 			float(self.kc.get())
 		)
 
-		etot = gsfv.calculate_etot(
+		etot = gen_data.calculate_etot(
 			float(self.poissonRatioProbe.get()),
 			float(self.eProbe.get()),
 			float(self.poissonRatioSample.get()),
@@ -674,14 +708,21 @@ class MainWindow(ttk.Frame):
 		except IndexError:
 			return self.holderFigureLinePlot.figure.add_subplot(111)
 
-	def _delete_force_volume(self) -> None:
+	def check_active_force_volume(function):
 		""""""
-		if self.activeForceVolume.get() not in self.forceVolumes:
-			return messagebox.showerror(
-				"Error", 
-				"Please select a Force Volume."
-			)		
+		def wrapper(self):
+			if self.activeForceVolume.get() not in self.forceVolumes:
+				return messagebox.showerror(
+					"Error", 
+					"Please select a Force Volume."
+				)
+			else:
+				function(self)
+		return wrapper
 
+	@check_active_force_volume
+	def _delete_force_volume(self) -> None:
+		""""""	
 		self._delete_force_volume_from_plot(
 			self.forceVolumes[self.activeForceVolume.get()]["lineCollection"]
 		)
@@ -812,14 +853,9 @@ class MainWindow(ttk.Frame):
 
 		self.holderFigureLinePlot.draw()
 
+	@check_active_force_volume
 	def _export_force_volume(self) -> None:
 		"""Open the export window if a force volume is selected."""
-		if self.activeForceVolume.get() not in self.forceVolumes:
-			return messagebox.showerror(
-				"Error", 
-				"Please select a Force Volume."
-			)
-
 		ExportWindow(
 			self.forceVolumes[self.activeForceVolume.get()]
 		)

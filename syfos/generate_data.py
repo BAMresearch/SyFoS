@@ -347,3 +347,7 @@ def arrange_curves_in_forcevolume(
 	forceVolume.insert(0, [piezo, deflection])
 
 	return np.asarray(forceVolume)
+
+def extraxt_parameters(forcevolume):
+	""""""
+	pass

@@ -3,10 +3,14 @@ from collections import namedtuple
 import pytest
 import numpy as np
 
-import syfos.generate_synthetic_force_volumes as gsfv
+import syfos.generate_data as gen_data
 
 def test_arrange_curves_in_forcevolume():
 	""""""
+	pass
+
+def test_multiply_and_apply_noise_to_ideal_curve():
+	"""Frage ob man das testen kann eventuell schauen ob x prozent der Werte in einem gewissen Wertebereich liegen wahrscheinlich kompliziert"""
 	pass
 
 def get_simple_test_parameters():
@@ -70,7 +74,7 @@ def test_create_synthetic_force_volume():
 	"""
 	parameterMaterial, parameterMeasurement, parameterForcevolume = get_simple_test_parameters()
 
-	syntheticForcevolume = gsfv.create_synthetic_force_volume(
+	syntheticForcevolume = gen_data.create_synthetic_force_volume(
 		parameterMaterial, 
 		parameterMeasurement, 
 		parameterForcevolume

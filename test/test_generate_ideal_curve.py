@@ -1,23 +1,39 @@
 import pytest
 import numpy as np
 
-import syfos.generate_synthetic_force_volumes as gsfv
+import syfos.generate_data as gen_data
 
 ##################### Unit Testing #####################
 
-def test_calculate_piezo():
+def test_calculate_piezo_simple_values():
 	""""""
 	pass
 
-def test_calculate_deflection_approach_part():
+def test_calculate_piezo_small_values():
 	""""""
 	pass
 
-def test_calculate_deflection_attraction_part():
+def test_calculate_deflection_approach_part_simple_values():
 	""""""
 	pass
 
-def test_calculate_deflection_contact_part():
+def test_calculate_deflection_approach_part_small_values():
+	""""""
+	pass
+
+def test_calculate_deflection_attraction_part_simple_values():
+	""""""
+	pass
+
+def test_calculate_deflection_attraction_part_small_values():
+	""""""
+	pass
+
+def test_calculate_deflection_contact_part_simple_values():
+	""""""
+	pass
+
+def test_calculate_deflection_contact_part_small_values():
 	""""""
 	pass
 

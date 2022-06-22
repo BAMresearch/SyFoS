@@ -1,15 +1,15 @@
 import pytest
 import numpy as np
 
-import syfos.generate_synthetic_force_volumes as gsfv
+import syfos.generate_data as gen_data
 
-def test_calculate_jtc():
+def test_calculate_jtc_simple_values():
 	"""."""
 	hamaker = 6
 	radius = 4
 	kd = 1
 
-	result = gsfv.calculate_jtc(
+	result = gen_data.calculate_jtc(
 		hamaker, 
 		radius, 
 		kd
@@ -17,14 +17,18 @@ def test_calculate_jtc():
 	
 	assert np.isclose(result, -2.0)
 
-def test_calculate_etot():
+def test_calculate_jtc_small_values():
+	"""."""
+	pass
+
+def test_calculate_etot_simple_values():
 	"""."""
 	possionRatioTip = 1
 	eTip = 1
 	possionRatioSample = 0.75 
 	eSample = 1
 
-	result = gsfv.calculate_etot(
+	result = gen_data.calculate_etot(
 		possionRatioTip, 
 		eTip,
 		possionRatioSample,
@@ -33,14 +37,22 @@ def test_calculate_etot():
 
 	assert np.isclose(result, 2,37)
 
-def test_calculate_hamaker():
+def test_calculate_etot_small_values():
+	"""."""
+	pass
+
+def test_calculate_hamaker_simple_values():
 	"""."""
 	hamakerTip = 9 
 	hamakerSample = 16 
 
-	result = gsfv.calculate_hamaker(
+	result = gen_data.calculate_hamaker(
 		hamakerTip, 
 		hamakerSample
 	)
 
 	assert np.isclose(result, 12)
+
+def test_calculate_hamaker_small_values():
+	"""."""
+	pass
