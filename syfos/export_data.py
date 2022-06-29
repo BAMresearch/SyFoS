@@ -46,12 +46,12 @@ def export_data(
 	update_progressbar(stop=True)
 
 def create_data_frame_force_volume(
-	dataForceVolumeCurves: List
+	dataForceVolumeCurves: np.ndarray
 ) -> pd.DataFrame:
 	"""
 
 	Parameters:
-		dataForceVolumeCurves(list): Contains the data of the force Volume.
+		dataForceVolumeCurves(np.ndarray): Contains the data of the force Volume.
 
 	Returns:
 		dataFrameForceVolume(pd.dataframe): .

@@ -63,7 +63,7 @@ def calculate_hamaker(
 def create_synthetic_force_volume(
 	parameterMaterial: NamedTuple, 
 	parameterMeasurement: NamedTuple, 
-	parameterForcevolume: NamedTuple
+	parameterForceVolume: NamedTuple
 ) -> np.ndarray:
 	"""Create a set of synthetic curves from given parameters, 
 	   including a noise level, virtuell deflection and topography offset.
@@ -72,10 +72,10 @@ def create_synthetic_force_volume(
 		parameterMaterial(nametupel): Contains all parameters describing the material 
 									  and geometriy of the virtuell measuring system
 		parameterMeasuerement(nametupel): 
-		parameterForcevolume(nametupel):
+		parameterForceVolume(nametupel):
 	
 	Returns:
-		syntheticForcevolume(np.ndarray): Set of generated synthetic curves. 
+		syntheticForceVolume(np.ndarray): Set of generated synthetic curves. 
 	"""
 	try:
 		piezo, deflection = create_ideal_curve(
@@ -85,24 +85,24 @@ def create_synthetic_force_volume(
 	except ValueError:
 		raise ValueError("") from error 
 	
-	shiftedPiezo = np.asarray(piezo) + parameterForcevolume.topography
-	shiftedDeflection = np.asarray(deflection) + parameterForcevolume.virtualDeflection
+	shiftedPiezo = np.asarray(piezo) + parameterForceVolume.topography
+	shiftedDeflection = np.asarray(deflection) + parameterForceVolume.virtualDeflection
 
 	try:
 		noisyCurves = multiply_and_apply_noise_to_ideal_curve(
-			shiftedDeflection, parameterForcevolume
+			shiftedDeflection, parameterForceVolume
 		)
 	except ValueError:
 		raise ValueError(
 			"Could not create a synthetic force volume due to negative noise value."
 		) from error
 	
-	syntheticForcevolume = arrange_curves_in_forcevolume(
+	syntheticForceVolume = arrange_curves_in_force_volume(
 		deflection, piezo, shiftedPiezo, 
 		shiftedDeflection, noisyCurves
 	)
 
-	return syntheticForcevolume
+	return syntheticForceVolume
 
 def create_ideal_curve(
 	parameterMaterial: NamedTuple, 
@@ -279,7 +279,7 @@ def calculate_deflection_contact_part(
 
 def multiply_and_apply_noise_to_ideal_curve(
 	shiftedDeflection: List, 
-	parameterForcevolume: NamedTuple
+	parameterForceVolume: NamedTuple
 ) -> List[np.ndarray]:
 	"""Applies noise of given extent to the shifted deflection of ideal curve, 
 	   shiftedDeflection shifted by virtuell shiftedDeflection, piezo is 
@@ -287,39 +287,39 @@ def multiply_and_apply_noise_to_ideal_curve(
 
 	Parameters:
 		shiftedDeflection(list): shifted ideal deflection
-		parameterForcevolume(nametupel): contains numberOfCurves, noise, virtualDeflection and topography
+		parameterForceVolume(nametupel): contains numberOfCurves, noise, virtualDeflection and topography
 
 	Returns:
 		noisyCurves(list): .
 	"""
 	return [
-		apply_noise_to_curve(shiftedDeflection, parameterForcevolume)
-		for index in range(parameterForcevolume.numberOfCurves)
+		apply_noise_to_curve(shiftedDeflection, parameterForceVolume)
+		for index in range(parameterForceVolume.numberOfCurves)
 	]
 
 def apply_noise_to_curve(
 	shiftedDeflection: List, 
-	parameterForcevolume: NamedTuple
+	parameterForceVolume: NamedTuple
 ) -> np.ndarray:
 	"""applies noise to shiftedDeflection
 
 	Parameters:
 		shiftedDeflection(list): shifted ideal deflection
-		parameterForcevolume(nametupel): contains numberOfCurves, noise, virtualDeflection and topography
+		parameterForceVolume(nametupel): contains numberOfCurves, noise, virtualDeflection and topography
 
 	Returns:
 		(np.ndarray): .
 	"""
 
 	try:
-		noiseValues = np.random.normal(0, parameterForcevolume.noise, size=len(shiftedDeflection))
+		noiseValues = np.random.normal(0, parameterForceVolume.noise, size=len(shiftedDeflection))
 	except ValueError:
 		raise ValueError("Noise value must be positive.")
 
 	return shiftedDeflection + noiseValues
 
 
-def arrange_curves_in_forcevolume(
+def arrange_curves_in_force_volume(
 	deflection: List, 
 	piezo: List, 
 	shiftedPiezo: np.ndarray, 
@@ -348,6 +348,6 @@ def arrange_curves_in_forcevolume(
 
 	return np.asarray(forceVolume)
 
-def extraxt_parameters(forcevolume):
+def extraxt_parameters(forceVolume):
 	""""""
 	pass

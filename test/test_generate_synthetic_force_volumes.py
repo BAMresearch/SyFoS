@@ -9,10 +9,6 @@ def test_arrange_curves_in_forcevolume():
 	""""""
 	pass
 
-def test_multiply_and_apply_noise_to_ideal_curve():
-	"""Frage ob man das testen kann eventuell schauen ob x prozent der Werte in einem gewissen Wertebereich liegen wahrscheinlich kompliziert"""
-	pass
-
 def get_simple_test_parameters():
 	""""""
 	ParameterMaterial = namedtuple(
@@ -64,28 +60,6 @@ def get_simple_test_parameters():
 
 	return parameterMaterial, parameterMeasurement, parameterForcevolume
 
-def extraxt_parameters(forcevolume):
-	""""""
-	pass
-
 def test_create_synthetic_force_volume():
 	""""""
 	pass
-	"""
-	parameterMaterial, parameterMeasurement, parameterForcevolume = get_simple_test_parameters()
-
-	syntheticForcevolume = gen_data.create_synthetic_force_volume(
-		parameterMaterial, 
-		parameterMeasurement, 
-		parameterForcevolume
-	)
-
-	extractedParameters = extraxt_parameters(syntheticForcevolume)
-
-	np.testing.assert_allclose(
-		[parameterMaterial.Hamaker, parameterMaterial.Etot, parameterMaterial.jtc], 
-		[extractedParameters.Hamaker, extractedParameters.Etot, extractedParameters.jtc], 
-		rtol=1e-5, 
-		atol=0
-	)
-	"""
