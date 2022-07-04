@@ -12,7 +12,7 @@ def calculate_jtc(
 	Parameters:
 		hamaker(float): .
 		radius(float): .
-		kd(float): .
+		kc(float): .
 
 	Returns:
 		jtc(float): .
@@ -24,16 +24,16 @@ def calculate_jtc(
 	)
 
 def calculate_etot(
-	poissonRatioTip: float, 
-	eTip: float, 
+	poissonRatioProbe: float, 
+	eProbe: float, 
 	poissonRatioSample: float,
 	eSample: float,
 ) -> float:
 	"""Calculate etot as
 
 	Parameters:
-		poissonRatioTip(float): .
-		eTip(float): .
+		poissonRatioProbe(float): .
+		eProbe(float): .
 		poissonRatioSample(float): .
 		eSample(float): .
 
@@ -42,23 +42,23 @@ def calculate_etot(
 	"""
 	return (
 		4 
-		/ (3 * ((1 - poissonRatioTip**2) / eTip + (1 - poissonRatioSample**2) / eSample))
+		/ (3 * ((1 - poissonRatioProbe**2) / eProbe + (1 - poissonRatioSample**2) / eSample))
 	)
 
 def calculate_hamaker(
-	hamakerTip: float, 
+	hamakerProbe: float, 
 	hamakerSample: float, 
 ) -> float:
 	"""Calculate hamaker as
 
 	Parameters:
-		hamakerTip(float): .
+		hamakerProbe(float): .
 		hamakerSample(float): .
 
 	Returns:
 		hamaker(float): .
 	"""
-	return np.sqrt(hamakerTip) * np.sqrt(hamakerSample)
+	return np.sqrt(hamakerProbe) * np.sqrt(hamakerSample)
 
 def create_synthetic_force_volume(
 	parameterMaterial: NamedTuple, 
@@ -85,12 +85,16 @@ def create_synthetic_force_volume(
 	except ValueError:
 		raise ValueError("") from error 
 	
-	shiftedPiezo = np.asarray(piezo) + parameterForceVolume.topography
-	shiftedDeflection = np.asarray(deflection) + parameterForceVolume.virtualDeflection
+	shiftedPiezo, shiftedDeflection = shift_ideal_curve(
+		piezo,
+		deflection,
+		parameterForceVolume
+	)
 
 	try:
 		noisyCurves = multiply_and_apply_noise_to_ideal_curve(
-			shiftedDeflection, parameterForceVolume
+			shiftedDeflection, 
+			parameterForceVolume
 		)
 	except ValueError:
 		raise ValueError(
@@ -276,6 +280,17 @@ def calculate_deflection_contact_part(
 		* np.sqrt(27*(kc**4)*(b**2)*(c**4)-4*(kc**6)*(c**3)))
 		/ (b**3)))**(1/3)))/(32**(1/3))
 	)
+
+def shift_ideal_curve(
+	piezo: List,
+	deflection: List,
+	parameterForceVolume: NamedTuple
+) -> Tuple[np.ndarray, np.ndarray]:
+	""""""
+	shiftedPiezo = np.asarray(piezo) + parameterForceVolume.topography
+	shiftedDeflection = np.asarray(deflection) + parameterForceVolume.virtualDeflection
+
+	return shiftedPiezo, shiftedDeflection
 
 def multiply_and_apply_noise_to_ideal_curve(
 	shiftedDeflection: List, 

@@ -23,11 +23,12 @@ from toolbar_line_plot import ToolbarLinePlot
 from export_window import ExportWindow
 
 def decorator_update_line_plot(function):
-	"""Get the axes of the line plot and redraw the figure."""
+	"""Get the axes of the line plot update view limits and redraw the figure."""
 	@functools.wraps(function)
 	def wrapper_update_line_plot(self, *args, **kwargs):
 		ax = self._get_axes()
 		function(self, ax, *args, **kwargs)
+		self._set_current_view_limits(ax)
 		self.holderFigureLinePlot.draw()
 
 	return wrapper_update_line_plot
@@ -519,11 +520,11 @@ class MainWindow(ttk.Frame):
 				parameterMeasurement, 
 				parameterForceVolume
 			)
-		except ValueError:
+		except ValueError as e:
 			self._reset_parameters()
 			return messagebox.showerror(
 				"Error", 
-				"Failed to generate a synthetic force volume. Please change the input parameters."
+				e
 			)
 
 		nameForceVolume = "Force Volume " + str(len(self.forceVolumes) + 1)
@@ -710,7 +711,7 @@ class MainWindow(ttk.Frame):
 	@decorator_update_line_plot
 	def _plot_force_volume(
 		self, 
-		ax: [matplotlib.axes],
+		ax: matplotlib.axes,
 		lineCollection: List[Line2D]
 	) -> None:
 		"""Add every line of a force volume to the line plot and adjust the view limits.
@@ -721,10 +722,6 @@ class MainWindow(ttk.Frame):
 		"""
 		for line in lineCollection:
 			ax.add_line(line)
-
-		self._set_current_view_limits(
-			ax
-		)
 
 	def _get_axes(self):
 		"""Create or get axis of the line plot holder.
@@ -739,7 +736,7 @@ class MainWindow(ttk.Frame):
 
 	@decorator_check_if_force_volume_selected
 	def _delete_force_volume(self) -> None:
-		"""Delete a synthetic force volume with all its data."""	
+		"""Delete a synthetic force volume with all its data, if one is selected."""	
 		self._delete_force_volume_from_plot(
 			self.forceVolumes[self.activeForceVolume.get()]["lineCollection"]
 		)
@@ -753,7 +750,7 @@ class MainWindow(ttk.Frame):
 	@decorator_update_line_plot	
 	def _delete_force_volume_from_plot(
 		self, 
-		ax: [matplotlib.axes],
+		ax: matplotlib.axes,
 		lineCollection: List[Line2D]
 	) -> None:
 		"""Remove all lines from a force volume from the line plot.
@@ -764,10 +761,6 @@ class MainWindow(ttk.Frame):
 		"""
 		for line in lineCollection:
 			line.remove()
-
-		self._set_current_view_limits(
-			ax
-		)
 
 	@staticmethod
 	def _set_current_view_limits(ax):

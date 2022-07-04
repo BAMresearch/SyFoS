@@ -48,13 +48,13 @@ def export_data(
 def create_data_frame_force_volume(
 	dataForceVolumeCurves: np.ndarray
 ) -> pd.DataFrame:
-	"""
+	"""Converts the curve data of a force volume to a dataframe. 
 
 	Parameters:
-		dataForceVolumeCurves(np.ndarray): Contains the data of the force Volume.
+		dataForceVolumeCurves(np.ndarray): Contains the data of every curve of the force Volume.
 
 	Returns:
-		dataFrameForceVolume(pd.dataframe): .
+		dataFrameForceVolume(pd.dataframe): Contains the data of every curve of the force Volume.
 	"""
 	dataForceVolumeCurvesStacked = np.column_stack(
 		[
@@ -70,13 +70,13 @@ def create_data_frame_force_volume(
 def create_column_names(
 	numberOfCurves: int
 ) -> List[str]:
-	"""
+	"""Create a list of names for each curve in a force volume.
 	
 	Parameters:
-		numberOfCurves(int): . 
+		numberOfCurves(int): The number of curves in the force volume. 
 
 	Returns:
-		columnNames(list): .
+		columnNames(list): Contains a name for each curve in the force volume.
 	"""
 	columnNames = []
 
@@ -98,15 +98,15 @@ def create_data_frame_meta_data(
 	jtc: float,
 	hamaker: float
 ) -> pd.DataFrame:
-	"""
+	"""Converts the meta data of a force volume to a dataframe.
 
 	Parameter:
-		etot(float):
-		jtc(float):
-		hamaker(float):
+		etot(float): The calculated etot value of the force volume.
+		jtc(float): The calculated jtc value of the force volume.
+		hamaker(float): The calculated hamaker value of the force volume.
 
 	Returns:
-		dataFrameMetaData(pd.dataframe): .
+		dataFrameMetaData(pd.dataframe): Contains the meta data of the force Volume.
 	"""
 	return pd.DataFrame(
 		[[etot, jtc, hamaker]],
@@ -117,10 +117,10 @@ def export_to_csv(
 	dataFrameForceVolume: pd.DataFrame,
 	pathOutputFile: str
 ) -> None:
-	"""
+	"""Export the curve data of a force volume to the csv file format.
 
 	Parameters:
-		dataFrameForceVolume(pd.dataframe): 
+		dataFrameForceVolume(pd.dataframe): Contains the data of every curve of the force Volume.
 		pathOutputFile(str): Path of the output file.
 	"""
 	pathOutputFileAsCsv = pathOutputFile + ".csv"
@@ -134,11 +134,11 @@ def export_to_excel(
 	dataFrameMetaData: pd.DataFrame,
 	pathOutputFile: str
 ) -> None:
-	"""
+	"""Export the data of a force volume to the xlsx file format.
 	
 	Parameters:
-		dataFrameForceVolume(pd.dataframe):
-		dataFrameMetaData(pd.dataframe):
+		dataFrameForceVolume(pd.dataframe): Contains the data of every curve of the force Volume.
+		dataFrameMetaData(pd.dataframe): Contains the meta data of the force Volume.
 		pathOutputFile(str): Path of the output file.
 	"""
 	pathOutputFileAsExcel = pathOutputFile + ".xlsx"
