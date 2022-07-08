@@ -33,10 +33,10 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.lines import Line2D
 
-import default_materials as dm
-import generate_data as gen_data
-from toolbar_line_plot import ToolbarLinePlot
-from export_window import ExportWindow
+import gui.default_materials as dm
+import data_handling.generate_data as gen_data
+from gui.toolbars.toolbar_line_plot import ToolbarLinePlot
+from gui.export_window import ExportWindow
 
 def decorator_update_line_plot(function):
 	"""Get the axes of the line plot, update view limits and redraw the figure."""

@@ -24,7 +24,7 @@ from tkinter import messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
-import export_data as exp_data
+import data_handling.export_data as exp_data
 
 class ExportWindow(ttk.Frame):
 	"""A subwindow to handle the data export."""

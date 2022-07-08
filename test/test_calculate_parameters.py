@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-import syfos.generate_data as gen_data
+import syfos.data_handling.generate_data as gen_data
 
 def test_calculate_jtc_simple_values():
 	"""Test calculate_jtc with simple values."""

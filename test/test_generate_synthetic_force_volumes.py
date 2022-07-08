@@ -3,7 +3,7 @@ from collections import namedtuple
 import pytest
 import numpy as np
 
-import syfos.generate_data as gen_data
+import syfos.data_handling.generate_data as gen_data
 
 def test_shift_ideal_curve():
 	""""""

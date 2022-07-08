@@ -17,7 +17,7 @@ along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
 import tkinter as tk
 import ttkbootstrap as ttk
 
-from main_window import MainWindow
+from gui.main_window import MainWindow
 
 if __name__ == "__main__":
 	app = ttk.Window(themename="minty")
