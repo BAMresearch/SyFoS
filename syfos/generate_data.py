@@ -1,3 +1,19 @@
+"""
+This file is part of SyFoS.
+SyFoS is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SyFoS is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
 from typing import NamedTuple, Tuple, List
 
 import numpy as np
@@ -75,7 +91,10 @@ def create_synthetic_force_volume(
 		parameterForceVolume(nametupel):
 	
 	Returns:
-		syntheticForceVolume(np.ndarray): Set of generated synthetic curves. 
+		syntheticForceVolume(np.ndarray): Set of generated synthetic curves.
+
+	Raises:
+		ValueError: . 
 	"""
 	try:
 		piezo, deflection = create_ideal_curve(
@@ -121,6 +140,9 @@ def create_ideal_curve(
 	Returns:
 		piezo(list): .
 		deflection(list): . 
+
+	Raises:
+		ValueError: . 
 	"""
 	deflection = [0]
 	piezo = [parameterMeasurement.initialDistance]
@@ -324,6 +346,9 @@ def apply_noise_to_curve(
 
 	Returns:
 		(np.ndarray): .
+
+	Raises:
+		ValueError: .
 	"""
 
 	try:

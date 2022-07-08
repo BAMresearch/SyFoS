@@ -19,8 +19,8 @@ def test_calculate_piezo_simple_values():
 	
 	assert np.isclose(result, 5.0)
 
-def test_calculate_piezo_small_values():
-	"""Test calculate_piezo_value with simple values."""
+def test_calculate_piezo_default_values():
+	"""Test calculate_piezo_value with default values."""
 	initialDistance = -10e-9
 	distanceInterval = 0.2e-9
 	index = 60
@@ -37,7 +37,7 @@ def test_calculate_deflection_approach_part_simple_values():
 	""""""
 	pass
 
-def test_calculate_deflection_approach_part_small_values():
+def test_calculate_deflection_approach_part_default_values():
 	""""""
 	pass
 
@@ -45,7 +45,7 @@ def test_calculate_deflection_attraction_part_simple_values():
 	""""""
 	pass
 
-def test_calculate_deflection_attraction_part_small_values():
+def test_calculate_deflection_attraction_part_default_values():
 	""""""
 	pass
 
@@ -53,7 +53,7 @@ def test_calculate_deflection_contact_part_simple_values():
 	""""""
 	pass
 
-def test_calculate_deflection_contact_part_small_values():
+def test_calculate_deflection_contact_part_default_values():
 	""""""
 	pass
 

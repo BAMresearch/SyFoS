@@ -14,12 +14,8 @@ You should have received a copy of the GNU General Public License
 along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import tkinter as tk
-import ttkbootstrap as ttk
+import numpy as np
 
-from main_window import MainWindow
-
-if __name__ == "__main__":
-	app = ttk.Window(themename="minty")
-	MainWindow(app)
-	app.mainloop()
+def extraxt_parameters(forceVolume):
+	""""""
+	pass

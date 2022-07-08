@@ -4,6 +4,7 @@ import pytest
 import numpy as np
 
 import syfos.generate_data as gen_data
+import syfos.analyse_data as analyse_data
 
 def test_compare_actual_and_synthetic_data():
 	""""""
@@ -17,12 +18,21 @@ def test_compare_actual_and_synthetic_data():
 		parameterForcevolume
 	)
 
-	extractedParameters = gen_data.extraxt_parameters(syntheticForcevolume)
+	realForcevolume = [] 
+
+	extractedSyntheticParameters = analyse_data.extraxt_parameters(syntheticForcevolume)
+	extractedRealParameters = analyse_data.extraxt_parameters(realForcevolume)
 
 	np.testing.assert_allclose(
-		[parameterMaterial.Hamaker, parameterMaterial.Etot, parameterMaterial.jtc], 
-		[extractedParameters.Hamaker, extractedParameters.Etot, extractedParameters.jtc], 
-		rtol=1e-5, 
-		atol=0
+		[
+			extractedRealParameters.Hamaker, 
+			extractedRealParameters.Etot, 
+			extractedRealParameters.jtc
+		], 
+		[
+			extractedSyntheticParameters.Hamaker, 
+			extractedSyntheticParameters.Etot, 
+			extractedSyntheticParameters.jtc
+		]
 	)
 	"""

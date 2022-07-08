@@ -1,3 +1,19 @@
+"""
+This file is part of SyFoS.
+SyFoS is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SyFoS is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
 from collections import namedtuple
 from typing import Tuple, List, Dict
 import os
@@ -23,7 +39,7 @@ from toolbar_line_plot import ToolbarLinePlot
 from export_window import ExportWindow
 
 def decorator_update_line_plot(function):
-	"""Get the axes of the line plot update view limits and redraw the figure."""
+	"""Get the axes of the line plot, update view limits and redraw the figure."""
 	@functools.wraps(function)
 	def wrapper_update_line_plot(self, *args, **kwargs):
 		ax = self._get_axes()
@@ -478,7 +494,7 @@ class MainWindow(ttk.Frame):
 		self.defaultSample.set("Custom Sample")
 
 	def _set_default_probe_parameters(self, defaultProbe:str) -> None:
-		"""Set the values of different default probes.
+		"""Set the parameters of a selected default probe.
 
 		Parameter:
 			defaultProbe(str): Name of the chosen default probe.
@@ -488,7 +504,7 @@ class MainWindow(ttk.Frame):
 		self.hamakerProbe.set(dm.defaultMaterials[defaultProbe]["hamaker"])
 
 	def _set_default_sample_parameters(self, defaultSample:str) -> None:
-		"""Set the the values of different default sample.
+		"""Set the parameters of a selected default sample.
 
 		Parameter:
 			defaultSample(str): Name of the chosen default sample.
@@ -498,7 +514,7 @@ class MainWindow(ttk.Frame):
 		self.hamakerSample.set(dm.defaultMaterials[defaultSample]["hamaker"])
 
 	def _create_force_volume(self) -> tk.messagebox:
-		"""Create a synthetic force volume with the chosen parameters and display it.
+		"""Create a synthetic force volume with the selected parameters and display it.
 
 		Returns:
 			userFeedback(tk.messagebox): Informs the user whether the force volume could be created or not.
@@ -550,7 +566,11 @@ class MainWindow(ttk.Frame):
 		)
 
 	def _check_parameters(self) -> None:
-		"""Check wether all input parameters are valid."""
+		"""Check wether all input parameters are valid.
+
+		Raises:
+			ValueError: A parameter is not a number.
+		"""
 		for parameterName, parameterVariable in self.parameters.items():
 			try:
 				float(parameterVariable.get())
@@ -568,7 +588,7 @@ class MainWindow(ttk.Frame):
 		self.defaultSample.set("Default Sample")
 
 	def _get_parameters(self) -> Tuple:
-		"""Combine all input parameters into namedtuples for easier use.
+		"""Combine all input parameters into namedtuples.
 		
 		Returns:
 			parameterMaterial(namedtuple): Contains every material parameter.
@@ -652,14 +672,14 @@ class MainWindow(ttk.Frame):
 		jtc: float,
 		hamaker: float
 	) -> None:
-		"""Cache the data of a force volume to compare it with other force volumes.
+		"""Cache the data of a force volume.
 
 		Parameters:
 			nameForceVolume(str): Name of the force volume.
-			forceVolume(np.ndarray): Created data of the force volume.
-			etot(float): Calculated etot value of the force volume.
-			jtc(float): Calculated jtc value of the force volume.
-			hamaker(float): Calculated hamaker value of the force volume.
+			forceVolume(np.ndarray): Data of the force volume.
+			etot(float): etot value of the force volume.
+			jtc(float): jtc value of the force volume.
+			hamaker(float): hamaker value of the force volume.
 		"""
 		self.forceVolumes[nameForceVolume] = {
 			"data": forceVolume,
@@ -694,13 +714,13 @@ class MainWindow(ttk.Frame):
 	def _create_line(
 		lineData: List, 
 	) -> Line2D:
-		"""Creates a displayable line from x and y curve data.
+		"""Creates a displayable line from the x and y data of a curve.
 
 		Parameters:
-			lineData(List): Contains the x and y values of the curve.
+			lineData(List): Contains the x and y values one curve.
 
 		Returns:
-			line(matplotlib.Line2D): A line that can be displayed in the plot.
+			line(matplotlib.Line2D): Line that can be displayed in the plot.
 		"""
 		return Line2D(
 			lineData[0], 
@@ -714,7 +734,7 @@ class MainWindow(ttk.Frame):
 		ax: matplotlib.axes,
 		lineCollection: List[Line2D]
 	) -> None:
-		"""Add every line of a force volume to the line plot and adjust the view limits.
+		"""Add every line of a force volume to the line plot.
 
 		Parameters:
 			ax(matplotlib.axes): Axes of the line plot.
@@ -763,7 +783,7 @@ class MainWindow(ttk.Frame):
 			line.remove()
 
 	@staticmethod
-	def _set_current_view_limits(ax):
+	def _set_current_view_limits(ax: matplotlib.axes):
 		"""Rescale the current view limits of the lineplot."""
 		ax.relim()
 		ax.autoscale_view()
@@ -805,13 +825,13 @@ class MainWindow(ttk.Frame):
 	def _round_parameter_presentation(
 		parameterValue: float
 	) -> str: 
-		"""Specifies a specific format for all displayed parameters.
+		"""Define format for parameter presentation in the GUI.
 
 		Parameters:
 			parameterValue(float): Calculated parameter value.
 
 		Returns:
-			roundedParameterRepresentation(str): Rounded parameter value in specific format.
+			roundedParameterRepresentation(str): Rounded parameter value in scientific format.
 		"""
 		return '{:.3e}'.format(parameterValue)
 
