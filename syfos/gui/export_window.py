@@ -83,7 +83,6 @@ class ExportWindow(ttk.Frame):
 		frameDataTypes = ttk.Labelframe(self.window, text="Data Types", padding=15)
 		frameDataTypes.pack(fill=X, expand=YES, anchor=N, padx=15, pady=5)
 
-		self.exportToTxt = tk.BooleanVar(self.window, value=0)
 		self.exportToCSV = tk.BooleanVar(self.window, value=0)
 		self.exportToExcel = tk.BooleanVar(self.window, value=0)
 
@@ -143,7 +142,7 @@ class ExportWindow(ttk.Frame):
 		self.progressbar.pack(fill=X, expand=YES, padx=15, pady=(5, 15))
 
 	def _browse_file_path(self) -> None:
-		"""Select the directory in which the data will be exported."""
+		"""Select a directory in which the data will be exported."""
 		filePath = fd.askdirectory(
 			title="Select directory",
 			parent=self.window
@@ -187,7 +186,7 @@ class ExportWindow(ttk.Frame):
 		return messagebox.showinfo("Success", "Data is exported.")
 
 	def _create_selected_export_parameters(self) -> NamedTuple:
-		"""Summarize the selected export options for easier use.
+		"""Summarize the selected export options.
 
 		Returns:
 			ExportOptions(namedtuple): Contains the selected export opotions.

@@ -31,23 +31,12 @@ import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.lines import Line2D
 
 import gui.default_materials as dm
 import data_handling.generate_data as gen_data
-from gui.toolbars.toolbar_line_plot import ToolbarLinePlot
+import data_visualisation.plot_data as plot_data
+from data_visualisation.toolbars.toolbar_line_plot import ToolbarLinePlot
 from gui.export_window import ExportWindow
-
-def decorator_update_line_plot(function):
-	"""Get the axes of the line plot, update view limits and redraw the figure."""
-	@functools.wraps(function)
-	def wrapper_update_line_plot(self, *args, **kwargs):
-		ax = self._get_axes()
-		function(self, ax, *args, **kwargs)
-		self._set_current_view_limits(ax)
-		self.holderFigureLinePlot.draw()
-
-	return wrapper_update_line_plot
 
 def decorator_check_if_force_volume_selected(function):
 	"""Check if a force volume if selected."""
@@ -78,10 +67,6 @@ class MainWindow(ttk.Frame):
 	def _init_style_parameters(self) -> None:
 		"""Initialise all style related parameters."""
 		self.colorPlot = "#e6f7f4"
-
-		self.colorActiveCurves = "#00c3ff"
-		self.colorActiveIdealCurve = "#fc0008"
-		self.colorInactiveCurves = "#b0b0b0"
 
 	def _init_parameter_variables(self) -> None:
 		"""Initialise all parameter variables."""
@@ -494,20 +479,20 @@ class MainWindow(ttk.Frame):
 		self.defaultSample.set("Custom Sample")
 
 	def _set_default_probe_parameters(self, defaultProbe:str) -> None:
-		"""Set the parameters of a selected default probe.
+		"""Set the parameters of a selected default probe material.
 
 		Parameter:
-			defaultProbe(str): Name of the chosen default probe.
+			defaultProbe(str): Name of the chosen default probe material.
 		"""
 		self.eProbe.set(dm.defaultMaterials[defaultProbe]["e"])
 		self.poissonRatioProbe.set(dm.defaultMaterials[defaultProbe]["poissonRatio"])
 		self.hamakerProbe.set(dm.defaultMaterials[defaultProbe]["hamaker"])
 
 	def _set_default_sample_parameters(self, defaultSample:str) -> None:
-		"""Set the parameters of a selected default sample.
+		"""Set the parameters of a selected default sample material.
 
 		Parameter:
-			defaultSample(str): Name of the chosen default sample.
+			defaultSample(str): Name of the chosen default sample material.
 		"""
 		self.eSample.set(dm.defaultMaterials[defaultSample]["e"])
 		self.poissonRatioSample.set(dm.defaultMaterials[defaultSample]["poissonRatio"])
@@ -527,8 +512,8 @@ class MainWindow(ttk.Frame):
 				"Error", 
 				e
 			)
-
-		parameterMaterial, parameterMeasurement, parameterForceVolume = self._get_parameters()
+		else:
+			parameterMaterial, parameterMeasurement, parameterForceVolume = self._get_parameters()
 
 		try:
 			forceVolume = gen_data.create_synthetic_force_volume(
@@ -543,22 +528,17 @@ class MainWindow(ttk.Frame):
 				e
 			)
 
-		nameForceVolume = "Force Volume " + str(len(self.forceVolumes) + 1)
-
 		self._cache_force_volume(
-			nameForceVolume,
 			forceVolume,
 			parameterMaterial.Etot,
 			parameterMaterial.jtc,
 			parameterMaterial.Hamaker
 		)
-		self._plot_force_volume(
-			self.forceVolumes[nameForceVolume]["lineCollection"]
-		)
 
-		self._update_dropdown_force_volumes()
-		self.activeForceVolume.set(nameForceVolume)
-		self._set_active_force_volume()
+		plot_data.plot_force_volume(
+			self.holderFigureLinePlot,
+			self.forceVolumes[self.activeForceVolume.get()]["lineCollection"]
+		)
 
 		return messagebox.showinfo(
 			"Success", 
@@ -569,7 +549,7 @@ class MainWindow(ttk.Frame):
 		"""Check wether all input parameters are valid.
 
 		Raises:
-			ValueError: A parameter is not a number.
+			ValueError: If a parameter is not a number.
 		"""
 		for parameterName, parameterVariable in self.parameters.items():
 			try:
@@ -588,7 +568,7 @@ class MainWindow(ttk.Frame):
 		self.defaultSample.set("Default Sample")
 
 	def _get_parameters(self) -> Tuple:
-		"""Combine all input parameters into namedtuples.
+		"""Group all input parameters into namedtuples.
 		
 		Returns:
 			parameterMaterial(namedtuple): Contains every material parameter.
@@ -666,7 +646,6 @@ class MainWindow(ttk.Frame):
 
 	def _cache_force_volume(
 		self,
-		nameForceVolume: str,
 		forceVolume: np.ndarray, 
 		etot: float, 
 		jtc: float,
@@ -675,89 +654,34 @@ class MainWindow(ttk.Frame):
 		"""Cache the data of a force volume.
 
 		Parameters:
-			nameForceVolume(str): Name of the force volume.
 			forceVolume(np.ndarray): Data of the force volume.
 			etot(float): etot value of the force volume.
 			jtc(float): jtc value of the force volume.
 			hamaker(float): hamaker value of the force volume.
 		"""
+		nameForceVolume = "Force Volume " + str(len(self.forceVolumes) + 1)
+
 		self.forceVolumes[nameForceVolume] = {
 			"data": forceVolume,
-			"lineCollection": self._create_line_collection(forceVolume),
+			"lineCollection": plot_data.create_line_collection(forceVolume),
 			"etot": etot,
 			"jtc": jtc,
 			"hamaker": hamaker
 		}
 
+		self._update_dropdown_force_volumes()
+		self.activeForceVolume.set(nameForceVolume)
+		self._set_active_force_volume()
+
 	def _update_dropdown_force_volumes(self) -> None:
 		"""Update the list of generated force volumes in the dropdown menu."""
 		self.dropdownForceVolumes.set_menu("", *self.forceVolumes.keys())
-
-	def _create_line_collection(
-		self, 
-		forceVolume: np.ndarray
-	) -> List[Line2D]:
-		"""Create a list of displayable lines from the data of the force volume.
-
-		Parameters:
-			forceVolume(np.ndarray): x and y data of every curve in the force volume.
-
-		Returns:
-			lineCollection(list): List of displayable Line2D objects.
-		"""
-		return [
-			self._create_line(line)
-			for line in forceVolume
-		]
-
-	@staticmethod
-	def _create_line(
-		lineData: List, 
-	) -> Line2D:
-		"""Creates a displayable line from the x and y data of a curve.
-
-		Parameters:
-			lineData(List): Contains the x and y values one curve.
-
-		Returns:
-			line(matplotlib.Line2D): Line that can be displayed in the plot.
-		"""
-		return Line2D(
-			lineData[0], 
-			lineData[1], 
-			linewidth=0.5, 
-		)
-
-	@decorator_update_line_plot
-	def _plot_force_volume(
-		self, 
-		ax: matplotlib.axes,
-		lineCollection: List[Line2D]
-	) -> None:
-		"""Add every line of a force volume to the line plot.
-
-		Parameters:
-			ax(matplotlib.axes): Axes of the line plot.
-			lineCollection(list): Contains every line of the force volume.
-		"""
-		for line in lineCollection:
-			ax.add_line(line)
-
-	def _get_axes(self):
-		"""Create or get axis of the line plot holder.
-
-		Returns:
-			axes(axes): New or existing axes of the line plot holder.
-		"""
-		try:
-			return self.holderFigureLinePlot.figure.get_axes()[0]
-		except IndexError:
-			return self.holderFigureLinePlot.figure.add_subplot(111)
-
+	
 	@decorator_check_if_force_volume_selected
 	def _delete_force_volume(self) -> None:
-		"""Delete a synthetic force volume with all its data, if one is selected."""	
-		self._delete_force_volume_from_plot(
+		"""Delete the active force volume with all its data."""	
+		plot_data.delete_force_volume_from_plot(
+			self.holderFigureLinePlot,
 			self.forceVolumes[self.activeForceVolume.get()]["lineCollection"]
 		)
 		# Remove force volume from cache.
@@ -765,29 +689,8 @@ class MainWindow(ttk.Frame):
 		self._update_dropdown_force_volumes()
 		self.activeForceVolume.set("Force Volumes")
 
-		self._set_calculated_parameters()
-
-	@decorator_update_line_plot	
-	def _delete_force_volume_from_plot(
-		self, 
-		ax: matplotlib.axes,
-		lineCollection: List[Line2D]
-	) -> None:
-		"""Remove all lines from a force volume from the line plot.
-
-		Parameters:
-			ax(matplotlib.axes): Axes of the line plot.
-			lineCollection(list): Contains every line of the force volume.
-		"""
-		for line in lineCollection:
-			line.remove()
-
-	@staticmethod
-	def _set_current_view_limits(ax: matplotlib.axes):
-		"""Rescale the current view limits of the lineplot."""
-		ax.relim()
-		ax.autoscale_view()
-
+		self._reset_calculated_parameters()
+	
 	def _set_active_force_volume(
 		self, 
 		forceVolume: str=""
@@ -798,24 +701,18 @@ class MainWindow(ttk.Frame):
 			forceVolume(str): .
 		"""
 		self._set_calculated_parameters(
-			self._round_parameter_presentation(
-				self.forceVolumes[self.activeForceVolume.get()]["etot"]
-			),
-			self._round_parameter_presentation(
-				self.forceVolumes[self.activeForceVolume.get()]["jtc"]
-			),
-			self._round_parameter_presentation(
-				self.forceVolumes[self.activeForceVolume.get()]["hamaker"]
-			)
+			self.forceVolumes[self.activeForceVolume.get()]["etot"],
+			self.forceVolumes[self.activeForceVolume.get()]["jtc"],
+			self.forceVolumes[self.activeForceVolume.get()]["hamaker"]
 		)
 
 		for forceVolumeName, forceVolumeData in self.forceVolumes.items():
 			if forceVolumeName == self.activeForceVolume.get():
-				self._set_active_line_collection(
+				plot_data.set_active_line_collection(
 					forceVolumeData["lineCollection"]
 				)
 			else:
-				self._set_inative_line_collection(
+				plot_data.set_inative_line_collection(
 					forceVolumeData["lineCollection"]
 				)
 
@@ -825,7 +722,7 @@ class MainWindow(ttk.Frame):
 	def _round_parameter_presentation(
 		parameterValue: float
 	) -> str: 
-		"""Define format for parameter presentation in the GUI.
+		"""Define the format for the parameter presentation in the GUI.
 
 		Parameters:
 			parameterValue(float): Calculated parameter value.
@@ -837,9 +734,9 @@ class MainWindow(ttk.Frame):
 
 	def _set_calculated_parameters(
 		self, 
-		etot: str = "",
-		jtc: str = "",
-		hamaker: str = ""
+		etot: str,
+		jtc: str,
+		hamaker: str
 	) -> None:
 		"""Set the calculated parameters of the active force volume.
 
@@ -848,44 +745,25 @@ class MainWindow(ttk.Frame):
 			jtc(str): Calculated and rounded jtc value.
 			hamaker(str): Calculated and rounded hamaker value.
 		"""
-		self.etot.set(etot)
-		self.jtc.set(jtc)
-		self.hamaker.set(hamaker)
+		self.etot.set(
+			self._round_parameter_presentation(etot)
+		)
+		self.jtc.set(
+			self._round_parameter_presentation(jtc)
+		)
+		self.hamaker.set(
+			self._round_parameter_presentation(hamaker)
+		)
 
-	def _set_active_line_collection(
-		self, 
-		lineCollection: List[Line2D]
-	) -> None: 
-		"""Change the color and z order of the active force volume.
-
-		Parameters:
-			lineCollection(list): Contains all lines of the active force volume.
-		"""
-		# Change color and z order of the ideal and shifeted ideal curve.
-		for line in lineCollection[:2]:
-			line.set_color(self.colorActiveIdealCurve)
-			line.set_zorder(2)
-		# Change color and z order of the other curves.
-		for line in lineCollection[2:]:
-			line.set_color(self.colorActiveCurves)
-			line.set_zorder(1)
-
-	def _set_inative_line_collection(
-		self, 
-		lineCollection: List[Line2D]
-	) -> None:
-		"""Change the color and z order of an inactive force volume.
-
-		Parameters:
-			lineCollection(list): Contains all lines of the inactive force volume.
-		"""
-		for line in lineCollection:
-			line.set_color(self.colorInactiveCurves)
-			line.set_zorder(-1)
-
+	def _reset_calculated_parameters(self) -> None:
+		"""Reset the calculated parameters if no force volume is active."""
+		self.etot.set("")
+		self.jtc.set("")
+		self.hamaker.set("")
+	
 	@decorator_check_if_force_volume_selected
 	def _export_force_volume(self) -> None:
-		"""Open the export window if a force volume is selected."""
+		"""Open a window to export the data of the active force volume."""
 		ExportWindow(
 			self.forceVolumes[self.activeForceVolume.get()]
 		)

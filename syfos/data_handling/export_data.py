@@ -26,7 +26,7 @@ def export_data(
 	dataForceVolume: Dict,
 	update_progressbar: Callable,
 ) -> None:
-	"""Export the currently selected force volume to every selected data format.
+	"""Export the active force volume to every selected data format.
 
 	Parameters:
 		exportParameters(namedtuple): Contains the selected export parameters and options.
@@ -64,7 +64,7 @@ def export_data(
 def create_data_frame_force_volume(
 	dataForceVolumeCurves: np.ndarray
 ) -> pd.DataFrame:
-	"""Converts the curve data of a force volume to a dataframe. 
+	"""Create a data frame from the curve data of a force volume. 
 
 	Parameters:
 		dataForceVolumeCurves(np.ndarray): Contains the data of every curve of the force Volume.
@@ -86,13 +86,13 @@ def create_data_frame_force_volume(
 def create_column_names(
 	numberOfCurves: int
 ) -> List[str]:
-	"""Create a list of names for each curve in a force volume.
+	"""Create a label for each curve in a force volume.
 	
 	Parameters:
 		numberOfCurves(int): The number of curves in the force volume. 
 
 	Returns:
-		columnNames(list): Contains a name for each curve in the force volume.
+		columnNames(list): Contains a label for each curve in the force volume.
 	"""
 	columnNames = []
 
@@ -114,7 +114,7 @@ def create_data_frame_meta_data(
 	jtc: float,
 	hamaker: float
 ) -> pd.DataFrame:
-	"""Converts the meta data of a force volume to a dataframe.
+	"""Create a data frame from the meta data of a force volume.
 
 	Parameter:
 		etot(float): The calculated etot value of the force volume.

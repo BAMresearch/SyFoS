@@ -14,8 +14,61 @@ You should have received a copy of the GNU General Public License
 along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""perform tests on the ideal curve"""
+
 import numpy as np
 
-def extraxt_parameters(forceVolume):
+def extraxt_parameters(idealCurve):
 	""""""
 	pass
+
+def split_curve(idealCurve) -> Tuple[np.ndarray, np.ndarray]:
+	""""""
+	pass 
+	"""
+	return approachPart, contactPart
+	"""
+
+def create_adjusted_approach_curve():
+	""""""
+	pass
+
+def create_adjusted_contact_curve():
+	""""""
+	pass 
+
+def calculate_deformation():
+	""""""
+	pass 
+
+def calculate_force():
+	""""""
+	pass 
+
+def calculate_pseudo_force():
+	""""""
+	pass 
+
+def calculate_kc_approach():
+	""""""
+	pass 
+
+def calculate_kc_contact():
+	""""""
+	pass 
+
+def calculate_radius_approach():
+	""""""
+	pass 
+
+def calculate_radius_contact():
+	""""""
+	pass 
+
+def calculate_etot():
+	""""""
+	pass 
+
+def calculate_hamaker():
+	""""""
+	pass 

@@ -16,7 +16,7 @@ along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 This file contains all predefined values 
-for different probe and sample settings. 
+for different probe and sample materials. 
 """
 
 # Default Meterial Values
