@@ -1,3 +1,19 @@
+"""
+This file is part of SyFoS.
+SyFoS is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SyFoS is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
 from typing import NamedTuple, Tuple, List
 
 import numpy as np
@@ -12,7 +28,7 @@ def calculate_jtc(
 	Parameters:
 		hamaker(float): .
 		radius(float): .
-		kd(float): .
+		kc(float): .
 
 	Returns:
 		jtc(float): .
@@ -24,16 +40,16 @@ def calculate_jtc(
 	)
 
 def calculate_etot(
-	poissonRatioTip: float, 
-	eTip: float, 
+	poissonRatioProbe: float, 
+	eProbe: float, 
 	poissonRatioSample: float,
 	eSample: float,
 ) -> float:
 	"""Calculate etot as
 
 	Parameters:
-		poissonRatioTip(float): .
-		eTip(float): .
+		poissonRatioProbe(float): .
+		eProbe(float): .
 		poissonRatioSample(float): .
 		eSample(float): .
 
@@ -42,23 +58,23 @@ def calculate_etot(
 	"""
 	return (
 		4 
-		/ (3 * ((1 - poissonRatioTip**2) / eTip + (1 - poissonRatioSample**2) / eSample))
+		/ (3 * ((1 - poissonRatioProbe**2) / eProbe + (1 - poissonRatioSample**2) / eSample))
 	)
 
 def calculate_hamaker(
-	hamakerTip: float, 
+	hamakerProbe: float, 
 	hamakerSample: float, 
 ) -> float:
 	"""Calculate hamaker as
 
 	Parameters:
-		hamakerTip(float): .
+		hamakerProbe(float): .
 		hamakerSample(float): .
 
 	Returns:
 		hamaker(float): .
 	"""
-	return np.sqrt(hamakerTip) * np.sqrt(hamakerSample)
+	return np.sqrt(hamakerProbe) * np.sqrt(hamakerSample)
 
 def create_synthetic_force_volume(
 	parameterMaterial: NamedTuple, 
@@ -75,7 +91,10 @@ def create_synthetic_force_volume(
 		parameterForceVolume(nametupel):
 	
 	Returns:
-		syntheticForceVolume(np.ndarray): Set of generated synthetic curves. 
+		syntheticForceVolume(np.ndarray): Set of generated synthetic curves.
+
+	Raises:
+		ValueError: . 
 	"""
 	try:
 		piezo, deflection = create_ideal_curve(
@@ -85,12 +104,16 @@ def create_synthetic_force_volume(
 	except ValueError:
 		raise ValueError("") from error 
 	
-	shiftedPiezo = np.asarray(piezo) + parameterForceVolume.topography
-	shiftedDeflection = np.asarray(deflection) + parameterForceVolume.virtualDeflection
+	shiftedPiezo, shiftedDeflection = shift_ideal_curve(
+		piezo,
+		deflection,
+		parameterForceVolume
+	)
 
 	try:
 		noisyCurves = multiply_and_apply_noise_to_ideal_curve(
-			shiftedDeflection, parameterForceVolume
+			shiftedDeflection, 
+			parameterForceVolume
 		)
 	except ValueError:
 		raise ValueError(
@@ -117,6 +140,9 @@ def create_ideal_curve(
 	Returns:
 		piezo(list): .
 		deflection(list): . 
+
+	Raises:
+		ValueError: . 
 	"""
 	deflection = [0]
 	piezo = [parameterMeasurement.initialDistance]
@@ -277,6 +303,17 @@ def calculate_deflection_contact_part(
 		/ (b**3)))**(1/3)))/(32**(1/3))
 	)
 
+def shift_ideal_curve(
+	piezo: List,
+	deflection: List,
+	parameterForceVolume: NamedTuple
+) -> Tuple[np.ndarray, np.ndarray]:
+	""""""
+	shiftedPiezo = np.asarray(piezo) + parameterForceVolume.topography
+	shiftedDeflection = np.asarray(deflection) + parameterForceVolume.virtualDeflection
+
+	return shiftedPiezo, shiftedDeflection
+
 def multiply_and_apply_noise_to_ideal_curve(
 	shiftedDeflection: List, 
 	parameterForceVolume: NamedTuple
@@ -309,6 +346,9 @@ def apply_noise_to_curve(
 
 	Returns:
 		(np.ndarray): .
+
+	Raises:
+		ValueError: .
 	"""
 
 	try:
@@ -347,7 +387,3 @@ def arrange_curves_in_force_volume(
 	forceVolume.insert(0, [piezo, deflection])
 
 	return np.asarray(forceVolume)
-
-def extraxt_parameters(forceVolume):
-	""""""
-	pass

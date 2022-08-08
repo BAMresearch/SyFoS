@@ -1,3 +1,19 @@
+"""
+This file is part of SyFoS.
+SyFoS is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SyFoS is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
 from collections import namedtuple
 import os
 from typing import NamedTuple
@@ -8,7 +24,7 @@ from tkinter import messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
-import export_data as exp_data
+import data_handling.export_data as exp_data
 
 class ExportWindow(ttk.Frame):
 	"""A subwindow to handle the data export."""
@@ -67,7 +83,6 @@ class ExportWindow(ttk.Frame):
 		frameDataTypes = ttk.Labelframe(self.window, text="Data Types", padding=15)
 		frameDataTypes.pack(fill=X, expand=YES, anchor=N, padx=15, pady=5)
 
-		self.exportToTxt = tk.BooleanVar(self.window, value=0)
 		self.exportToCSV = tk.BooleanVar(self.window, value=0)
 		self.exportToExcel = tk.BooleanVar(self.window, value=0)
 
@@ -127,7 +142,7 @@ class ExportWindow(ttk.Frame):
 		self.progressbar.pack(fill=X, expand=YES, padx=15, pady=(5, 15))
 
 	def _browse_file_path(self) -> None:
-		"""Select the directory in which the data will be saved."""
+		"""Select a directory in which the data will be exported."""
 		filePath = fd.askdirectory(
 			title="Select directory",
 			parent=self.window
@@ -140,7 +155,7 @@ class ExportWindow(ttk.Frame):
 		"""Export the current force volume with the selected parameters and options.
 
 		Returns:
-			userFeedback(tk.messagebox): Informs the user whether the data could be saved or not.
+			userFeedback(tk.messagebox): Informs the user whether the data could be exported or not.
 		"""
 		# Check if a folder name is selected.
 		if not self.fileName.get():
@@ -154,7 +169,7 @@ class ExportWindow(ttk.Frame):
 		if not os.path.isdir(self.filePath.get()):
 			return messagebox.showerror(
 				"Error", 
-				"Please specify a location to save your data.", 
+				"Please specify a location to export your data.", 
 				parent=self.window
 			)
 
@@ -168,10 +183,10 @@ class ExportWindow(ttk.Frame):
 
 		self.window.destroy()
 
-		return messagebox.showinfo("Success", "Data is saved.")
+		return messagebox.showinfo("Success", "Data is exported.")
 
 	def _create_selected_export_parameters(self) -> NamedTuple:
-		"""Summarize the selected export options for easier use.
+		"""Summarize the selected export options.
 
 		Returns:
 			ExportOptions(namedtuple): Contains the selected export opotions.
