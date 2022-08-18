@@ -18,6 +18,9 @@ from typing import NamedTuple, Tuple, List
 
 import numpy as np
 
+from sympy.solvers import solve
+from sympy import Symbol
+
 def calculate_jtc(
 	hamaker: float, 
 	radius: float, 
@@ -238,8 +241,9 @@ def create_ideal_curve_contact_part(
 	parameterMeasurement: NamedTuple
 )-> None: 
 	""""""
-	b = np.sqrt(parameterMaterial.radius) * parameterMaterial.Etot
-	kc = parameterMaterial.kc
+	#solutions = solve_contact_equation()
+
+	a = parameterMaterial.kc / (np.sqrt(parameterMaterial.radius) * parameterMaterial.Etot)
 
 	while(deflection[-1] <= parameterMeasurement.maximumdeflection):
 		index += 1
@@ -250,12 +254,12 @@ def create_ideal_curve_contact_part(
 				index
 			)
 		)
-		c = piezo[-1]
+		x = piezo[-1]
 		deflection.append(
 			calculate_deflection_contact_part(
-				b,
-				kc,
-				c
+				#solutions,
+				a,
+				x
 			)
 		)
 
@@ -302,6 +306,47 @@ def calculate_deflection_contact_part(
 		* np.sqrt(27*(kc**4)*(b**2)*(c**4)-4*(kc**6)*(c**3)))
 		/ (b**3)))**(1/3)))/(32**(1/3))
 	)
+
+def solve_contact_equation(): 
+	""""""
+	a = Symbol("argument1")
+	b = Symbol("argument2")
+	c = Symbol("res")
+
+	return solve((a-c)**(3/2) / c - b,  exclude=[a, b])
+
+def calculate_deflection_contact_part_fast(
+	solutions,
+	a,
+	x
+):
+	""""""
+	a = Symbol("argument1")
+	b = Symbol("argument2")
+	"""
+	for solution in solutions:
+		solution.subs([(a, x), (b, a)])
+	"""
+	for solution in solutions:
+		result = solution.subs([(a, x), (b, a)])
+		if np.isscalar(result):
+			return result
+		print(result)
+
+	return 0
+
+def calculate_deflection_contact_part_slow(
+	a,
+	x
+):
+	""""""
+	y = Symbol("y")
+	res = solve((x-y)**(3/2) / y - a, y)
+	
+	if len(res) > 0:
+		return res[0]
+
+	return 0
 
 def shift_ideal_curve(
 	piezo: List,

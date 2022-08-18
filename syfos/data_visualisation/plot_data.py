@@ -28,7 +28,7 @@ colorActiveCurves = "#00c3ff"
 colorInactiveCurves = "#b0b0b0"
 
 def decorator_update_plot(function):
-	"""Get the axes of a plot, update view limits and redraw the holder."""
+	"""Get axes, update view limits and redraw the holder of a plot."""
 	@functools.wraps(function)
 	def wrapper_update_plot(*args, **kwargs):
 		holder = args[0]

@@ -14,26 +14,78 @@ You should have received a copy of the GNU General Public License
 along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-"""perform tests on the ideal curve"""
+from typing import List, Tuple
 
 import numpy as np
 
-def extraxt_parameters(idealCurve):
+def extraxt_parameters(idealCurve: List) -> Tuple:
 	""""""
-	pass
+	approachPart, contactPart = split_curve(idealCurve)
 
-def split_curve(idealCurve) -> Tuple[np.ndarray, np.ndarray]:
+	adjustedApproachPart, adjustedContactPart = adjusted_curve_parts(
+		approachPart,
+		contactPart
+	)
+
+	approachParameters, contactParameters = calculate_parameters(
+		adjustedApproachPart,
+		adjustedContactPart
+	)
+
+	return approachParameters, contactParameters
+
+def split_curve(idealCurve: List) -> Tuple[List, List]:
+	""""""
+	approachPart = get_approach_part(idealCurve)
+	contactPart = get_contact_part(idealCurve)
+
+	return approachPart, contactPart
+
+def get_approach_part(idealCurve: List) -> List:
 	""""""
 	pass 
-	"""
-	return approachPart, contactPart
-	"""
 
-def create_adjusted_approach_curve():
+def get_contact_part(idealCurve: List) -> List:
 	""""""
 	pass
 
-def create_adjusted_contact_curve():
+def adjusted_curve_parts(
+	approachPart,
+	contactPart
+):
+	""""""
+	pass
+
+def adjust_approach_part(approachPart):
+	""""""
+	pass
+
+
+def adjust_contact_part(contactPart):
+	""""""
+	pass 
+
+def calculate_adjusted_force_value():
+	""""""
+	pass
+
+def calculate_adjusted_pseudo_force_value():
+	""""""
+	pass 
+
+def calculate_adjusted_distance_value():
+	""""""
+	pass
+
+def calculate_parameters():
+	""""""
+	pass 
+
+def calculate_approach_parameters():
+	""""""
+	pass 
+
+def calculate_contact_parameters():
 	""""""
 	pass 
 
