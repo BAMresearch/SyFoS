@@ -3,7 +3,7 @@ SyFoS
 
 Description
 ===========
-SyFoS is a Graphical User Interface to create, display and export synthetic force spectroscopy data. This data can be used to test force spectroscopy analysis software like `SOFA <https://github.com/2Puck/sofa>`_
+SyFoS is a Graphical User Interface to create, display and export synthetic force spectroscopy data. This data can be used to test force spectroscopy analysis software like `SOFA <https://github.com/2Puck/sofa>`_.
 
 Documentation
 =============
