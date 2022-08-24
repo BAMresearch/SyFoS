@@ -39,7 +39,7 @@ from data_visualisation.toolbars.toolbar_line_plot import ToolbarLinePlot
 from gui.export_window import ExportWindow
 
 def decorator_check_if_force_volume_selected(function):
-	"""Check if a force volume if selected."""
+	"""Check if a force volume is selected."""
 	@functools.wraps(function)
 	def wrapper_check_if_force_volume_selected(self):
 		if self.activeForceVolume.get() not in self.forceVolumes:

@@ -17,6 +17,7 @@ along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
 from collections import namedtuple
 import os
 from typing import NamedTuple
+import functools
 
 import tkinter as tk
 from tkinter import filedialog as fd
@@ -26,6 +27,36 @@ from ttkbootstrap.constants import *
 
 import data_handling.export_data as exp_data
 
+def decorator_check_if_file_name_selected(function):
+	"""Check if a file name is selected."""
+	@functools.wraps(function)
+	def wrapper_check_if_file_name_selected(self):
+		if not self.fileName.get():
+			return messagebox.showerror(
+				"Error", 
+				"Please specify a name for the ouput file.", 
+				parent=self.window
+			)
+		else:
+			function(self)
+
+	return wrapper_check_if_file_name_selected
+
+def decorator_check_if_file_location_selected(function):
+	"""Check if a file location is selected."""
+	@functools.wraps(function)
+	def wrapper_check_if_file_location_selected(self):
+		if not os.path.isdir(self.filePath.get()):
+			return messagebox.showerror(
+				"Error", 
+				"Please specify a location to export your data.", 
+				parent=self.window
+			)
+		else:
+			function(self)
+
+	return wrapper_check_if_file_location_selected
+
 class ExportWindow(ttk.Frame):
 	"""A subwindow to handle the data export."""
 	def __init__(self, dataForceVolume):
@@ -34,9 +65,9 @@ class ExportWindow(ttk.Frame):
 
 		self.dataForceVolume = dataForceVolume
 
-		self._create_window()
+		self._create_export_window()
 
-	def _create_window(self) -> None:
+	def _create_export_window(self) -> None:
 		"""Define all elements within the export window."""
 		self._create_frame_data_location()
 		self._create_frame_data_types()
@@ -151,28 +182,14 @@ class ExportWindow(ttk.Frame):
 		if filePath:
 			self.filePath.set(filePath)
 
+	@decorator_check_if_file_name_selected
+	@decorator_check_if_file_location_selected
 	def _export_data(self) -> tk.messagebox:
 		"""Export the current force volume with the selected parameters and options.
 
 		Returns:
 			userFeedback(tk.messagebox): Informs the user whether the data could be exported or not.
 		"""
-		# Check if a folder name is selected.
-		if not self.fileName.get():
-			return messagebox.showerror(
-				"Error", 
-				"Please specify a name for the ouput file.", 
-				parent=self.window
-			)
-
-		# Check if a output folder is selected.
-		if not os.path.isdir(self.filePath.get()):
-			return messagebox.showerror(
-				"Error", 
-				"Please specify a location to export your data.", 
-				parent=self.window
-			)
-
 		selectedExportParameters = self._create_selected_export_parameters()
 
 		exp_data.export_data(
