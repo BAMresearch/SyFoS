@@ -47,7 +47,8 @@ def get_approach_part(idealCurve: List) -> List:
 
 def get_contact_part(idealCurve: List) -> List:
 	""""""
-	pass
+	indexContact = np.where(idealCurve >= 0)[0][-1]
+	return idealCurve[indexContact:]
 
 def adjusted_curve_parts(
 	approachPart,

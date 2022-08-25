@@ -102,6 +102,7 @@ def plot_force_volume(
 
 	Parameters:
 		ax(matplotlib.axes): Axes of a line plot.
+		holder(matplotlib.FigureCanvasTkAgg): Embedds the figure into the GUI.
 		lineCollection(list): Contains every line of the force volume.
 	"""
 	for line in lineCollection:
@@ -117,6 +118,7 @@ def delete_force_volume_from_plot(
 
 	Parameters:
 		ax(matplotlib.axes): Axes of a line plot.
+		holder(matplotlib.FigureCanvasTkAgg): Embedds the figure into the GUI.
 		lineCollection(list): Contains every line of the force volume.
 	"""
 	for line in lineCollection:

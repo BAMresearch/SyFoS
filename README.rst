@@ -1,13 +1,13 @@
-Synthetic Force Volumes
-=======================
+SyFoS
+=====
 
 Description
 ===========
-*Verweiß zu SOFA einfügen*
+SyFoS is a Graphical User Interface to create, display and export synthetic force spectroscopy data. This data can be used to test force spectroscopy analysis software like `SOFA <https://github.com/2Puck/sofa>`_.
 
 Documentation
 =============
-For more detailed information read the documentation at *Link einführen sobald Dokumentation über github pages gehostet ist*.
+For more detailed information and examples of how SyFoS can be used, read the documentation at *Link einführen sobald Dokumentation über github pages gehostet ist*.
 
 Installation
 ============

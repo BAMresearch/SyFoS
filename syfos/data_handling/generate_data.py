@@ -259,7 +259,7 @@ def create_ideal_curve_contact_part(
 		#x = piezo[-1]
 		c = piezo[-1]
 		deflection.append(
-			calculate_deflection_contact_part(
+			calculate_deflection_contact_part_slow(
 				#solutions,
 				#a,
 				#x
