@@ -243,7 +243,9 @@ def create_ideal_curve_contact_part(
 	""""""
 	#solutions = solve_contact_equation()
 
-	a = parameterMaterial.kc / (np.sqrt(parameterMaterial.radius) * parameterMaterial.Etot)
+	#a = parameterMaterial.kc / (np.sqrt(parameterMaterial.radius) * parameterMaterial.Etot)
+	b = np.sqrt(parameterMaterial.radius) * parameterMaterial.Etot
+	kc = parameterMaterial.kc
 
 	while(deflection[-1] <= parameterMeasurement.maximumdeflection):
 		index += 1
@@ -254,12 +256,16 @@ def create_ideal_curve_contact_part(
 				index
 			)
 		)
-		x = piezo[-1]
+		#x = piezo[-1]
+		c = piezo[-1]
 		deflection.append(
 			calculate_deflection_contact_part(
 				#solutions,
-				a,
-				x
+				#a,
+				#x
+				b,
+				kc,
+				c
 			)
 		)
 

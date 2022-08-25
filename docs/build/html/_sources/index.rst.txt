@@ -1,7 +1,7 @@
 Welcome to Synthetic Force Volumes's documentation!
 ===================================================
 
-*Kurzer Einleitungstext der das Programm beschreibt. Verweiß auf git und DOI*
+Kurzer Einleitungstext der das Programm beschreibt. Verweiß auf git und DOI und vlt das Paper.
 
 Create Synthetic Force Volumes
 ==============================
