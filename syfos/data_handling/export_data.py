@@ -49,7 +49,7 @@ def export_data(
 			dataFrameForceVolume, 
 			exportParameters.pathOutputFile
 		)
-		update_progressbar("Exporting to CSV")
+		update_progressbar(newLabel="Exporting to CSV")
 
 	if exportParameters.exportToExcel:
 		export_to_excel(
@@ -57,7 +57,7 @@ def export_data(
 			dataFrameForceVolume, 
 			exportParameters.pathOutputFile
 		)
-		update_progressbar("Exporting to Excel")
+		update_progressbar(newLabel="Exporting to Excel")
 
 	update_progressbar(stop=True)
 

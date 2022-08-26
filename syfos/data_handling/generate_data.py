@@ -18,9 +18,6 @@ from typing import NamedTuple, Tuple, List
 
 import numpy as np
 
-from sympy.solvers import solve
-from sympy import Symbol
-
 def calculate_jtc(
 	hamaker: float, 
 	radius: float, 
@@ -119,9 +116,7 @@ def create_synthetic_force_volume(
 			parameterForceVolume
 		)
 	except ValueError:
-		raise ValueError(
-			"Could not create a synthetic force volume due to negative noise value."
-		) from error
+		raise ValueError("") from error
 	
 	syntheticForceVolume = arrange_curves_in_force_volume(
 		deflection, piezo, shiftedPiezo, 
@@ -147,105 +142,95 @@ def create_ideal_curve(
 	Raises:
 		ValueError: . 
 	"""
-	deflection = [0]
-	piezo = [parameterMeasurement.initialDistance]
-	index = 0
-	
-	index = create_ideal_curve_approach_part(
-		piezo,
-		deflection,
-		index,
+	piezoApproach, deflectionApproach = create_ideal_curve_approach_part(
 		parameterMaterial,
 		parameterMeasurement
 	)
 
-	index -= 1
-	piezo = piezo[:-1]
-	deflection = deflection[:-1]
-
-	index = create_ideal_curve_attraction_part(
-		piezo,
-		deflection,
-		index,
+	piezoAttraction, deflectionAttraction = create_ideal_curve_attraction_part(
 		parameterMeasurement
 	)
 	
-	create_ideal_curve_contact_part(
-		piezo,
-		deflection,
-		index,
+	piezoContact, deflectionContact = create_ideal_curve_contact_part(
 		parameterMaterial,
 		parameterMeasurement
 	)
+
+	piezo = piezoApproach + piezoAttraction + piezoContact
+	deflection = deflectionApproach + deflectionAttraction + deflectionContact
 
 	return piezo, deflection
 		
 def create_ideal_curve_approach_part(
-	piezo: List,
-	deflection: List,
-	index: int,
 	parameterMaterial: NamedTuple,
 	parameterMeasurement: NamedTuple
-)-> None: 
+) -> Tuple[List, List]: 
 	""""""
-	while(deflection[-1] >= parameterMaterial.jtc):
-		index += 1
-		piezo.append(
+	piezoApproach = [parameterMeasurement.initialDistance]
+	deflectionApproach = [0]
+
+	while(True):
+		piezoApproach.append(
 			calculate_piezo_value(
 				parameterMeasurement.initialDistance,
 				parameterMeasurement.distanceInterval,
-				index
+				len(piezoApproach)
 			)
 		)
-		deflection.append(
+		deflectionApproach.append(
 			calculate_deflection_approach_part(
 				parameterMaterial.Hamaker,
 				parameterMaterial.radius,
 				parameterMaterial.kc,
-				piezo[-1],
-				deflection[-1]
+				piezoApproach[-1],
+				deflectionApproach[-1]
 			)
 		)
 
-	return index
+		if (deflectionApproach[-1] < parameterMaterial.jtc):
+			break
+
+	return piezoApproach, deflectionApproach
 
 def create_ideal_curve_attraction_part(
-	piezo: List,
-	deflection: List,
-	index: int,
 	parameterMeasurement: NamedTuple
-)-> None: 
+) -> Tuple[List, List]: 
 	""""""
-	while(deflection[index] <= 0):
-		index += 1
-		piezo.append(
+	piezoAttraction = []
+	deflectionAttraction = []
+
+	while(True):
+		piezoAttraction.append(
 			calculate_piezo_value(
 				parameterMeasurement.initialDistance,
 				parameterMeasurement.distanceInterval,
-				index
+				len(piezoAttraction)
 			)
 		)
-		deflection.append(
+		deflectionAttraction.append(
 			calculate_deflection_attraction_part(
-				piezo[-1]
+				piezoAttraction[-1]
 			)
 		)
 
-	return index
+		if (deflectionAttraction[-1] >= 0):
+			break
+
+	return piezoAttraction, deflectionAttraction
 
 def create_ideal_curve_contact_part(
-	piezo: List,
-	deflection: List,
-	index: int,
 	parameterMaterial: NamedTuple,
 	parameterMeasurement: NamedTuple
-)-> None: 
+) -> Tuple[List, List]: 
 	""""""
 	#solutions = solve_contact_equation()
 
 	#a = parameterMaterial.kc / (np.sqrt(parameterMaterial.radius) * parameterMaterial.Etot)
 	b = np.sqrt(parameterMaterial.radius) * parameterMaterial.Etot
 	kc = parameterMaterial.kc
+
+	piezoContact = []
+	deflectionContact = []
 
 	while(deflection[-1] <= parameterMeasurement.maximumdeflection):
 		index += 1
@@ -259,7 +244,7 @@ def create_ideal_curve_contact_part(
 		#x = piezo[-1]
 		c = piezo[-1]
 		deflection.append(
-			calculate_deflection_contact_part_slow(
+			calculate_deflection_contact_part(
 				#solutions,
 				#a,
 				#x
@@ -268,6 +253,8 @@ def create_ideal_curve_contact_part(
 				c
 			)
 		)
+
+	return piezoContact, deflectionContact
 
 def calculate_piezo_value(
 	initialDistance: float,
@@ -312,47 +299,6 @@ def calculate_deflection_contact_part(
 		* np.sqrt(27*(kc**4)*(b**2)*(c**4)-4*(kc**6)*(c**3)))
 		/ (b**3)))**(1/3)))/(32**(1/3))
 	)
-
-def solve_contact_equation(): 
-	""""""
-	a = Symbol("argument1")
-	b = Symbol("argument2")
-	c = Symbol("res")
-
-	return solve((a-c)**(3/2) / c - b,  exclude=[a, b])
-
-def calculate_deflection_contact_part_fast(
-	solutions,
-	a,
-	x
-):
-	""""""
-	a = Symbol("argument1")
-	b = Symbol("argument2")
-	"""
-	for solution in solutions:
-		solution.subs([(a, x), (b, a)])
-	"""
-	for solution in solutions:
-		result = solution.subs([(a, x), (b, a)])
-		if np.isscalar(result):
-			return result
-		print(result)
-
-	return 0
-
-def calculate_deflection_contact_part_slow(
-	a,
-	x
-):
-	""""""
-	y = Symbol("y")
-	res = solve((x-y)**(3/2) / y - a, y)
-	
-	if len(res) > 0:
-		return res[0]
-
-	return 0
 
 def shift_ideal_curve(
 	piezo: List,
