@@ -23,20 +23,18 @@ def calculate_jtc(
 	radius: float, 
 	kc: float
 ) -> float:
-	"""Calculate the jtc as
+	"""Calculate the jtc from the probe parameters and the hamaker value.
 
 	Parameters:
-		hamaker(float): .
-		radius(float): .
-		kc(float): .
+		hamaker(float): Hamker value for the specified probe and sample system.
+		radius(float): Specified value for the tip radius.
+		kc(float): Specified value for the spring constant.
 
 	Returns:
 		jtc(float): .
 	"""
-	return -(
-		(
-			(hamaker * radius) / (3 * kc)
-		)**(1/3)
+	return - np.cbrt(
+		(hamaker*radius) / (3*kc)
 	)
 
 def calculate_etot(
@@ -45,31 +43,43 @@ def calculate_etot(
 	poissonRatioSample: float,
 	eSample: float,
 ) -> float:
-	"""Calculate etot as
+	"""Calculate the etot value from the poisson ration 
+	   and e value of probe and sample.
 
 	Parameters:
-		poissonRatioProbe(float): .
-		eProbe(float): .
-		poissonRatioSample(float): .
-		eSample(float): .
+		poissonRatioProbe(float): Specified poisson ratio for the probe.
+		eProbe(float): Specified e value for the probe.
+		poissonRatioSample(float): Specified poisson ratio for the sample.
+		eSample(float): Specified e value for the sample.
 
 	Returns:
 		etot(float): .
 	"""
 	return (
-		4 
-		/ (3 * ((1 - poissonRatioProbe**2) / eProbe + (1 - poissonRatioSample**2) / eSample))
+		4 / (3*(
+			calculate_etot_inner_fraction(poissonRatioProbe, eProbe)
+			+ calculate_etot_inner_fraction(poissonRatioSample, eSample)
+		))
+	)
+
+def calculate_etot_inner_fraction(
+	poissonRatio,
+	e
+) -> float: 
+	""""""
+	return (
+		(1 - poissonRatio**2) / e
 	)
 
 def calculate_hamaker(
 	hamakerProbe: float, 
 	hamakerSample: float, 
 ) -> float:
-	"""Calculate hamaker as
+	"""Calculate the hamaker value for the probe and sample
 
 	Parameters:
-		hamakerProbe(float): .
-		hamakerSample(float): .
+		hamakerProbe(float): Specified hamaker value for the probe.
+		hamakerSample(float): Specified hamaker value for the sample.
 
 	Returns:
 		hamaker(float): .
@@ -95,6 +105,7 @@ def create_synthetic_force_volume(
 
 	Raises:
 		ValueError: . 
+		ValueError: .
 	"""
 	try:
 		piezo, deflection = create_ideal_curve(
@@ -144,16 +155,20 @@ def create_ideal_curve(
 	"""
 	piezoApproach, deflectionApproach = create_ideal_curve_approach_part(
 		parameterMaterial,
-		parameterMeasurement
+		parameterMeasurement,
 	)
 
+	totalLength = len(piezoApproach)
 	piezoAttraction, deflectionAttraction = create_ideal_curve_attraction_part(
-		parameterMeasurement
+		parameterMeasurement,
+		totalLength
 	)
 	
+	totalLength += len(piezoAttraction)
 	piezoContact, deflectionContact = create_ideal_curve_contact_part(
 		parameterMaterial,
-		parameterMeasurement
+		parameterMeasurement,
+		totalLength
 	)
 
 	piezo = piezoApproach + piezoAttraction + piezoContact
@@ -165,7 +180,15 @@ def create_ideal_curve_approach_part(
 	parameterMaterial: NamedTuple,
 	parameterMeasurement: NamedTuple
 ) -> Tuple[List, List]: 
-	""""""
+	"""
+
+	Parameters:
+		parameterMaterial(namedtuple): .
+		parameterMeasurement(namedtuple): .
+
+	Returns:
+
+	"""
 	piezoApproach = [parameterMeasurement.initialDistance]
 	deflectionApproach = [0]
 
@@ -193,9 +216,17 @@ def create_ideal_curve_approach_part(
 	return piezoApproach, deflectionApproach
 
 def create_ideal_curve_attraction_part(
-	parameterMeasurement: NamedTuple
+	parameterMeasurement: NamedTuple,
+	totalLength: int
 ) -> Tuple[List, List]: 
-	""""""
+	"""
+
+	Parameters:
+		parameterMeasurement(namedtuple): .
+		totalLength(int): .
+
+	Returns:
+	"""
 	piezoAttraction = []
 	deflectionAttraction = []
 
@@ -204,7 +235,7 @@ def create_ideal_curve_attraction_part(
 			calculate_piezo_value(
 				parameterMeasurement.initialDistance,
 				parameterMeasurement.distanceInterval,
-				len(piezoAttraction)
+				len(piezoAttraction) + totalLength
 			)
 		)
 		deflectionAttraction.append(
@@ -220,49 +251,59 @@ def create_ideal_curve_attraction_part(
 
 def create_ideal_curve_contact_part(
 	parameterMaterial: NamedTuple,
-	parameterMeasurement: NamedTuple
+	parameterMeasurement: NamedTuple,
+	totalLength: int
 ) -> Tuple[List, List]: 
-	""""""
-	#solutions = solve_contact_equation()
+	"""
 
-	#a = parameterMaterial.kc / (np.sqrt(parameterMaterial.radius) * parameterMaterial.Etot)
-	b = np.sqrt(parameterMaterial.radius) * parameterMaterial.Etot
-	kc = parameterMaterial.kc
+	Parameters:
+		parameterMaterial(namedtuple): .
+		parameterMeasurement(namedtuple): .
+		totalLength(int): .
+
+	Returns:
+	"""
+	parameterSubstitut = parameterMaterial.kc / (np.sqrt(parameterMaterial.radius) * parameterMaterial.Etot)
 
 	piezoContact = []
 	deflectionContact = []
 
-	while(deflection[-1] <= parameterMeasurement.maximumdeflection):
-		index += 1
-		piezo.append(
+	while(True):
+		piezoContact.append(
 			calculate_piezo_value(
 				parameterMeasurement.initialDistance,
 				parameterMeasurement.distanceInterval,
-				index
+				len(piezoContact) + totalLength
 			)
 		)
-		#x = piezo[-1]
-		c = piezo[-1]
-		deflection.append(
+		deflectionContact.append(
 			calculate_deflection_contact_part(
-				#solutions,
-				#a,
-				#x
-				b,
-				kc,
-				c
+				parameterSubstitut,
+				piezoContact[-1]
 			)
 		)
+
+		if (deflectionContact[-1] >= parameterMeasurement.maximumdeflection):
+			break
 
 	return piezoContact, deflectionContact
 
 def calculate_piezo_value(
 	initialDistance: float,
 	distanceInterval: float,
-	index: int
+	currentLength: int
 ) -> float:
-	""""""
-	return initialDistance + distanceInterval * index
+	"""Calculate the current piezo value.
+
+	Parameters:
+		initialDistance(float): .
+		distanceInterval(float): .
+		currentLength(int): .
+
+	Returns:
+		piezoValue(float): .
+	"""
+	return initialDistance + distanceInterval * currentLength
 
 def calculate_deflection_approach_part(
 	hamaker: float,
@@ -271,41 +312,130 @@ def calculate_deflection_approach_part(
 	currentPiezoValue: float,
 	lastDeflectionValue: float
 ) -> float:
-	""""""
+	"""Calculate the current deflection while probe and sample converge,
+	   using Hooke's Law and the Hamaker constant.
+	
+	Parameters:
+		hamaker(float): .
+		radius(float): .
+		kc(float): .
+		currentPiezoValue(float): .
+		lastDeflectionValue(float): .
+
+	Returns:
+		deflectionValue(float): .
+	"""
 	return (
-		- (hamaker * radius)
-		/ (6 * ((lastDeflectionValue - currentPiezoValue) ** 2)) * (1 / kc)
+		- (hamaker*radius)
+		/ (6*(lastDeflectionValue-currentPiezoValue)**2) 
+		* (1/kc)
 	)
 
 def calculate_deflection_attraction_part(
 	currentPiezoValue: float
 ) -> float:
-	""""""
+	"""Calculate the current deflection while the probe is in the 
+	   attractive regime.
+
+	Parameters:
+		currentPiezoValue(float): .
+
+	Returns:
+		deflectionValue(float): .
+	"""
 	return currentPiezoValue
 
 def calculate_deflection_contact_part(
-	b: float,
-	kc: float,
-	c: float
-) -> float:
-	""""""
+	parameterSubstitut: float,
+	currentPiezoValue: float
+) -> float:	
+	"""Calculate the current deflection after probe and sample are in contact,
+	   using the Hertzian contact theory.
+
+	Parameters:
+		parameterSubstitut(float): .
+		currentPiezoValue(float): .
+
+	Returns:
+		deflectionValue(float): .
+	"""
 	return (
-		- (kc**2-3*b**2*c)/(3*b**2)-(2**(1/3)*(((6*kc**2*c)
-		/ (b**2))-kc**4/b**4))/(3*(-((2*kc**6)/(b**6))
-		+ ((18*kc**4*c)/(b**4))-((27*kc**2*c**2)*(b**2))
-		+ ((3*np.sqrt(3)*np.sqrt(27*(kc**4)*(b**2)*(c**4)-4*(kc**6)
-		* (c**3)))/(b**3))**(1/3)))+(((-((2*kc**6)/(b**6))+((18*(kc**4)*c)
-		/ (b**4))-((27*(kc**2)*(c**2))/(b**2))+((3*np.sqrt(3)
-		* np.sqrt(27*(kc**4)*(b**2)*(c**4)-4*(kc**6)*(c**3)))
-		/ (b**3)))**(1/3)))/(32**(1/3))
+		1 / 3 
+		* (
+			3 * currentPiezoValue
+			- parameterSubstitut**2
+		)
+		+ calculate_cubic_root(parameterSubstitut, currentPiezoValue)
+		/ (3 * np.cbrt(2))
+		- (
+			np.cbrt(2)
+			* (
+				6 * parameterSubstitut**2
+				* currentPiezoValue
+				- parameterSubstitut**4
+			)
+		)
+		/ 3 * calculate_cubic_root(parameterSubstitut, currentPiezoValue)
 	)
+
+def calculate_inner_root(
+	parameterSubstitut: float,
+	currentPiezoValue: float
+) -> float:
+	"""
+
+	Parameters:
+		parameterSubstitut(float): .
+		currentPiezoValue(float): .
+
+	Returns:
+		(float): .
+	"""
+	return np.sqrt(
+		27 * parameterSubstitut**4 
+		* currentPiezoValue**4 
+		- 4 * parameterSubstitut**6 
+		* currentPiezoValue**3
+	)
+
+def calculate_cubic_root(
+	parameterSubstitut: float,
+	currentPiezoValue: float
+) -> float:
+	"""
+
+	Parameters:
+		parameterSubstitut(float): .
+		currentPiezoValue(float): .
+
+	Returns:
+		(float): .
+	"""
+	return np.cbrt(
+		- 2 * parameterSubstitut**6
+		+ 18 * parameterSubstitut**4
+		* currentPiezoValue
+		- 27 * parameterSubstitut**2
+		* currentPiezoValue**2
+		+ 3 * np.sqrt(3)
+		* calculate_inner_root(parameterSubstitut, currentPiezoValue)	
+	)	
 
 def shift_ideal_curve(
 	piezo: List,
 	deflection: List,
 	parameterForceVolume: NamedTuple
 ) -> Tuple[np.ndarray, np.ndarray]:
-	""""""
+	"""
+
+	Parameters:
+		piezo(list): .
+		deflection(list): .
+		parameterForceVolume(nametupel): .
+
+	Returns:
+		shiftedIdealCurve(tuple): .
+	"""
 	shiftedPiezo = np.asarray(piezo) + parameterForceVolume.topography
 	shiftedDeflection = np.asarray(deflection) + parameterForceVolume.virtualDeflection
 
