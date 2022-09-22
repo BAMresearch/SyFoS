@@ -26,12 +26,12 @@ def calculate_jtc(
 	"""Calculate the jtc from the probe parameters and the hamaker value.
 
 	Parameters:
-		hamaker(float): Hamker value for the specified probe and sample system.
+		hamaker(float): Hamker value for the specified probe and sample setup.
 		radius(float): Specified value for the tip radius.
 		kc(float): Specified value for the spring constant.
 
 	Returns:
-		jtc(float): .
+		jtc(float): jtc value for the given probe and sample setup.
 	"""
 	return - np.cbrt(
 		(hamaker*radius) / (3*kc)
@@ -53,7 +53,7 @@ def calculate_etot(
 		eSample(float): Specified e value for the sample.
 
 	Returns:
-		etot(float): .
+		etot(float): etot value for the given probe and sample setup.
 	"""
 	return (
 		4 / (3*(
@@ -66,7 +66,15 @@ def calculate_etot_inner_fraction(
 	poissonRatio,
 	e
 ) -> float: 
-	""""""
+	"""Helper function for calculate_etot.
+
+	Parameters:
+		poissonRatio(float): Specified poisson ratio for the probe/sample.
+		e(float): Specified e value for the probe/sample.
+
+	Returns:
+		innerFraction(float): Inner fraction for the probe/sample values.
+	"""
 	return (
 		(1 - poissonRatio**2) / e
 	)
@@ -82,7 +90,7 @@ def calculate_hamaker(
 		hamakerSample(float): Specified hamaker value for the sample.
 
 	Returns:
-		hamaker(float): .
+		hamaker(float): hamker value for the given probe and sample setup.
 	"""
 	return np.sqrt(hamakerProbe) * np.sqrt(hamakerSample)
 
@@ -92,20 +100,22 @@ def create_synthetic_force_volume(
 	parameterForceVolume: NamedTuple
 ) -> np.ndarray:
 	"""Create a set of synthetic curves from given parameters, 
-	   including a noise level, virtuell deflection and topography offset.
+	   including a noise level, virtual deflection and topography offset.
 
 	Parameters:
-		parameterMaterial(nametupel): Contains all parameters describing the material 
-									  and geometriy of the virtuell measuring system
-		parameterMeasuerement(nametupel): 
-		parameterForceVolume(nametupel):
+		parameterMaterial(namedtupel): Contains all parameters describing the material 
+									  and geometriy of the virtuell measuring system.
+		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
+										  measuring system.
+		parameterForceVolume(namedtupel): Contains the number of synthetic curves, the noise
+										 level and the virtual deflection and topography offset.
 	
 	Returns:
-		syntheticForceVolume(np.ndarray): Set of generated synthetic curves.
+		syntheticForceVolume(np.ndarray): Set of generated synthetic force distance curves.
 
 	Raises:
-		ValueError: . 
-		ValueError: .
+		ValueError: If the ideal curve can not be created with the given parameters. 
+		ValueError: If the given noise can not be applied to the ideal curve.
 	"""
 	try:
 		piezo, deflection = create_ideal_curve(
@@ -130,8 +140,9 @@ def create_synthetic_force_volume(
 		raise ValueError("") from error
 	
 	syntheticForceVolume = arrange_curves_in_force_volume(
-		deflection, piezo, shiftedPiezo, 
-		shiftedDeflection, noisyCurves
+		piezo, deflection, 
+		shiftedPiezo, shiftedDeflection, 
+		noisyCurves
 	)
 
 	return syntheticForceVolume
@@ -140,18 +151,17 @@ def create_ideal_curve(
 	parameterMaterial: NamedTuple, 
 	parameterMeasurement: NamedTuple
 ) -> Tuple[List, List]:
-	"""
+	"""Create an ideal curve from the given parameters.
 
 	Parameters:
-		parameterMaterial(nametupel): .
-		parameterMeasurement(nametupel): .
+		parameterMaterial(namedtupel): Contains all parameters describing the material 
+									  and geometriy of the virtuell measuring system.
+		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
+										 measuring system.
 
 	Returns:
-		piezo(list): .
-		deflection(list): . 
-
-	Raises:
-		ValueError: . 
+		piezo(list): Piezo (x) values of the ideal curve.
+		deflection(list): Deflection (y) values of the ideal curve. 
 	"""
 	piezoApproach, deflectionApproach = create_ideal_curve_approach_part(
 		parameterMaterial,
@@ -183,11 +193,15 @@ def create_ideal_curve_approach_part(
 	"""
 
 	Parameters:
-		parameterMaterial(namedtuple): .
-		parameterMeasurement(namedtuple): .
+		parameterMaterial(namedtupel): Contains all parameters describing the material 
+									  and geometriy of the virtuell measuring system.
+		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
+										 measuring system.
 
 	Returns:
-
+	
+	Raises:
+		ValueError:
 	"""
 	piezoApproach = [parameterMeasurement.initialDistance]
 	deflectionApproach = [0]
@@ -222,10 +236,14 @@ def create_ideal_curve_attraction_part(
 	"""
 
 	Parameters:
-		parameterMeasurement(namedtuple): .
+		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
+										 measuring system.
 		totalLength(int): .
 
 	Returns:
+
+	Raises:
+		ValueError:
 	"""
 	piezoAttraction = []
 	deflectionAttraction = []
@@ -257,11 +275,16 @@ def create_ideal_curve_contact_part(
 	"""
 
 	Parameters:
-		parameterMaterial(namedtuple): .
-		parameterMeasurement(namedtuple): .
+		parameterMaterial(namedtupel): Contains all parameters describing the material 
+									  and geometriy of the virtuell measuring system.
+		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
+										 measuring system.
 		totalLength(int): .
 
 	Returns:
+
+	Raises:
+		ValueError:
 	"""
 	parameterSubstitut = parameterMaterial.kc / (np.sqrt(parameterMaterial.radius) * parameterMaterial.Etot)
 
@@ -301,7 +324,7 @@ def calculate_piezo_value(
 		currentLength(int): .
 
 	Returns:
-		piezoValue(float): .
+		piezoValue(float): Current piezo value of the ideal curve.
 	"""
 	return initialDistance + distanceInterval * currentLength
 
@@ -316,14 +339,15 @@ def calculate_deflection_approach_part(
 	   using Hooke's Law and the Hamaker constant.
 	
 	Parameters:
-		hamaker(float): .
-		radius(float): .
-		kc(float): .
-		currentPiezoValue(float): .
-		lastDeflectionValue(float): .
+		hamaker(float): Hamaker value of the given virtual system.
+		radius(float): Value for the specified tip radius.
+		kc(float): Value for the specified spring constant.
+		currentPiezoValue(float): Corresponding piezo value.
+		lastDeflectionValue(float): Previous deflection value.
 
 	Returns:
-		deflectionValue(float): .
+		deflectionValue(float): Current deflection value while probe and
+							    sample approach each other.
 	"""
 	return (
 		- (hamaker*radius)
@@ -334,14 +358,15 @@ def calculate_deflection_approach_part(
 def calculate_deflection_attraction_part(
 	currentPiezoValue: float
 ) -> float:
-	"""Calculate the current deflection while the probe is in the 
+	"""Calculate the current deflection while the probe is within the 
 	   attractive regime.
 
 	Parameters:
-		currentPiezoValue(float): .
+		currentPiezoValue(float): Corresponding piezo value.
 
 	Returns:
-		deflectionValue(float): .
+		deflectionValue(float): Current deflection value while probe and
+							    sample attract each other.
 	"""
 	return currentPiezoValue
 
@@ -354,10 +379,11 @@ def calculate_deflection_contact_part(
 
 	Parameters:
 		parameterSubstitut(float): .
-		currentPiezoValue(float): .
+		currentPiezoValue(float): Corresponding piezo value.
 
 	Returns:
-		deflectionValue(float): .
+		deflectionValue(float): Current deflection value while the probe 
+							    is in contact.
 	"""
 	return (
 		1 / 3 
@@ -378,31 +404,11 @@ def calculate_deflection_contact_part(
 		/ 3 * calculate_cubic_root(parameterSubstitut, currentPiezoValue)
 	)
 
-def calculate_inner_root(
-	parameterSubstitut: float,
-	currentPiezoValue: float
-) -> float:
-	"""
-
-	Parameters:
-		parameterSubstitut(float): .
-		currentPiezoValue(float): .
-
-	Returns:
-		(float): .
-	"""
-	return np.sqrt(
-		27 * parameterSubstitut**4 
-		* currentPiezoValue**4 
-		- 4 * parameterSubstitut**6 
-		* currentPiezoValue**3
-	)
-
 def calculate_cubic_root(
 	parameterSubstitut: float,
 	currentPiezoValue: float
 ) -> float:
-	"""
+	"""Helper function for calculate_deflection_contact_part.
 
 	Parameters:
 		parameterSubstitut(float): .
@@ -419,6 +425,26 @@ def calculate_cubic_root(
 		* currentPiezoValue**2
 		+ 3 * np.sqrt(3)
 		* calculate_inner_root(parameterSubstitut, currentPiezoValue)	
+	)
+
+def calculate_inner_root(
+	parameterSubstitut: float,
+	currentPiezoValue: float
+) -> float:
+	"""Helper function for calculate_cubic_root.
+
+	Parameters:
+		parameterSubstitut(float): .
+		currentPiezoValue(float): .
+
+	Returns:
+		(float): .
+	"""
+	return np.sqrt(
+		27 * parameterSubstitut**4 
+		* currentPiezoValue**4 
+		- 4 * parameterSubstitut**6 
+		* currentPiezoValue**3
 	)	
 
 def shift_ideal_curve(
@@ -426,12 +452,13 @@ def shift_ideal_curve(
 	deflection: List,
 	parameterForceVolume: NamedTuple
 ) -> Tuple[np.ndarray, np.ndarray]:
-	"""
+	"""Shift the ideal curve in the x and y direction by applying the 
+	   virtual deflection and topography offset.
 
 	Parameters:
 		piezo(list): .
 		deflection(list): .
-		parameterForceVolume(nametupel): .
+		parameterForceVolume(namedtupel): .
 
 	Returns:
 		shiftedIdealCurve(tuple): .
@@ -451,7 +478,8 @@ def multiply_and_apply_noise_to_ideal_curve(
 
 	Parameters:
 		shiftedDeflection(list): shifted ideal deflection
-		parameterForceVolume(nametupel): contains numberOfCurves, noise, virtualDeflection and topography
+		parameterForceVolume(namedtupel): Contains the number of synthetic curves, the noise
+										 level and the virtual deflection and topography offset.
 
 	Returns:
 		noisyCurves(list): .
@@ -465,11 +493,12 @@ def apply_noise_to_curve(
 	shiftedDeflection: List, 
 	parameterForceVolume: NamedTuple
 ) -> np.ndarray:
-	"""applies noise to shiftedDeflection
+	"""Apply noise to the deflection values of the shifted ideal curve.
 
 	Parameters:
-		shiftedDeflection(list): shifted ideal deflection
-		parameterForceVolume(nametupel): contains numberOfCurves, noise, virtualDeflection and topography
+		shiftedDeflection(list): Deflection (y) values of the shifted ideal curve.
+		parameterForceVolume(namedtupel): Contains the number of synthetic curves, the noise
+										 level and the virtual deflection and topography offset.
 
 	Returns:
 		(np.ndarray): .
@@ -487,19 +516,20 @@ def apply_noise_to_curve(
 
 
 def arrange_curves_in_force_volume(
-	deflection: List, 
-	piezo: List, 
+	piezo: List,
+	deflection: List,  
 	shiftedPiezo: np.ndarray, 
 	shiftedDeflection: np.ndarray, 
 	noisyCurves: List
 ) -> List[np.ndarray]:
-	"""
+	"""Arrange the ideal curve, the shifted ideal curve and the noisy curves
+	   in a force volume.
 
 	Parameters:
-		deflection(list):
-		piezo(list):
-		shiftedPiezo(np.ndarray):
-		shiftedDeflection(np.ndarray):
+		piezo(list): Piezo (x) values of the ideal curve.
+		deflection(list): Deflection (y) values of the ideal curve.
+		shiftedPiezo(np.ndarray): Piezo (x) values of the shifted ideal curve.
+		shiftedDeflection(np.ndarray): Deflection (y) values of the shifted ideal curve.
 		noisyCurves(list): .
 
 	Returns:
