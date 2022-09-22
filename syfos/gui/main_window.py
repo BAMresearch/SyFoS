@@ -33,10 +33,12 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import gui.default_materials as dm
+from gui.tkinter_utility import SubscriptLabel, CheckedInput
+from gui.export_window import ExportWindow
+
 import data_handling.generate_data as gen_data
 import data_visualisation.plot_data as plot_data
 from data_visualisation.toolbars.toolbar_line_plot import ToolbarLinePlot
-from gui.export_window import ExportWindow
 
 def decorator_check_if_force_volume_selected(function):
 	"""Check if a force volume is selected."""
@@ -148,7 +150,7 @@ class MainWindow(ttk.Frame):
 		)
 		dropdownProbe.grid(row=0, column=1, sticky=W, padx=(7, 0), pady=(0, 5))
 
-		labelKc = ttk.Label(frameParameters, text="kc:")
+		labelKc = SubscriptLabel(frameParameters, text="k", subscript="c")
 		labelKc.grid(row=1, column=0, sticky=W)
 
 		entryKc = ttk.Entry(
@@ -159,7 +161,7 @@ class MainWindow(ttk.Frame):
 		)
 		entryKc.grid(row=1, column=1)
 
-		labelRadius = ttk.Label(frameParameters, text="Radius:")
+		labelRadius = SubscriptLabel(frameParameters, text="R", subscript="")
 		labelRadius.grid(row=2, column=0, sticky=W)
 
 		entryRadius = ttk.Entry(
@@ -170,21 +172,7 @@ class MainWindow(ttk.Frame):
 		)
 		entryRadius.grid(row=2, column=1)
 		
-		labelEProbe = tk.Text(
-			frameParameters, 
-			width=10, height=1,
-		)
-		labelEProbe.tag_configure(
-			"subscript", 
-			offset=-2, 
-			font=("Helvetica", 8, "italic")
-		)
-		labelEProbe.insert(INSERT, "e", "", "probe", "subscript")
-		labelEProbe.config(
-			state="disabled",
-			borderwidth=0,
-			highlightthickness=0
-		)
+		labelEProbe = SubscriptLabel(frameParameters, text="E", subscript="tip")
 		labelEProbe.grid(row=3, column=0, sticky=W)
 
 		entryEProbe = ttk.Entry(
@@ -195,7 +183,7 @@ class MainWindow(ttk.Frame):
 		)
 		entryEProbe.grid(row=3, column=1)
 
-		labelPoissonRatioProbe = ttk.Label(frameParameters, text="Poisson Ratio:")
+		labelPoissonRatioProbe = SubscriptLabel(frameParameters, text="\u03BD", subscript="tip")
 		labelPoissonRatioProbe.grid(row=4, column=0, sticky=W)
 
 		entryPoissonRatioProbe = ttk.Entry(
@@ -206,7 +194,7 @@ class MainWindow(ttk.Frame):
 		)
 		entryPoissonRatioProbe.grid(row=4, column=1)
 
-		labelHamakerProbe = ttk.Label(frameParameters, text="Hamaker:")
+		labelHamakerProbe = SubscriptLabel(frameParameters, text="A", subscript="tip")
 		labelHamakerProbe.grid(row=5, column=0, sticky=W)
 
 		entryHamakerProbe = ttk.Entry(
@@ -236,21 +224,7 @@ class MainWindow(ttk.Frame):
 		)
 		dropdownSample.grid(row=0, column=3, sticky=W, padx=(7, 0), pady=(0, 5))
 
-		labelESample = tk.Text(
-			frameParameters, 
-			width=10, height=1,
-		)
-		labelESample.tag_configure(
-			"subscript", 
-			offset=-2, 
-			font=("Helvetica", 8, "italic")
-		)
-		labelESample.insert(INSERT, "e", "", "sample", "subscript")
-		labelESample.config(
-			state="disabled",
-			borderwidth=0,
-			highlightthickness=0
-		)
+		labelESample = SubscriptLabel(frameParameters, text="E", subscript="sample")
 		labelESample.grid(row=1, column=2, sticky=W)
 
 		entryESample = ttk.Entry(
@@ -261,7 +235,7 @@ class MainWindow(ttk.Frame):
 		)
 		entryESample.grid(row=1, column=3)
 
-		labelPoissonRatioSample = ttk.Label(frameParameters, text="Poisson Ratio:")
+		labelPoissonRatioSample = SubscriptLabel(frameParameters, text="\u03BD", subscript="sample")
 		labelPoissonRatioSample.grid(row=2, column=2, sticky=W)
 
 		entryPoissonRatioSample = ttk.Entry(
@@ -272,7 +246,7 @@ class MainWindow(ttk.Frame):
 		)
 		entryPoissonRatioSample.grid(row=2, column=3)
 
-		labelHamakerSample = ttk.Label(frameParameters, text="Hamaker:")
+		labelHamakerSample = SubscriptLabel(frameParameters, text="A", subscript="sample")
 		labelHamakerSample.grid(row=3, column=2, sticky=W)
 
 		entryHamakerSample = ttk.Entry(
@@ -309,7 +283,7 @@ class MainWindow(ttk.Frame):
 		)
 		entryMaximumDeflection.grid(row=2, column=5)
 
-		labelInitialDistance = ttk.Label(frameParameters, text="Initial Distance:")
+		labelInitialDistance = SubscriptLabel(frameParameters, text="Initial Distance Z", subscript="0")
 		labelInitialDistance.grid(row=3, column=4, sticky=W)
 
 		entryInitialDistance = ttk.Entry(
@@ -327,39 +301,66 @@ class MainWindow(ttk.Frame):
 		)
 		entryDistanceInterval.grid(row=4, column=5)	
 
-		labelNoise = ttk.Label(frameParameters, text="Noise:")
-		labelNoise.grid(row=5, column=4, sticky=W)
-
-		entryNoise = ttk.Entry(
+		# Artefact section
+		labelArtefact = ttk.Label(
 			frameParameters, 
-			textvariable=self.noise
+			text="Artefacts", 
+			font="bold"
 		)
-		entryNoise.grid(row=5, column=5)
+		labelArtefact.grid(row=0, column=6, columnspan=2, sticky=W, pady=(0, 5))
 
 		labelVirtualDeflection = ttk.Label(frameParameters, text="Virtual Deflection:")
-		labelVirtualDeflection.grid(row=6, column=4, sticky=W)
+		labelVirtualDeflection.grid(row=1, column=6, sticky=W)
 
 		entryVirtualDeflection = ttk.Entry(
 			frameParameters, 
 			textvariable=self.virtualDeflection
 		)
-		entryVirtualDeflection.grid(row=6, column=5)
+		entryVirtualDeflection.grid(row=1, column=7)
 
-		labelTopography = ttk.Label(frameParameters, text="Topography:")
-		labelTopography.grid(row=7, column=4, sticky=W)
+		labelVirtualDeflectionUnit = ttk.Label(frameParameters, text="m")
+		labelVirtualDeflectionUnit.grid(row=1, column=8, sticky=W)
 
-		entryTopography = ttk.Entry(
+		labelTopographyOffset = ttk.Label(frameParameters, text="Topography Offset:")
+		labelTopographyOffset.grid(row=2, column=6, sticky=W)
+
+		entryTopographyOffset = ttk.Entry(
 			frameParameters, 
 			textvariable=self.topography
 		)
-		entryTopography.grid(row=7, column=5)
-		
+		entryTopographyOffset.grid(row=2, column=7)
+
+		labelTopographyOffsetUnit = ttk.Label(frameParameters, text="m")
+		labelTopographyOffsetUnit.grid(row=2, column=8, sticky=W)
+
+		labelNoise = ttk.Label(frameParameters, text="Noise:")
+		labelNoise.grid(row=3, column=6, sticky=W)
+
+		entryNoise = ttk.Entry(
+			frameParameters, 
+			textvariable=self.noise
+		)
+		entryNoise.grid(row=3, column=7)
+
+		self.testVar = tk.StringVar(self.root, value="")
+		entryTest = CheckedInput(
+			frameParameters, 
+			textvariable=self.testVar,
+			name="Test",
+			placeholder="0 - 10",
+			valueBoundaries=[0, 10]
+		)
+		entryTest.grid(row=4, column=7)
+
 		frameParameters.grid_columnconfigure(0, weight=1, pad=3)
 		frameParameters.grid_columnconfigure(1, weight=1, pad=3)
 		frameParameters.grid_columnconfigure(2, weight=1, pad=3)
 		frameParameters.grid_columnconfigure(3, weight=1, pad=3)
 		frameParameters.grid_columnconfigure(4, weight=1, pad=3)
 		frameParameters.grid_columnconfigure(5, weight=1, pad=3)
+		frameParameters.grid_columnconfigure(6, weight=1, pad=3)
+		frameParameters.grid_columnconfigure(7, weight=1, pad=3)
+		frameParameters.grid_columnconfigure(8, weight=1, pad=3)
 
 		frameParameters.grid_rowconfigure(0, weight=1, pad=3)
 		frameParameters.grid_rowconfigure(1, weight=1, pad=3)
@@ -367,8 +368,6 @@ class MainWindow(ttk.Frame):
 		frameParameters.grid_rowconfigure(3, weight=1, pad=3)
 		frameParameters.grid_rowconfigure(4, weight=1, pad=3)
 		frameParameters.grid_rowconfigure(5, weight=1, pad=3)
-		frameParameters.grid_rowconfigure(6, weight=1, pad=3)
-		frameParameters.grid_rowconfigure(7, weight=1, pad=3)
 
 	def _create_frame_lineplot(self) -> None:
 		"""Define all elements within the line plot frame."""
