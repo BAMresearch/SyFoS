@@ -33,7 +33,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import gui.default_materials as dm
-from gui.tkinter_utility import SubscriptLabel, CheckedInput
+from gui.tkinter_utility import LabeledParameterInput, SubscriptLabel, CheckedInput
 from gui.export_window import ExportWindow
 
 import data_handling.generate_data as gen_data
@@ -342,15 +342,19 @@ class MainWindow(ttk.Frame):
 		)
 		entryNoise.grid(row=3, column=7)
 
-		self.testVar = tk.StringVar(self.root, value="")
-		entryTest = CheckedInput(
-			frameParameters, 
-			textvariable=self.testVar,
-			name="Test",
-			placeholder="0 - 10",
-			valueBoundaries=[0, 10]
+		self.testPar = tk.StringVar(self.root, value="")
+		testwarum = LabeledParameterInput(
+			frameParameters,
+			"Start Distance ",
+			"Z",
+			"0",
+			self.testPar,
+			"example",
+			"-10e-6 - 0 ",
+			[-10e-6, 0],
+			"m"
 		)
-		entryTest.grid(row=4, column=7)
+		testwarum.grid(row=6, column=0, columnspan=3, sticky=W)
 
 		frameParameters.grid_columnconfigure(0, weight=1, pad=3)
 		frameParameters.grid_columnconfigure(1, weight=1, pad=3)
@@ -368,6 +372,8 @@ class MainWindow(ttk.Frame):
 		frameParameters.grid_rowconfigure(3, weight=1, pad=3)
 		frameParameters.grid_rowconfigure(4, weight=1, pad=3)
 		frameParameters.grid_rowconfigure(5, weight=1, pad=3)
+
+		frameParameters.grid_rowconfigure(6, weight=1, pad=3)
 
 	def _create_frame_lineplot(self) -> None:
 		"""Define all elements within the line plot frame."""

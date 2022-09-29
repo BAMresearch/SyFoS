@@ -18,34 +18,91 @@ import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
-class SubscriptLabel(tk.Text):
+class LabeledParameterInput(ttk.Frame):
 	""""""
-	def __init__(self, root, text, subscript, *args, **kwargs):
+	def __init__(
+		self, 
+		root,
+		label,
+		formulaCharacter,
+		formulaCharacterSubscript,
+		textvariable,
+		name,
+		placeholder,
+		valueBoundaries,
+		unitLabel 
+	):
+		super().__init__(root)
+
+		self.label = ParameterLabel(
+			self,
+			label=label,
+			formulaCharacter=formulaCharacter,
+			formulaCharacterSubscript=formulaCharacterSubscript
+		)
+		self.label.pack(side=LEFT, fill=X, expand=YES)
+
+		self.input = CheckedInput(
+			self,
+			textvariable=textvariable,
+			name=name,
+			placeholder=placeholder,
+			valueBoundaries=valueBoundaries
+		)
+		self.input.pack(side=LEFT, fill=X, expand=YES)
+
+		self.unitLabel = UnitLabel(
+			self,
+			text=unitLabel
+		)
+		self.unitLabel.pack(side=LEFT, fill=X, expand=YES)
+
+class ParameterLabel(tk.Text):
+	""""""
+	def __init__(
+		self, 
+		root, 
+		label, 
+		formulaCharacter,
+		formulaCharacterSubscript,
+		*args, 
+		**kwargs
+	):
 
 		super().__init__(root, *args, **kwargs)
 
-		self.text = text
-		self.subscript = subscript
+		self.label = label
+		self.formulaCharacter = formulaCharacter
+		self.formulaCharacterSubscript = formulaCharacterSubscript
 
 		self._setup_text_tags()
-		self._insert_text()
+		self._insert_label()
 		self._setup_config()
 
 	def _setup_text_tags(self):
 		"""Define the different text styles."""
 		self.tag_configure(
-			"subscript", 
+			"label", 
+			font=("Helvetica", 9)
+		)
+		self.tag_configure(
+			"formulaCharacter", 
+			font=("Helvetica", 9, "italic")
+		)
+		self.tag_configure(
+			"formulaCharacterSubscript", 
 			offset=-2, 
 			font=("Helvetica", 8)
 		)
-		self.tag_configure(
-			"text", 
-			font=("Helvetica", 9, "italic")
-		)
 
-	def _insert_text(self):
-		"""Insert the given Text."""
-		self.insert(INSERT, self.text, "text", self.subscript, "subscript")
+	def _insert_label(self):
+		"""Insert the given label."""
+		self.insert(
+			INSERT, 
+			self.label, "label", 
+			self.formulaCharacter, "formulaCharacter",
+			self.formulaCharacterSubscript, "formulaCharacterSubscript"
+		)
 
 	def _setup_config(self):
 		"""Adjust the config to make it look like a normal label."""
@@ -53,9 +110,10 @@ class SubscriptLabel(tk.Text):
 			state="disabled",
 			borderwidth=0,
 			highlightthickness=0,
-			width=10, 
+			width=15, 
 			height=1
 		)
+
 
 class CheckedInput(ttk.Entry):
 	"""Helper class that extends the ttk entry by adding a placeholder 
@@ -133,3 +191,48 @@ class CheckedInput(ttk.Entry):
 	def _delete_input(self):
 		"""Delete the current input."""
 		self.delete(0, len(self.get()))
+
+
+class UnitLabel(ttk.Label):
+	""""""
+	def __init__(self, root, *args, **kwargs):
+		super().__init__(root, *args, **kwargs)
+
+class SubscriptLabel(tk.Text):
+	""""""
+	def __init__(self, root, text, subscript, *args, **kwargs):
+
+		super().__init__(root, *args, **kwargs)
+
+		self.text = text
+		self.subscript = subscript
+
+		self._setup_text_tags()
+		self._insert_text()
+		self._setup_config()
+
+	def _setup_text_tags(self):
+		"""Define the different text styles."""
+		self.tag_configure(
+			"subscript", 
+			offset=-2, 
+			font=("Helvetica", 8)
+		)
+		self.tag_configure(
+			"text", 
+			font=("Helvetica", 9, "italic")
+		)
+
+	def _insert_text(self):
+		"""Insert the given Text."""
+		self.insert(INSERT, self.text, "text", self.subscript, "subscript")
+
+	def _setup_config(self):
+		"""Adjust the config to make it look like a normal label."""
+		self.config(
+			state="disabled",
+			borderwidth=0,
+			highlightthickness=0,
+			width=10, 
+			height=1
+		)
