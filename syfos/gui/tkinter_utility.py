@@ -19,13 +19,14 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
 class LabeledParameterInput(ttk.Frame):
-	""""""
+	"""Custom widget"""
 	def __init__(
 		self, 
 		root,
 		label,
 		formulaCharacter,
 		formulaCharacterSubscript,
+		width,
 		textvariable,
 		name,
 		placeholder,
@@ -38,7 +39,8 @@ class LabeledParameterInput(ttk.Frame):
 			self,
 			label=label,
 			formulaCharacter=formulaCharacter,
-			formulaCharacterSubscript=formulaCharacterSubscript
+			formulaCharacterSubscript=formulaCharacterSubscript,
+			width=width
 		)
 		self.label.pack(side=LEFT, fill=X, expand=YES)
 
@@ -65,6 +67,7 @@ class ParameterLabel(tk.Text):
 		label, 
 		formulaCharacter,
 		formulaCharacterSubscript,
+		width,
 		*args, 
 		**kwargs
 	):
@@ -74,6 +77,7 @@ class ParameterLabel(tk.Text):
 		self.label = label
 		self.formulaCharacter = formulaCharacter
 		self.formulaCharacterSubscript = formulaCharacterSubscript
+		self.width = width
 
 		self._setup_text_tags()
 		self._insert_label()
@@ -110,7 +114,7 @@ class ParameterLabel(tk.Text):
 			state="disabled",
 			borderwidth=0,
 			highlightthickness=0,
-			width=15, 
+			width=self.width, 
 			height=1
 		)
 
@@ -135,6 +139,7 @@ class CheckedInput(ttk.Entry):
 
 	def _set_placeholder(self):
 		"""Set the placeholder."""
+		self._delete_input()
 		self._set_text_color_placeholder()
 		self.insert(0, self.placeholder)
 
@@ -157,7 +162,10 @@ class CheckedInput(ttk.Entry):
 		try:
 			currentInput = float(self.get())
 		except ValueError:
-			self._hint_false_input()
+			if self.get() == "":
+				self._set_placeholder()
+			else:
+				self._hint_false_input()
 		else:
 			if self.valueBoundaries[0] <= currentInput <= self.valueBoundaries[1]:
 				self._show_valid_input()
@@ -198,41 +206,4 @@ class UnitLabel(ttk.Label):
 	def __init__(self, root, *args, **kwargs):
 		super().__init__(root, *args, **kwargs)
 
-class SubscriptLabel(tk.Text):
-	""""""
-	def __init__(self, root, text, subscript, *args, **kwargs):
-
-		super().__init__(root, *args, **kwargs)
-
-		self.text = text
-		self.subscript = subscript
-
-		self._setup_text_tags()
-		self._insert_text()
-		self._setup_config()
-
-	def _setup_text_tags(self):
-		"""Define the different text styles."""
-		self.tag_configure(
-			"subscript", 
-			offset=-2, 
-			font=("Helvetica", 8)
-		)
-		self.tag_configure(
-			"text", 
-			font=("Helvetica", 9, "italic")
-		)
-
-	def _insert_text(self):
-		"""Insert the given Text."""
-		self.insert(INSERT, self.text, "text", self.subscript, "subscript")
-
-	def _setup_config(self):
-		"""Adjust the config to make it look like a normal label."""
-		self.config(
-			state="disabled",
-			borderwidth=0,
-			highlightthickness=0,
-			width=10, 
-			height=1
-		)
+		self.config(font=("Helvetica", 8))

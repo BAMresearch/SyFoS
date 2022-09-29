@@ -1,10 +1,11 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Create Synthetic Force Volumes" href="create_synthetic_force_volumes.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Using SyFoS" href="using_syfos.html" />
 
-    <meta name="generator" content="sphinx-5.1.1, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
         <title>Synthetic Force Volumes documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
@@ -154,7 +155,7 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
-<li class="toctree-l1"><a class="reference internal" href="create_synthetic_force_volumes.html">Create Synthetic Force Volumes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using_syfos.html">Using SyFoS</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
@@ -193,46 +194,47 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="welcome-to-synthetic-force-volumes-s-documentation">
-<h1>Welcome to Synthetic Force Volumes’s documentation!<a class="headerlink" href="#welcome-to-synthetic-force-volumes-s-documentation" title="Permalink to this heading">#</a></h1>
-<p>Kurzer Einleitungstext der das Programm beschreibt. Verweiß auf git und DOI und vlt das Paper.</p>
-</div>
-<div class="section" id="create-synthetic-force-volumes">
-<h1>Create Synthetic Force Volumes<a class="headerlink" href="#create-synthetic-force-volumes" title="Permalink to this heading">#</a></h1>
+          <section id="about-syfos">
+<h1>About SyFoS<a class="headerlink" href="#about-syfos" title="Permalink to this headline">#</a></h1>
+<p>With SyFoS (<strong>Sy</strong>nthetic <strong>Fo</strong>rce <strong>S</strong>pectroscopy) data can be created. Force spectroscopy data is usually acquired experimentally by atomic force microscopy (AFM) and has its challenges when an automated analysis of the data is attempted, f. e. with SOFA (<strong>SO</strong>ftware for <strong>F</strong>orce <strong>A</strong>nalysis). For one it is unique to this spectroscopic data, that the shift of the abscissa is not inherently known from the measurement. An additional challenge is, that the spectrum is not monotonous. The change of regimes of attractive and repulsive forces results in a singularity JTC (jump to contact). Data in the attractive respectively repulsive regime can be described by general theories, such as van der Waals attraction and Hertz contact, but one single expression which describes the full spectroscopic range does not exist.</p>
+<p>With SOFA we develop a software aiming for a robust algorithm which will be able to handle all varieties of force spectroscopy data. In order to test this capability reliable synthetic test data is required for which SyFoS was written. SyFoS mirrors the experimental acquisition of data and successively builds force spectroscopy data, taking material parameter and experimental parameter into account. All parameters can be specified by the user via a GUI (Figure 1). To achieve realistic challenges in the test data sets a noise level and data offsets are added. The software is stored in Git Hub, and published in $doi</p>
+</section>
+<section id="using-syfos">
+<h1>Using SyFoS<a class="headerlink" href="#using-syfos" title="Permalink to this headline">#</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="create_synthetic_force_volumes.html">Create Synthetic Force Volumes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using_syfos.html">Using SyFoS</a></li>
 </ul>
 </div>
-</div>
-<div class="section" id="reference">
-<h1>Reference<a class="headerlink" href="#reference" title="Permalink to this heading">#</a></h1>
+</section>
+<section id="reference">
+<h1>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">#</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
 </ul>
 </div>
-</div>
-<div class="section" id="glossary">
-<h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this heading">#</a></h1>
+</section>
+<section id="glossary">
+<h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">#</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 </div>
-</div>
+</section>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="create_synthetic_force_volumes.html">
+          <a class="next-page" href="using_syfos.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Create Synthetic Force Volumes</div>
+                <div class="title">Using SyFoS</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -269,8 +271,8 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Welcome to Synthetic Force Volumes’s documentation!</a></li>
-<li><a class="reference internal" href="#create-synthetic-force-volumes">Create Synthetic Force Volumes</a></li>
+<li><a class="reference internal" href="#">About SyFoS</a></li>
+<li><a class="reference internal" href="#using-syfos">Using SyFoS</a></li>
 <li><a class="reference internal" href="#reference">Reference</a></li>
 <li><a class="reference internal" href="#glossary">Glossary</a></li>
 </ul>
@@ -285,7 +287,6 @@
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>
