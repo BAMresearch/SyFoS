@@ -19,6 +19,6 @@ import ttkbootstrap as ttk
 from gui.main_window import MainWindow
 
 if __name__ == "__main__":
-	app = ttk.Window(themename="minty")
+	app = ttk.Window("SyFoS", "minty")
 	MainWindow(app)
 	app.mainloop()

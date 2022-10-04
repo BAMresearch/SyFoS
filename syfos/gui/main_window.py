@@ -31,7 +31,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import gui.default_materials as dm
-from gui.tkinter_utility import LabeledParameterInput
+from gui.tkinter_utility import LabeledParameterInput, ParameterLabel
 from gui.export_window import ExportWindow
 
 import data_handling.generate_data as gen_data
@@ -55,8 +55,9 @@ def decorator_check_if_force_volume_selected(function):
 class MainWindow(ttk.Frame):
 	"""A GUI to create and compare synthetic force volumes."""
 	def __init__(self, root):
-		self.root = root
-		self.root.title("SyFoS")
+		super().__init__(root, padding=10)
+
+		self.pack(fill=BOTH, expand=YES)
 
 		self.forceVolumes = {}
 
@@ -70,49 +71,10 @@ class MainWindow(ttk.Frame):
 
 	def _init_parameter_variables(self) -> None:
 		"""Initialise all parameter variables."""
-		# Probe parameters
-		self.eProbe = tk.StringVar(self.root, value="")
-		self.poissonRatioProbe = tk.StringVar(self.root, value="")
-		self.hamakerProbe = tk.StringVar(self.root, value="")
-		self.kc = tk.StringVar(self.root, value="1")
-		self.radius = tk.StringVar(self.root, value="25e-9")
-
-		# Sample parameters
-		self.eSample = tk.StringVar(self.root, value="")
-		self.poissonRatioSample = tk.StringVar(self.root, value="")
-		self.hamakerSample = tk.StringVar(self.root, value="")
-
-		# Experimental parameters
-		self.numberOfCurves = tk.StringVar(self.root, value="4")
-		self.maximumDeflection = tk.StringVar(self.root, value="30e-9")
-		self.initialDistance = tk.StringVar(self.root, value="-10e-9")
-		self.distanceInterval = tk.StringVar(self.root, value="0.2e-9")
-		self.noise = tk.StringVar(self.root, value="1e-10")
-		self.virtualDeflection = tk.StringVar(self.root, value="3e-9")
-		self.topography = tk.StringVar(self.root, value="10e-9")
-
 		# Calculated parameters
-		self.etot = tk.StringVar(self.root, value="")
-		self.jtc = tk.StringVar(self.root, value="")
-		self.hamaker = tk.StringVar(self.root, value="")
-
-		self.parameters = {
-			"kc": self.kc,
-			"Radius": self.radius,
-			"e probe": self.eProbe,
-			"Poisson Ratio Probe": self.poissonRatioProbe,
-			"Hamaker Probe": self.hamakerProbe,
-			"e sample": self.eSample,
-			"Poisson Ratio Sample": self.poissonRatioSample,
-			"Hamaker Sample": self.hamakerSample,	
-			"Number Of Curves": self.numberOfCurves,
-			"Maximum Deflection": self.maximumDeflection,
-			"Initial Distance": self.initialDistance,
-			"Distance Interval": self.distanceInterval,
-			"Noise": self.noise,
-			"Virtual Deflection": self.virtualDeflection,
-			"Topography": self.topography
-		}
+		self.etot = ttk.StringVar(self, value="")
+		self.jtc = ttk.StringVar(self, value="")
+		self.hamaker = ttk.StringVar(self, value="")
 
 	def _create_main_window(self) -> None: 
 		"""Define all elements within the main window."""
@@ -127,7 +89,7 @@ class MainWindow(ttk.Frame):
 		wideLabelLength = 15
 
 		frameParameters = ttk.Labelframe(
-			self.root, 
+			self, 
 			text="Parameters", 
 			padding=15
 		)
@@ -141,7 +103,7 @@ class MainWindow(ttk.Frame):
 		)
 		labelProbeSection.grid(row=0, column=0, sticky=W, pady=(0, 5))
 
-		self.defaultProbe = tk.StringVar(self.root, value="Default Probe")
+		self.defaultProbe = tk.StringVar(self, value="Default Probe")
 		dropdownProbe = ttk.OptionMenu(
 			frameParameters, 
 			self.defaultProbe, 
@@ -152,75 +114,65 @@ class MainWindow(ttk.Frame):
 		)
 		dropdownProbe.grid(row=0, column=1, sticky=W, padx=(7, 0), pady=(0, 5))
 
-		inputEProbe = LabeledParameterInput(
+		self.inputEProbe = LabeledParameterInput(
 			frameParameters,
 			"",
 			"E",
 			"tip",
 			smallLabelLength,
-			self.eProbe,
-			"E Probe",
 			"1e6 - 300e9",
 			[1e6, 300e9],
 			"Pa"
 		)
-		inputEProbe.grid(row=1, column=0, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputEProbe.grid(row=1, column=0, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputPoissonRatioProbe = LabeledParameterInput(
+		self.inputPoissonRatioProbe = LabeledParameterInput(
 			frameParameters,
 			"",
 			"\u03BD",
 			"tip",
 			smallLabelLength,
-			self.poissonRatioProbe,
-			"Poisson Ratio Probe",
 			"0 - 0.5",
 			[0, 0.5],
 			""
 		)
-		inputPoissonRatioProbe.grid(row=2, column=0, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputPoissonRatioProbe.grid(row=2, column=0, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputHamakerProbe = LabeledParameterInput(
+		self.inputHamakerProbe = LabeledParameterInput(
 			frameParameters,
 			"",
 			"A",
 			"tip",
 			smallLabelLength,
-			self.hamakerProbe,
-			"Hamaker Probe",
 			"1 - 450",
-			[1, 450],
+			[1e-21, 450e-21],
 			"zJ"
 		)
-		inputHamakerProbe.grid(row=3, column=0, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputHamakerProbe.grid(row=3, column=0, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputSpringConstant = LabeledParameterInput(
+		self.inputSpringConstant = LabeledParameterInput(
 			frameParameters,
 			"",
 			"k",
 			"c",
 			smallLabelLength,
-			self.kc,
-			"Spring Constant",
 			"0.001 - 100",
 			[0.001, 100],
 			"N/m"
 		)
-		inputSpringConstant.grid(row=4, column=0, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputSpringConstant.grid(row=4, column=0, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputRadius = LabeledParameterInput(
+		self.inputRadius = LabeledParameterInput(
 			frameParameters,
 			"",
 			"R",
 			"",
 			smallLabelLength,
-			self.radius,
-			"Radius",
 			"1e-9 - 10e-6",
 			[1e-9, 10e-6],
 			"m"
 		)
-		inputRadius.grid(row=5, column=0, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputRadius.grid(row=5, column=0, columnspan=2, sticky=W, pady=(0, 5))
 
 		# Sample Section
 		labelSampleSection = ttk.Label(
@@ -230,7 +182,7 @@ class MainWindow(ttk.Frame):
 		)
 		labelSampleSection.grid(row=0, column=2, sticky=W, pady=(0, 5))
 
-		self.defaultSample = tk.StringVar(self.root, value="Default Sample")
+		self.defaultSample = tk.StringVar(self, value="Default Sample")
 		dropdownSample = ttk.OptionMenu(
 			frameParameters, 
 			self.defaultSample, 
@@ -241,47 +193,41 @@ class MainWindow(ttk.Frame):
 		)
 		dropdownSample.grid(row=0, column=3, sticky=W, padx=(7, 0), pady=(0, 5))
 
-		inputESample = LabeledParameterInput(
+		self.inputESample = LabeledParameterInput(
 			frameParameters,
 			"",
 			"E",
 			"sample",
 			normalLabelLength,
-			self.eSample,
-			"E Sample",
 			"1e6 - 300e9",
 			[1e6, 300e9],
 			"Pa"
 		)
-		inputESample.grid(row=1, column=2, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputESample.grid(row=1, column=2, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputPoissonRatioSample = LabeledParameterInput(
+		self.inputPoissonRatioSample = LabeledParameterInput(
 			frameParameters,
 			"",
 			"\u03BD",
 			"sample",
 			normalLabelLength,
-			self.poissonRatioSample,
-			"Poisson Ratio Sample",
 			"0 - 0.5",
 			[0, 0.5],
 			""
 		)
-		inputPoissonRatioSample.grid(row=2, column=2, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputPoissonRatioSample.grid(row=2, column=2, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputHamakerSample = LabeledParameterInput(
+		self.inputHamakerSample = LabeledParameterInput(
 			frameParameters,
 			"",
 			"A",
 			"sample",
 			normalLabelLength,
-			self.hamakerSample,
-			"Hamaker Sample",
 			"1 - 450",
-			[1, 450],
+			[1e-21, 450e-21],
 			"zJ"
 		)
-		inputHamakerSample.grid(row=3, column=2, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputHamakerSample.grid(row=3, column=2, columnspan=2, sticky=W, pady=(0, 5))
 
 		# Force Spectroscopy Experiment section
 		labelExperiment = ttk.Label(
@@ -291,61 +237,53 @@ class MainWindow(ttk.Frame):
 		)
 		labelExperiment.grid(row=0, column=4, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputStartDistance = LabeledParameterInput(
+		self.inputStartDistance = LabeledParameterInput(
 			frameParameters,
 			"Start Distance ",
 			"Z",
 			"0",
 			wideLabelLength,
-			self.initialDistance,
-			"Start Distance",
 			"-10e-6 - 0",
 			[-10e-6, 0],
 			"m"
 		)
-		inputStartDistance.grid(row=1, column=4, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputStartDistance.grid(row=1, column=4, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputStepSize = LabeledParameterInput(
+		self.inputStepSize = LabeledParameterInput(
 			frameParameters,
 			"Step Size ",
 			"dZ",
 			"",
 			wideLabelLength,
-			self.distanceInterval,
-			"Step Size",
 			"0.01e-9 - 1e-9",
 			[0.01e-9, 1e-9],
 			"m"
 		)
-		inputStepSize.grid(row=2, column=4, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputStepSize.grid(row=2, column=4, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputMaximumPiezo = LabeledParameterInput(
+		self.inputMaximumPiezo = LabeledParameterInput(
 			frameParameters,
 			"Maximum Piezo ",
 			"Z",
 			"max",
 			wideLabelLength,
-			self.maximumDeflection,
-			"Maximum Piezo",
 			"0 - 1e-6",
 			[0, 1e-6],
 			"m"
 		)
-		inputMaximumPiezo.grid(row=3, column=4, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputMaximumPiezo.grid(row=3, column=4, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputNumberOfCurves = LabeledParameterInput(
+		self.inputNumberOfCurves = LabeledParameterInput(
 			frameParameters,
 			"Number Of Curves",
 			"",
 			"",
 			wideLabelLength,
-			self.numberOfCurves,
-			"Number of Curves",
 			"1 - 1000",
 			[1, 1000],
 			""
 		)
-		inputNumberOfCurves.grid(row=4, column=4, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputNumberOfCurves.grid(row=4, column=4, columnspan=2, sticky=W, pady=(0, 5))
 
 		# Artefact section
 		labelArtefact = ttk.Label(
@@ -355,47 +293,61 @@ class MainWindow(ttk.Frame):
 		)
 		labelArtefact.grid(row=0, column=6, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputVirtualDeflection = LabeledParameterInput(
+		self.inputVirtualDeflection = LabeledParameterInput(
 			frameParameters,
 			"Virtual Deflection",
 			"",
 			"",
 			wideLabelLength,
-			self.virtualDeflection,
-			"Virtual Deflection",
 			"0 - 3e-6",
 			[0, 3e-6],
 			"m"
 		)
-		inputVirtualDeflection.grid(row=1, column=6, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputVirtualDeflection.grid(row=1, column=6, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputTopographyOffset = LabeledParameterInput(
+		self.inputTopographyOffset = LabeledParameterInput(
 			frameParameters,
 			"Topography Offset",
 			"",
 			"",
 			wideLabelLength,
-			self.topography,
-			"Topography Offset",
 			"0 - 10e-6",
 			[0, 10e-6],
 			"m"
 		)
-		inputTopographyOffset.grid(row=2, column=6, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputTopographyOffset.grid(row=2, column=6, columnspan=2, sticky=W, pady=(0, 5))
 
-		inputNoise = LabeledParameterInput(
+		self.inputNoise = LabeledParameterInput(
 			frameParameters,
 			"Noise",
 			"",
 			"",
 			wideLabelLength,
-			self.noise,
-			"Noise",
 			"0 - 1e-9",
 			[0, 1e-9],
 			""
 		)
-		inputNoise.grid(row=3, column=6, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputNoise.grid(row=3, column=6, columnspan=2, sticky=W, pady=(0, 5))
+
+		self.parameterInputs = {
+			"e Probe": self.inputEProbe,
+			"Poisson Ratio Probe": self.inputPoissonRatioProbe,
+			"Hamaker Probe": self.inputHamakerProbe,
+			"kc": self.inputSpringConstant,
+			"Radius": self.inputRadius,
+			"e Sample": self.inputESample,
+			"Poisson Ratio Sample": self.inputPoissonRatioSample,
+			"Hamaker Sample": self.inputHamakerSample,	
+			"Start Distance": self.inputStartDistance,
+			"Step Size": self.inputStepSize,
+			"Maximum Piezo": self.inputMaximumPiezo,
+			"Number Of Curves": self.inputNumberOfCurves,
+			"Virtual Deflection": self.inputVirtualDeflection,
+			"Topography Offset": self.inputTopographyOffset,
+			"Noise": self.inputNoise
+		}
+
+		self._set_test_values()
 
 		frameParameters.grid_columnconfigure(0, weight=1, pad=3)
 		frameParameters.grid_columnconfigure(1, weight=1, pad=3)
@@ -414,9 +366,22 @@ class MainWindow(ttk.Frame):
 		frameParameters.grid_rowconfigure(4, weight=1, pad=3)
 		frameParameters.grid_rowconfigure(5, weight=1, pad=3)
 
+	def _set_test_values(self):
+		""""""
+		self.inputSpringConstant.set("1")
+		self.inputRadius.set("25e-9")
+
+		self.inputNumberOfCurves.set("4")
+		self.inputMaximumPiezo.set("30e-9")
+		self.inputStartDistance.set("-10e-9")
+		self.inputStepSize.set("0.2e-9")
+		self.inputNoise.set("1e-10")
+		self.inputVirtualDeflection.set("3e-9")		
+		self.inputTopographyOffset.set("10e-9")
+
 	def _create_frame_lineplot(self) -> None:
 		"""Define all elements within the line plot frame."""
-		frameLinePlot = ttk.Labelframe(self.root, text="Presentation", padding=15)
+		frameLinePlot = ttk.Labelframe(self, text="Presentation", padding=15)
 		frameLinePlot.pack(side=LEFT, fill=X, expand=YES, padx=15, pady=15)
 
 		rowVariables = ttk.Frame(frameLinePlot)
@@ -471,7 +436,7 @@ class MainWindow(ttk.Frame):
 
 	def _create_frame_control(self) -> None:
 		"""Define all elements within the control frame."""
-		frameControl = ttk.Labelframe(self.root, text="Control", padding=15)
+		frameControl = ttk.Labelframe(self, text="Control", padding=15)
 		frameControl.pack(side=RIGHT, fill=X, expand=YES, anchor=N, padx=15, pady=15)
 
 		buttonCreateForceVolume = ttk.Button(
@@ -484,7 +449,7 @@ class MainWindow(ttk.Frame):
 		seperator = ttk.Separator(frameControl)
 		seperator.pack(fill=X, expand=YES, pady=(0, 50))
 
-		self.activeForceVolume = tk.StringVar(self.root, value="Force Volumes")
+		self.activeForceVolume = tk.StringVar(self, value="Force Volumes")
 		
 		self.dropdownForceVolumes = ttk.OptionMenu(
 			frameControl, 
@@ -528,9 +493,9 @@ class MainWindow(ttk.Frame):
 		Parameter:
 			defaultProbe(str): Name of the chosen default probe material.
 		"""
-		self.eProbe.set(dm.defaultMaterials[defaultProbe]["e"])
-		self.poissonRatioProbe.set(dm.defaultMaterials[defaultProbe]["poissonRatio"])
-		self.hamakerProbe.set(dm.defaultMaterials[defaultProbe]["hamaker"])
+		self.inputEProbe.set(dm.defaultMaterials[defaultProbe]["e"])
+		self.inputPoissonRatioProbe.set(dm.defaultMaterials[defaultProbe]["poissonRatio"])
+		self.inputHamakerProbe.set(dm.defaultMaterials[defaultProbe]["hamaker"])
 
 	def _set_default_sample_parameters(self, defaultSample:str) -> None:
 		"""Set the parameters of a selected default sample material.
@@ -538,9 +503,9 @@ class MainWindow(ttk.Frame):
 		Parameter:
 			defaultSample(str): Name of the chosen default sample material.
 		"""
-		self.eSample.set(dm.defaultMaterials[defaultSample]["e"])
-		self.poissonRatioSample.set(dm.defaultMaterials[defaultSample]["poissonRatio"])
-		self.hamakerSample.set(dm.defaultMaterials[defaultSample]["hamaker"])
+		self.inputESample.set(dm.defaultMaterials[defaultSample]["e"])
+		self.inputPoissonRatioSample.set(dm.defaultMaterials[defaultSample]["poissonRatio"])
+		self.inputHamakerSample.set(dm.defaultMaterials[defaultSample]["hamaker"])
 
 	def _create_force_volume(self) -> tk.messagebox:
 		"""Create a synthetic force volume with the selected parameters and display it.
@@ -551,7 +516,6 @@ class MainWindow(ttk.Frame):
 		try:
 			self._check_parameters()
 		except ValueError as e:
-			self._reset_parameters()
 			return messagebox.showerror(
 				"Error", 
 				e
@@ -595,21 +559,11 @@ class MainWindow(ttk.Frame):
 		Raises:
 			ValueError: If a parameter is not a number.
 		"""
-		for parameterName, parameterVariable in self.parameters.items():
-			try:
-				float(parameterVariable.get())
-			except ValueError:
+		for parameterName, parameterInput in self.parameterInputs.items():
+			if parameterInput.check_value() == False:
 				raise ValueError(
-					"Invalid input parameter.\n" + parameterName + " must be a number."
+					"Invalid value for " + parameterName + "."
 				)
-
-	def _reset_parameters(self) -> None:
-		"""Reset all input parameters."""
-		for parameterVariable in self.parameters.values():
-			parameterVariable.set("")
-
-		self.defaultProbe.set("Default Probe")
-		self.defaultSample.set("Default Sample")
 
 	def _get_parameters(self) -> Tuple:
 		"""Group all input parameters into namedtuples.
@@ -622,38 +576,38 @@ class MainWindow(ttk.Frame):
 		ParameterMaterial, ParameterMeasurement, ParameterForceVolume = gen_data.get_parameter_tuples()
 
 		hamaker = gen_data.calculate_hamaker(
-			float(self.hamakerProbe.get()),
-			float(self.hamakerSample.get())
+			float(self.inputHamakerProbe.get()),
+			float(self.inputHamakerSample.get())
 		)
 		jtc = gen_data.calculate_jtc(
 			hamaker,
-			float(self.radius.get()),
-			float(self.kc.get())
+			float(self.inputRadius.get()),
+			float(self.inputSpringConstant.get())
 		)
 		etot = gen_data.calculate_etot(
-			float(self.poissonRatioProbe.get()),
-			float(self.eProbe.get()),
-			float(self.poissonRatioSample.get()),
-			float(self.eSample.get())
+			float(self.inputPoissonRatioProbe.get()),
+			float(self.inputEProbe.get()),
+			float(self.inputPoissonRatioSample.get()),
+			float(self.inputESample.get())
 		)
 
 		parameterMaterial = ParameterMaterial(
-			kc=float(self.kc.get()),
-			radius=float(self.radius.get()),
+			kc=float(self.inputSpringConstant.get()),
+			radius=float(self.inputRadius.get()),
 			Hamaker=hamaker,
 			Etot=etot,
 			jtc=jtc,
 		)
 		parameterMeasurement = ParameterMeasurement(
-			initialDistance=float(self.initialDistance.get()),
-			distanceInterval=float(self.distanceInterval.get()),
-			maximumdeflection=float(self.maximumDeflection.get()),	
+			initialDistance=float(self.inputStartDistance.get()),
+			distanceInterval=float(self.inputStepSize.get()),
+			maximumdeflection=float(self.inputMaximumPiezo.get()),	
 		)
 		parameterForceVolume = ParameterForceVolume(
-			numberOfCurves=int(self.numberOfCurves.get()),
-			noise=float(self.noise.get()),
-			virtualDeflection=float(self.virtualDeflection.get()),
-			topography=float(self.topography.get())
+			numberOfCurves=int(self.inputNumberOfCurves.get()),
+			noise=float(self.inputNoise.get()),
+			virtualDeflection=float(self.inputVirtualDeflection.get()),
+			topography=float(self.inputTopographyOffset.get())
 		)
 
 		return parameterMaterial, parameterMeasurement, parameterForceVolume

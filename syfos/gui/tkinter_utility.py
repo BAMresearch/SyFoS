@@ -25,9 +25,7 @@ class LabeledParameterInput(ttk.Frame):
 		label,
 		formulaCharacter,
 		formulaCharacterSubscript,
-		width,
-		textvariable,
-		name,
+		labelWidth,
 		placeholder,
 		valueBoundaries,
 		unitLabel 
@@ -36,19 +34,17 @@ class LabeledParameterInput(ttk.Frame):
 
 		self.label = ParameterLabel(
 			self,
-			label=label,
-			formulaCharacter=formulaCharacter,
-			formulaCharacterSubscript=formulaCharacterSubscript,
-			width=width
+			label,
+			formulaCharacter,
+			formulaCharacterSubscript,
+			labelWidth
 		)
 		self.label.pack(side=LEFT, fill=X, expand=YES)
 
 		self.input = CheckedInput(
 			self,
-			textvariable=textvariable,
-			name=name,
-			placeholder=placeholder,
-			valueBoundaries=valueBoundaries
+			placeholder,
+			valueBoundaries
 		)
 		self.input.pack(side=LEFT, fill=X, expand=YES)
 
@@ -58,6 +54,25 @@ class LabeledParameterInput(ttk.Frame):
 		)
 		self.unitLabel.pack(side=LEFT, fill=X, expand=YES)
 
+		self.set_placeholder()
+
+	def set_placeholder(self):
+		""""""
+		self.input.set_placeholder()
+
+	def set(self, value:str):
+		""""""
+		self.input.set_value(value)
+
+	def get(self):
+		""""""
+		return self.input.get()
+
+	def check_value(self):
+		""""""
+		return self.input.validValue
+
+
 class ParameterLabel(tk.Text):
 	""""""
 	def __init__(
@@ -66,12 +81,9 @@ class ParameterLabel(tk.Text):
 		label, 
 		formulaCharacter,
 		formulaCharacterSubscript,
-		width,
-		*args, 
-		**kwargs
+		width
 	):
-
-		super().__init__(root, *args, **kwargs)
+		super().__init__(root)
 
 		self.label = label
 		self.formulaCharacter = formulaCharacter
@@ -121,22 +133,24 @@ class ParameterLabel(tk.Text):
 class CheckedInput(ttk.Entry):
 	"""Helper class that extends the ttk entry by adding a placeholder 
 	   and validation of the input values."""
-	def  __init__(self, root, name, placeholder, valueBoundaries, *args, **kwargs):
-		
-		super().__init__(root, *args, **kwargs)
+	def  __init__(
+		self, 
+		root, 
+		placeholder,
+		valueBoundaries
+	):
+		super().__init__(root)
 
-		self.root = root
-		self.name = name
-		self.validValue = False
 		self.placeholder = placeholder
-		self.valueBoundaries = valueBoundaries
+		self.minValue = valueBoundaries[0]
+		self.maxValue = valueBoundaries[1]
+
+		self.validValue = False
 
 		self.bind("<FocusIn>", self._change_value)
-		self.bind("<FocusOut>", self._validate_input, add="+")
+		self.bind("<FocusOut>", self._validate_value, add="+")
 
-		self._set_placeholder()
-
-	def _set_placeholder(self):
+	def set_placeholder(self):
 		"""Set the placeholder."""
 		self._delete_input()
 		self._set_text_color_placeholder()
@@ -144,29 +158,37 @@ class CheckedInput(ttk.Entry):
 
 		self.validValue = False
 
+	def set_value(self, value: str):
+		""""""
+		self._delete_input()
+		self._set_text_color_valid()
+		self.insert(0, value)
+
+		self.validValue = True
+
+	def _change_value(self, *args):
+		""""""
+		if self.get() == self.placeholder:
+			self.icursor(0)
+			self.bind("<KeyPress>", self._remove_placeholder, add="+")
+
 	def _remove_placeholder(self, *args):
 		"""Remove the placeholder when something is entered."""
 		self._delete_input()
 		self._set_text_color_valid()
 		self.unbind("<KeyPress>")
 
-	def _change_value(self, *args):
-		""""""
-		if self.validValue == False:
-			self.icursor(0)
-			self.bind("<KeyPress>", self._remove_placeholder, add="+")
-
-	def _validate_input(self, *args):
+	def _validate_value(self, *args):
 		"""Check if the input value is a number and within it's value range."""
 		try:
-			currentInput = float(self.get())
+			currentValue = float(self.get())
 		except ValueError:
 			if self.get() == "":
-				self._set_placeholder()
-			else:
+				self.set_placeholder()
+			elif self.get() != self.placeholder:
 				self._hint_false_input()
 		else:
-			if self.valueBoundaries[0] <= currentInput <= self.valueBoundaries[1]:
+			if self.minValue <= currentValue <= self.maxValue:
 				self._show_valid_input()
 			else:
 				self._hint_false_input()
@@ -198,7 +220,6 @@ class CheckedInput(ttk.Entry):
 	def _delete_input(self):
 		"""Delete the current input."""
 		self.delete(0, len(self.get()))
-
 
 class UnitLabel(ttk.Label):
 	""""""
