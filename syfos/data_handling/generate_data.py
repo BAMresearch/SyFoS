@@ -13,10 +13,51 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
 """
-
+from collections import namedtuple
 from typing import NamedTuple, Tuple, List
 
 import numpy as np
+
+def get_parameter_tuples() -> Tuple: 
+	"""Define
+
+	Returns:
+		parameterMaterial(namedtupel): Combines all parameters describing the material 
+									   and geometriy of the virtuell measuring system.
+		parameterMeasurement(namedtupel): Combines all parameters describing the virtuell
+										  measuring system.
+		parameterForceVolume(namedtupel): Combines the number of synthetic curves, the noise
+										  level and the virtual deflection and topography offset.
+	"""
+	ParameterMaterial = namedtuple(
+		"ParameterMaterial",
+		[
+			"kc",
+			"radius",
+			"Etot",
+			"Hamaker",
+			"jtc"
+		]
+	)
+	ParameterMeasurement = namedtuple(
+		"ParameterMeasurement",
+		[
+			"initialDistance",
+			"distanceInterval",
+			"maximumdeflection"
+		]
+	)
+	ParameterForceVolume = namedtuple(
+		"parameterForceVolume",
+		[
+			"numberOfCurves",
+			"noise",
+			"virtualDeflection",
+			"topography"
+		]
+	)
+
+	return ParameterMaterial, ParameterMeasurement, ParameterForceVolume
 
 def calculate_jtc(
 	hamaker: float, 
@@ -104,11 +145,11 @@ def create_synthetic_force_volume(
 
 	Parameters:
 		parameterMaterial(namedtupel): Contains all parameters describing the material 
-									  and geometriy of the virtuell measuring system.
+									   and geometriy of the virtuell measuring system.
 		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
 										  measuring system.
 		parameterForceVolume(namedtupel): Contains the number of synthetic curves, the noise
-										 level and the virtual deflection and topography offset.
+										  level and the virtual deflection and topography offset.
 	
 	Returns:
 		syntheticForceVolume(np.ndarray): Set of generated synthetic force distance curves.
@@ -155,9 +196,9 @@ def create_ideal_curve(
 
 	Parameters:
 		parameterMaterial(namedtupel): Contains all parameters describing the material 
-									  and geometriy of the virtuell measuring system.
+									   and geometriy of the virtuell measuring system.
 		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
-										 measuring system.
+										  measuring system.
 
 	Returns:
 		piezo(list): Piezo (x) values of the ideal curve.
@@ -194,9 +235,9 @@ def create_ideal_curve_approach_part(
 
 	Parameters:
 		parameterMaterial(namedtupel): Contains all parameters describing the material 
-									  and geometriy of the virtuell measuring system.
+									   and geometriy of the virtuell measuring system.
 		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
-										 measuring system.
+										  measuring system.
 
 	Returns:
 	
@@ -237,7 +278,7 @@ def create_ideal_curve_attraction_part(
 
 	Parameters:
 		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
-										 measuring system.
+										  measuring system.
 		totalLength(int): .
 
 	Returns:
@@ -276,9 +317,9 @@ def create_ideal_curve_contact_part(
 
 	Parameters:
 		parameterMaterial(namedtupel): Contains all parameters describing the material 
-									  and geometriy of the virtuell measuring system.
+									   and geometriy of the virtuell measuring system.
 		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
-										 measuring system.
+										  measuring system.
 		totalLength(int): .
 
 	Returns:
@@ -479,7 +520,7 @@ def multiply_and_apply_noise_to_ideal_curve(
 	Parameters:
 		shiftedDeflection(list): shifted ideal deflection
 		parameterForceVolume(namedtupel): Contains the number of synthetic curves, the noise
-										 level and the virtual deflection and topography offset.
+										  level and the virtual deflection and topography offset.
 
 	Returns:
 		noisyCurves(list): .
@@ -498,7 +539,7 @@ def apply_noise_to_curve(
 	Parameters:
 		shiftedDeflection(list): Deflection (y) values of the shifted ideal curve.
 		parameterForceVolume(namedtupel): Contains the number of synthetic curves, the noise
-										 level and the virtual deflection and topography offset.
+										  level and the virtual deflection and topography offset.
 
 	Returns:
 		(np.ndarray): .

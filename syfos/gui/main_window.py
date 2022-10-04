@@ -13,8 +13,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
 """
-
-from collections import namedtuple
 from typing import Tuple, List, Dict
 import os
 import functools
@@ -621,45 +619,17 @@ class MainWindow(ttk.Frame):
 			parameterMeasurement(namedtuple): Contains every measurment parameter.
 			parameterForceVolume(namedtuple): Contains every force volume parameter.
 		"""
-		ParameterMaterial = namedtuple(
-			"ParameterMaterial",
-			[
-				"kc",
-				"radius",
-				"Etot",
-				"Hamaker",
-				"jtc"
-			]
-		)
-		ParameterMeasurement = namedtuple(
-			"ParameterMeasurement",
-			[
-				"initialDistance",
-				"distanceInterval",
-				"maximumdeflection"
-			]
-		)
-		ParameterForceVolume = namedtuple(
-			"parameterForceVolume",
-			[
-				"numberOfCurves",
-				"noise",
-				"virtualDeflection",
-				"topography"
-			]
-		)
+		ParameterMaterial, ParameterMeasurement, ParameterForceVolume = gen_data.get_parameter_tuples()
 
 		hamaker = gen_data.calculate_hamaker(
 			float(self.hamakerProbe.get()),
 			float(self.hamakerSample.get())
 		)
-		
 		jtc = gen_data.calculate_jtc(
 			hamaker,
 			float(self.radius.get()),
 			float(self.kc.get())
 		)
-
 		etot = gen_data.calculate_etot(
 			float(self.poissonRatioProbe.get()),
 			float(self.eProbe.get()),
@@ -674,13 +644,11 @@ class MainWindow(ttk.Frame):
 			Etot=etot,
 			jtc=jtc,
 		)
-
 		parameterMeasurement = ParameterMeasurement(
 			initialDistance=float(self.initialDistance.get()),
 			distanceInterval=float(self.distanceInterval.get()),
 			maximumdeflection=float(self.maximumDeflection.get()),	
 		)
-
 		parameterForceVolume = ParameterForceVolume(
 			numberOfCurves=int(self.numberOfCurves.get()),
 			noise=float(self.noise.get()),

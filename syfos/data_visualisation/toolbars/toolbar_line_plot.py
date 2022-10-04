@@ -13,7 +13,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
 """
-
 from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
 
 class ToolbarLinePlot(NavigationToolbar2Tk):
