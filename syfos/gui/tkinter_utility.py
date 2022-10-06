@@ -18,7 +18,9 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
 class LabeledParameterInput(ttk.Frame):
-	"""Custom widget"""
+	"""Custom widget for the input of parameter values.
+	   It combines a parameter label a checked input and
+	   a unit label."""
 	def __init__(
 		self, 
 		root,
@@ -57,35 +59,40 @@ class LabeledParameterInput(ttk.Frame):
 		self.set_placeholder()
 
 	def set_placeholder(self):
-		""""""
+		"""Set the input placeholder."""
 		self.input.set_placeholder()
 
 	def set(self, value:str):
-		""""""
+		"""Set the value for the input.
+
+		Parameters:
+			value(str): New input value.
+		"""
 		self.input.set_value(value)
 
 	def get(self):
-		""""""
+		"""Get the value of the input."""
 		return self.input.get()
 
 	def check_value(self):
-		""""""
+		"""Check if the current input value is valid."""
 		return self.input.validValue
 
 
 class ParameterLabel(tk.Text):
-	""""""
+	"""Custom label for a parameter input.
+	   Consists of """
 	def __init__(
 		self, 
 		root, 
-		label, 
+		name, 
 		formulaCharacter,
 		formulaCharacterSubscript,
 		width
 	):
 		super().__init__(root)
 
-		self.label = label
+		self.name = name
 		self.formulaCharacter = formulaCharacter
 		self.formulaCharacterSubscript = formulaCharacterSubscript
 		self.width = width
@@ -97,7 +104,7 @@ class ParameterLabel(tk.Text):
 	def _setup_text_tags(self):
 		"""Define the different text styles."""
 		self.tag_configure(
-			"label", 
+			"name", 
 			font=("Helvetica", 9)
 		)
 		self.tag_configure(
@@ -114,7 +121,7 @@ class ParameterLabel(tk.Text):
 		"""Insert the given label."""
 		self.insert(
 			INSERT, 
-			self.label, "label", 
+			self.name, "name", 
 			self.formulaCharacter, "formulaCharacter",
 			self.formulaCharacterSubscript, "formulaCharacterSubscript"
 		)
@@ -131,7 +138,7 @@ class ParameterLabel(tk.Text):
 
 
 class CheckedInput(ttk.Entry):
-	"""Helper class that extends the ttk entry by adding a placeholder 
+	"""Extends the ttk entry by adding a placeholder 
 	   and validation of the input values."""
 	def  __init__(
 		self, 
@@ -159,7 +166,11 @@ class CheckedInput(ttk.Entry):
 		self.validValue = False
 
 	def set_value(self, value: str):
-		""""""
+		"""Set the value.
+
+		Parameters:
+			value(str): New value.
+		"""
 		self._delete_input()
 		self._set_text_color_valid()
 		self.insert(0, value)
@@ -179,7 +190,7 @@ class CheckedInput(ttk.Entry):
 		self.unbind("<KeyPress>")
 
 	def _validate_value(self, *args):
-		"""Check if the input value is a number and within it's value range."""
+		"""Check if the input value is a number within it's value range."""
 		try:
 			currentValue = float(self.get())
 		except ValueError:

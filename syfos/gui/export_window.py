@@ -34,7 +34,7 @@ def decorator_check_if_file_name_selected(function):
 			return messagebox.showerror(
 				"Error", 
 				"Please specify a name for the ouput file.", 
-				parent=self.window
+				parent=self
 			)
 		else:
 			function(self)
@@ -49,7 +49,7 @@ def decorator_check_if_file_location_selected(function):
 			return messagebox.showerror(
 				"Error", 
 				"Please specify a location to export your data.", 
-				parent=self.window
+				parent=self
 			)
 		else:
 			function(self)
@@ -58,10 +58,12 @@ def decorator_check_if_file_location_selected(function):
 
 class ExportWindow(ttk.Frame):
 	"""A subwindow to handle the data export."""
-	def __init__(self, dataForceVolume):
-		self.window = tk.Toplevel()
-		self.window.title("Export Force Curve")
+	def __init__(self, root, dataForceVolume):
+		super().__init__(root, padding=10)
 
+		self.pack(fill=BOTH, expand=YES)
+
+		self.root = root
 		self.dataForceVolume = dataForceVolume
 
 		self._create_export_window()
@@ -75,11 +77,11 @@ class ExportWindow(ttk.Frame):
 
 	def _create_frame_data_location(self) -> None:
 		"""Define all elements within the data location frame."""
-		frameDataLocation = ttk.Labelframe(self.window, text="Data Location", padding=15)
+		frameDataLocation = ttk.Labelframe(self, text="Data Location", padding=15)
 		frameDataLocation.pack(fill=X, expand=YES, anchor=N, padx=15, pady=(15, 5))
 
-		self.fileName = tk.StringVar(self.window, value="")
-		self.filePath = tk.StringVar(self.window, value="")
+		self.fileName = tk.StringVar(self, value="")
+		self.filePath = tk.StringVar(self, value="")
 
 		# Folder name
 		rowFileName = ttk.Frame(frameDataLocation)
@@ -110,11 +112,11 @@ class ExportWindow(ttk.Frame):
 
 	def _create_frame_data_types(self) -> None:
 		"""Define all elements within the data types frame."""
-		frameDataTypes = ttk.Labelframe(self.window, text="Data Types", padding=15)
+		frameDataTypes = ttk.Labelframe(self, text="Data Types", padding=15)
 		frameDataTypes.pack(fill=X, expand=YES, anchor=N, padx=15, pady=5)
 
-		self.exportToCSV = tk.BooleanVar(self.window, value=0)
-		self.exportToExcel = tk.BooleanVar(self.window, value=0)
+		self.exportToCSV = tk.BooleanVar(self, value=0)
+		self.exportToExcel = tk.BooleanVar(self, value=0)
 
 		# Export to csv
 		rowExportToCSV = ttk.Frame(frameDataTypes)
@@ -144,7 +146,7 @@ class ExportWindow(ttk.Frame):
 
 	def _create_export_button(self) -> None:
 		"""Define the export button."""
-		rowExportButton = ttk.Frame(self.window)
+		rowExportButton = ttk.Frame(self)
 		rowExportButton.pack(fill=X, expand=YES, pady=(20, 10))
 
 		buttonExportData = ttk.Button(
@@ -156,16 +158,16 @@ class ExportWindow(ttk.Frame):
 
 	def _create_progressbar(self) -> None:
 		"""Define the progressbar."""	
-		rowLabelProgressbar = ttk.Frame(self.window)
+		rowLabelProgressbar = ttk.Frame(self)
 		rowLabelProgressbar.pack(fill=X, expand=YES)
 
-		self.progressbarCurrentLabel = tk.StringVar(self.window, value="")
+		self.progressbarCurrentLabel = tk.StringVar(self, value="")
 
 		labelProgressbar = ttk.Label(rowLabelProgressbar, textvariable=self.progressbarCurrentLabel)
 		labelProgressbar.pack(side=RIGHT, padx=15)
 
 		self.progressbar = ttk.Progressbar(
-			self.window,
+			self,
 			mode=INDETERMINATE, 
             bootstyle=SUCCESS
 		)
@@ -175,7 +177,7 @@ class ExportWindow(ttk.Frame):
 		"""Select a directory in which the data will be exported."""
 		filePath = fd.askdirectory(
 			title="Select directory",
-			parent=self.window
+			parent=self
 		)
 
 		if filePath:
@@ -197,7 +199,7 @@ class ExportWindow(ttk.Frame):
 			self.update_progressbar
 		)
 
-		self.window.destroy()
+		self.root.destroy()
 
 		return messagebox.showinfo("Success", "Data is exported.")
 

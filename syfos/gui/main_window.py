@@ -86,7 +86,54 @@ class MainWindow(ttk.Frame):
 		"""Define all elements within the parameter frame."""
 		smallLabelLength = 3
 		normalLabelLength = 7
-		wideLabelLength = 15
+		wideLabelLength = 20
+
+		frameParameters = ttk.Labelframe(
+			self, 
+			text="Parameters", 
+			padding=15
+		)
+		frameParameters.pack(fill=X, expand=YES, padx=15, pady=(15, 0))
+
+		# Probe Section
+		frameProbeSection = ttk.Frame(frameParameters)
+		frameProbeSection.pack(fill=Y, expand=YES)
+
+		labelProbeSection = ttk.Label(
+			frameProbeSection, 
+			text="Probe", 
+			font="bold"
+		)
+		labelProbeSection.pack(side=LEFT, fill=None, expand=YES)
+
+		self.defaultProbe = tk.StringVar(self, value="Default Probe")
+		dropdownProbe = ttk.OptionMenu(
+			frameProbeSection, 
+			self.defaultProbe, 
+			"",
+			*dm.defaultMaterials.keys(), 
+			command=self._set_default_probe_parameters,
+			bootstyle=""
+		)
+		dropdownProbe.pack(side=TOP, fill=None, expand=YES)
+
+		self.inputEProbe = LabeledParameterInput(
+			frameProbeSection,
+			"",
+			"E",
+			"tip",
+			smallLabelLength,
+			"1e6 - 300e9",
+			[1e6, 300e9],
+			"Pa"
+		)
+		self.inputEProbe.pack(side=LEFT, fill=X, expand=YES)
+
+	def _create_frame_parameters_(self) -> None:
+		"""Define all elements within the parameter frame."""
+		smallLabelLength = 3
+		normalLabelLength = 7
+		wideLabelLength = 20
 
 		frameParameters = ttk.Labelframe(
 			self, 
@@ -732,6 +779,8 @@ class MainWindow(ttk.Frame):
 	@decorator_check_if_force_volume_selected
 	def _export_force_volume(self) -> None:
 		"""Open a window to export the data of the active force volume."""
+		exportWindow = ttk.Toplevel("Export Force Curve")
 		ExportWindow(
+			exportWindow,
 			self.forceVolumes[self.activeForceVolume.get()]
 		)
