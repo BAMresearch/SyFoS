@@ -19,12 +19,13 @@ from typing import NamedTuple, Tuple, List
 import numpy as np
 
 def get_parameter_tuples() -> Tuple: 
-	"""Define
+	"""Combine the different components of the virtual setup
+	   into named tuples.
 
 	Returns:
 		parameterMaterial(namedtupel): Combines all parameters describing the material 
-									   and geometriy of the virtuell measuring system.
-		parameterMeasurement(namedtupel): Combines all parameters describing the virtuell
+									   and geometriy of the virtual measuring system.
+		parameterMeasurement(namedtupel): Combines all parameters describing the virtual
 										  measuring system.
 		parameterForceVolume(namedtupel): Combines the number of synthetic curves, the noise
 										  level and the virtual deflection and topography offset.
@@ -42,9 +43,9 @@ def get_parameter_tuples() -> Tuple:
 	ParameterMeasurement = namedtuple(
 		"ParameterMeasurement",
 		[
-			"initialDistance",
-			"distanceInterval",
-			"maximumdeflection"
+			"startDistance",
+			"stepSize",
+			"maximumPiezo"
 		]
 	)
 	ParameterForceVolume = namedtuple(
@@ -53,7 +54,7 @@ def get_parameter_tuples() -> Tuple:
 			"numberOfCurves",
 			"noise",
 			"virtualDeflection",
-			"topography"
+			"topographyOffset"
 		]
 	)
 
@@ -145,8 +146,8 @@ def create_synthetic_force_volume(
 
 	Parameters:
 		parameterMaterial(namedtupel): Contains all parameters describing the material 
-									   and geometriy of the virtuell measuring system.
-		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
+									   and geometriy of the virtual measuring system.
+		parameterMeasurement(namedtupel): Contains all parameters describing the virtual
 										  measuring system.
 		parameterForceVolume(namedtupel): Contains the number of synthetic curves, the noise
 										  level and the virtual deflection and topography offset.
@@ -196,8 +197,8 @@ def create_ideal_curve(
 
 	Parameters:
 		parameterMaterial(namedtupel): Contains all parameters describing the material 
-									   and geometriy of the virtuell measuring system.
-		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
+									   and geometriy of the virtual measuring system.
+		parameterMeasurement(namedtupel): Contains all parameters describing the virtual
 										  measuring system.
 
 	Returns:
@@ -208,14 +209,14 @@ def create_ideal_curve(
 		parameterMaterial,
 		parameterMeasurement,
 	)
-
 	totalLength = len(piezoApproach)
+
 	piezoAttraction, deflectionAttraction = create_ideal_curve_attraction_part(
 		parameterMeasurement,
 		totalLength
 	)
-	
 	totalLength += len(piezoAttraction)
+	
 	piezoContact, deflectionContact = create_ideal_curve_contact_part(
 		parameterMaterial,
 		parameterMeasurement,
@@ -235,8 +236,8 @@ def create_ideal_curve_approach_part(
 
 	Parameters:
 		parameterMaterial(namedtupel): Contains all parameters describing the material 
-									   and geometriy of the virtuell measuring system.
-		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
+									   and geometriy of the virtual measuring system.
+		parameterMeasurement(namedtupel): Contains all parameters describing the virtual
 										  measuring system.
 
 	Returns:
@@ -244,14 +245,14 @@ def create_ideal_curve_approach_part(
 	Raises:
 		ValueError:
 	"""
-	piezoApproach = [parameterMeasurement.initialDistance]
+	piezoApproach = [parameterMeasurement.startDistance]
 	deflectionApproach = [0]
 
 	while(True):
 		piezoApproach.append(
 			calculate_piezo_value(
-				parameterMeasurement.initialDistance,
-				parameterMeasurement.distanceInterval,
+				parameterMeasurement.startDistance,
+				parameterMeasurement.stepSize,
 				len(piezoApproach)
 			)
 		)
@@ -268,6 +269,11 @@ def create_ideal_curve_approach_part(
 		if (deflectionApproach[-1] < parameterMaterial.jtc):
 			break
 
+		if (piezoApproach[-1] > parameterMeasurement.maximumPiezo):
+			raise ValueError(
+				"No ideal curve could be created. Please change the iput parameters."
+			)
+
 	return piezoApproach, deflectionApproach
 
 def create_ideal_curve_attraction_part(
@@ -277,7 +283,7 @@ def create_ideal_curve_attraction_part(
 	"""
 
 	Parameters:
-		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
+		parameterMeasurement(namedtupel): Contains all parameters describing the virtual
 										  measuring system.
 		totalLength(int): .
 
@@ -292,8 +298,8 @@ def create_ideal_curve_attraction_part(
 	while(True):
 		piezoAttraction.append(
 			calculate_piezo_value(
-				parameterMeasurement.initialDistance,
-				parameterMeasurement.distanceInterval,
+				parameterMeasurement.startDistance,
+				parameterMeasurement.stepSize,
 				len(piezoAttraction) + totalLength
 			)
 		)
@@ -306,6 +312,11 @@ def create_ideal_curve_attraction_part(
 		if (deflectionAttraction[-1] >= 0):
 			break
 
+		if (piezoAttraction[-1] > parameterMeasurement.maximumPiezo):
+			raise ValueError(
+				"No ideal curve could be created. Please change the iput parameters."
+			)
+
 	return piezoAttraction, deflectionAttraction
 
 def create_ideal_curve_contact_part(
@@ -317,8 +328,8 @@ def create_ideal_curve_contact_part(
 
 	Parameters:
 		parameterMaterial(namedtupel): Contains all parameters describing the material 
-									   and geometriy of the virtuell measuring system.
-		parameterMeasurement(namedtupel): Contains all parameters describing the virtuell
+									   and geometriy of the virtual measuring system.
+		parameterMeasurement(namedtupel): Contains all parameters describing the virtual
 										  measuring system.
 		totalLength(int): .
 
@@ -335,8 +346,8 @@ def create_ideal_curve_contact_part(
 	while(True):
 		piezoContact.append(
 			calculate_piezo_value(
-				parameterMeasurement.initialDistance,
-				parameterMeasurement.distanceInterval,
+				parameterMeasurement.startDistance,
+				parameterMeasurement.stepSize,
 				len(piezoContact) + totalLength
 			)
 		)
@@ -347,27 +358,27 @@ def create_ideal_curve_contact_part(
 			)
 		)
 
-		if (deflectionContact[-1] >= parameterMeasurement.maximumdeflection):
+		if (piezoContact[-1] >= parameterMeasurement.maximumPiezo):
 			break
 
 	return piezoContact, deflectionContact
 
 def calculate_piezo_value(
-	initialDistance: float,
-	distanceInterval: float,
+	startDistance: float,
+	stepSize: float,
 	currentLength: int
 ) -> float:
 	"""Calculate the current piezo value.
 
 	Parameters:
-		initialDistance(float): .
-		distanceInterval(float): .
+		startDistance(float): .
+		stepSize(float): .
 		currentLength(int): .
 
 	Returns:
 		piezoValue(float): Current piezo value of the ideal curve.
 	"""
-	return initialDistance + distanceInterval * currentLength
+	return startDistance + stepSize * currentLength
 
 def calculate_deflection_approach_part(
 	hamaker: float,
@@ -504,7 +515,7 @@ def shift_ideal_curve(
 	Returns:
 		shiftedIdealCurve(tuple): .
 	"""
-	shiftedPiezo = np.asarray(piezo) + parameterForceVolume.topography
+	shiftedPiezo = np.asarray(piezo) + parameterForceVolume.topographyOffset
 	shiftedDeflection = np.asarray(deflection) + parameterForceVolume.virtualDeflection
 
 	return shiftedPiezo, shiftedDeflection
@@ -514,7 +525,7 @@ def multiply_and_apply_noise_to_ideal_curve(
 	parameterForceVolume: NamedTuple
 ) -> List[np.ndarray]:
 	"""Applies noise of given extent to the shifted deflection of ideal curve, 
-	   shiftedDeflection shifted by virtuell shiftedDeflection, piezo is 
+	   shiftedDeflection shifted by virtual shiftedDeflection, piezo is 
 	   shifted by topography.
 
 	Parameters:

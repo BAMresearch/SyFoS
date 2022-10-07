@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-import syfos.data_handling.analyse_data as analyse_data
+#import syfos.data_handling.analyse_data as analyse_data
 
 def test_get_approach_part_simple_curve():
 	""""""

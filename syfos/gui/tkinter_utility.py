@@ -74,14 +74,15 @@ class LabeledParameterInput(ttk.Frame):
 		"""Get the value of the input."""
 		return self.input.get()
 
-	def check_value(self):
+	def check_for_valid_value(self):
 		"""Check if the current input value is valid."""
 		return self.input.validValue
 
 
 class ParameterLabel(tk.Text):
-	"""Custom label for a parameter input.
-	   Consists of """
+	"""Custom label for the parameter input.
+	   Consists of a name and a formula character
+	   which can have an additional subscript."""
 	def __init__(
 		self, 
 		root, 
@@ -154,7 +155,7 @@ class CheckedInput(ttk.Entry):
 
 		self.validValue = False
 
-		self.bind("<FocusIn>", self._change_value)
+		self.bind("<FocusIn>", self._check_for_placeholder)
 		self.bind("<FocusOut>", self._validate_value, add="+")
 
 	def set_placeholder(self):
@@ -177,8 +178,8 @@ class CheckedInput(ttk.Entry):
 
 		self.validValue = True
 
-	def _change_value(self, *args):
-		""""""
+	def _check_for_placeholder(self, *args):
+		"""Check whether the placeholer is still set when the input get's focus."""
 		if self.get() == self.placeholder:
 			self.icursor(0)
 			self.bind("<KeyPress>", self._remove_placeholder, add="+")
@@ -218,11 +219,11 @@ class CheckedInput(ttk.Entry):
 
 	def _set_text_color_placeholder(self):
 		"""Set the text color for the place holder."""
-		self.config(foreground="gray")
+		self.config(foreground="#c4c4c4")
 
 	def _set_text_color_valid(self):
 		"""Set the text color for a valid input."""
-		self.config(foreground="black")
+		self.config(foreground="gray")
 
 	def _set_text_color_invalid(self):
 		"""Set the text color for an invalid input."""
@@ -233,7 +234,7 @@ class CheckedInput(ttk.Entry):
 		self.delete(0, len(self.get()))
 
 class UnitLabel(ttk.Label):
-	""""""
+	"""Label to display the unit of the input value."""
 	def __init__(self, root, *args, **kwargs):
 		super().__init__(root, *args, **kwargs)
 

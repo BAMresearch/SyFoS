@@ -63,10 +63,18 @@ class MainWindow(ttk.Frame):
 
 		self._init_style_parameters()
 		self._init_parameter_variables()
+		
 		self._create_main_window()
+
+		self._combine_parameter_inputs()
+		self._set_test_values()
 
 	def _init_style_parameters(self) -> None:
 		"""Initialise all style related parameters."""
+		self.smallLabelLength = 3
+		self.normalLabelLength = 7
+		self.wideLabelLength = 15
+
 		self.colorPlot = "#e6f7f4"
 
 	def _init_parameter_variables(self) -> None:
@@ -84,57 +92,6 @@ class MainWindow(ttk.Frame):
 
 	def _create_frame_parameters(self) -> None:
 		"""Define all elements within the parameter frame."""
-		smallLabelLength = 3
-		normalLabelLength = 7
-		wideLabelLength = 20
-
-		frameParameters = ttk.Labelframe(
-			self, 
-			text="Parameters", 
-			padding=15
-		)
-		frameParameters.pack(fill=X, expand=YES, padx=15, pady=(15, 0))
-
-		# Probe Section
-		frameProbeSection = ttk.Frame(frameParameters)
-		frameProbeSection.pack(fill=Y, expand=YES)
-
-		labelProbeSection = ttk.Label(
-			frameProbeSection, 
-			text="Probe", 
-			font="bold"
-		)
-		labelProbeSection.pack(side=LEFT, fill=None, expand=YES)
-
-		self.defaultProbe = tk.StringVar(self, value="Default Probe")
-		dropdownProbe = ttk.OptionMenu(
-			frameProbeSection, 
-			self.defaultProbe, 
-			"",
-			*dm.defaultMaterials.keys(), 
-			command=self._set_default_probe_parameters,
-			bootstyle=""
-		)
-		dropdownProbe.pack(side=TOP, fill=None, expand=YES)
-
-		self.inputEProbe = LabeledParameterInput(
-			frameProbeSection,
-			"",
-			"E",
-			"tip",
-			smallLabelLength,
-			"1e6 - 300e9",
-			[1e6, 300e9],
-			"Pa"
-		)
-		self.inputEProbe.pack(side=LEFT, fill=X, expand=YES)
-
-	def _create_frame_parameters_(self) -> None:
-		"""Define all elements within the parameter frame."""
-		smallLabelLength = 3
-		normalLabelLength = 7
-		wideLabelLength = 20
-
 		frameParameters = ttk.Labelframe(
 			self, 
 			text="Parameters", 
@@ -166,7 +123,7 @@ class MainWindow(ttk.Frame):
 			"",
 			"E",
 			"tip",
-			smallLabelLength,
+			self.smallLabelLength,
 			"1e6 - 300e9",
 			[1e6, 300e9],
 			"Pa"
@@ -178,7 +135,7 @@ class MainWindow(ttk.Frame):
 			"",
 			"\u03BD",
 			"tip",
-			smallLabelLength,
+			self.smallLabelLength,
 			"0 - 0.5",
 			[0, 0.5],
 			""
@@ -190,7 +147,7 @@ class MainWindow(ttk.Frame):
 			"",
 			"A",
 			"tip",
-			smallLabelLength,
+			self.smallLabelLength,
 			"1 - 450",
 			[1e-21, 450e-21],
 			"zJ"
@@ -202,7 +159,7 @@ class MainWindow(ttk.Frame):
 			"",
 			"k",
 			"c",
-			smallLabelLength,
+			self.smallLabelLength,
 			"0.001 - 100",
 			[0.001, 100],
 			"N/m"
@@ -214,7 +171,7 @@ class MainWindow(ttk.Frame):
 			"",
 			"R",
 			"",
-			smallLabelLength,
+			self.smallLabelLength,
 			"1e-9 - 10e-6",
 			[1e-9, 10e-6],
 			"m"
@@ -245,7 +202,7 @@ class MainWindow(ttk.Frame):
 			"",
 			"E",
 			"sample",
-			normalLabelLength,
+			self.normalLabelLength,
 			"1e6 - 300e9",
 			[1e6, 300e9],
 			"Pa"
@@ -257,7 +214,7 @@ class MainWindow(ttk.Frame):
 			"",
 			"\u03BD",
 			"sample",
-			normalLabelLength,
+			self.normalLabelLength,
 			"0 - 0.5",
 			[0, 0.5],
 			""
@@ -269,7 +226,7 @@ class MainWindow(ttk.Frame):
 			"",
 			"A",
 			"sample",
-			normalLabelLength,
+			self.normalLabelLength,
 			"1 - 450",
 			[1e-21, 450e-21],
 			"zJ"
@@ -289,7 +246,7 @@ class MainWindow(ttk.Frame):
 			"Start Distance ",
 			"Z",
 			"0",
-			wideLabelLength,
+			self.wideLabelLength,
 			"-10e-6 - 0",
 			[-10e-6, 0],
 			"m"
@@ -301,7 +258,7 @@ class MainWindow(ttk.Frame):
 			"Step Size ",
 			"dZ",
 			"",
-			wideLabelLength,
+			self.wideLabelLength,
 			"0.01e-9 - 1e-9",
 			[0.01e-9, 1e-9],
 			"m"
@@ -313,7 +270,7 @@ class MainWindow(ttk.Frame):
 			"Maximum Piezo ",
 			"Z",
 			"max",
-			wideLabelLength,
+			self.wideLabelLength,
 			"0 - 1e-6",
 			[0, 1e-6],
 			"m"
@@ -325,7 +282,7 @@ class MainWindow(ttk.Frame):
 			"Number Of Curves",
 			"",
 			"",
-			wideLabelLength,
+			self.wideLabelLength,
 			"1 - 1000",
 			[1, 1000],
 			""
@@ -345,7 +302,7 @@ class MainWindow(ttk.Frame):
 			"Virtual Deflection",
 			"",
 			"",
-			wideLabelLength,
+			self.wideLabelLength,
 			"0 - 3e-6",
 			[0, 3e-6],
 			"m"
@@ -357,7 +314,7 @@ class MainWindow(ttk.Frame):
 			"Topography Offset",
 			"",
 			"",
-			wideLabelLength,
+			self.wideLabelLength,
 			"0 - 10e-6",
 			[0, 10e-6],
 			"m"
@@ -369,32 +326,12 @@ class MainWindow(ttk.Frame):
 			"Noise",
 			"",
 			"",
-			wideLabelLength,
+			self.wideLabelLength,
 			"0 - 1e-9",
 			[0, 1e-9],
 			""
 		)
 		self.inputNoise.grid(row=3, column=6, columnspan=2, sticky=W, pady=(0, 5))
-
-		self.parameterInputs = {
-			"e Probe": self.inputEProbe,
-			"Poisson Ratio Probe": self.inputPoissonRatioProbe,
-			"Hamaker Probe": self.inputHamakerProbe,
-			"kc": self.inputSpringConstant,
-			"Radius": self.inputRadius,
-			"e Sample": self.inputESample,
-			"Poisson Ratio Sample": self.inputPoissonRatioSample,
-			"Hamaker Sample": self.inputHamakerSample,	
-			"Start Distance": self.inputStartDistance,
-			"Step Size": self.inputStepSize,
-			"Maximum Piezo": self.inputMaximumPiezo,
-			"Number Of Curves": self.inputNumberOfCurves,
-			"Virtual Deflection": self.inputVirtualDeflection,
-			"Topography Offset": self.inputTopographyOffset,
-			"Noise": self.inputNoise
-		}
-
-		self._set_test_values()
 
 		frameParameters.grid_columnconfigure(0, weight=1, pad=3)
 		frameParameters.grid_columnconfigure(1, weight=1, pad=3)
@@ -434,7 +371,13 @@ class MainWindow(ttk.Frame):
 		rowVariables = ttk.Frame(frameLinePlot)
 		rowVariables.pack(fill=X, expand=YES, padx=(15, 0), pady=(0, 10))
 
-		labelEtot = ttk.Label(rowVariables, text="etot:")
+		labelEtot = ParameterLabel(
+			rowVariables,
+			"",
+			"E",
+			"total",
+			self.smallLabelLength,
+		)
 		labelEtot.pack(side=LEFT, fill=X, expand=YES)
 		
 		entryEtot = ttk.Entry(
@@ -445,7 +388,13 @@ class MainWindow(ttk.Frame):
 		)
 		entryEtot.pack(side=LEFT, fill=X, expand=YES, padx=(0, 20))
 
-		labelJtc = ttk.Label(rowVariables, text="jtc:")
+		labelJtc = ParameterLabel(
+			rowVariables,
+			"JTC",
+			"",
+			"",
+			self.smallLabelLength,
+		)
 		labelJtc.pack(side=LEFT, fill=X, expand=YES)
 
 		entryJtc = ttk.Entry(
@@ -456,7 +405,13 @@ class MainWindow(ttk.Frame):
 		)
 		entryJtc.pack(side=LEFT, fill=X, padx=(0, 15), expand=YES)
 
-		labelHamaker = ttk.Label(rowVariables, text="hamaker:")
+		labelHamaker = ParameterLabel(
+			rowVariables,
+			"",
+			"A",
+			"total",
+			self.smallLabelLength,
+		)
 		labelHamaker.pack(side=LEFT, fill=X, expand=YES)
 
 		entryHamaker = ttk.Entry(
@@ -503,7 +458,7 @@ class MainWindow(ttk.Frame):
 			self.activeForceVolume, 
 			"",
 			*self.forceVolumes.keys(), 
-			command=self._set_active_force_volume,
+			command=self._update_active_force_volume,
 			bootstyle=""
 		)
 		self.dropdownForceVolumes.pack()
@@ -524,15 +479,25 @@ class MainWindow(ttk.Frame):
 		)
 		buttonDeleteForceVolume.pack(pady=(10, 0))
 
-	def _set_probe_label(self) -> None:
-		"""Change the probe label if the user changes 
-		   any of it's parameters."""
-		self.defaultProbe.set("Custom Probe")
-
-	def _set_sample_label(self) -> None:
-		"""Change the sample label if the user changes 
-		   any of it's parameters."""
-		self.defaultSample.set("Custom Sample")
+	def _combine_parameter_inputs(self):
+		"""Combine the parameter inputs to check and get all values."""
+		self.parameterInputs = {
+			"e Probe": self.inputEProbe,
+			"Poisson Ratio Probe": self.inputPoissonRatioProbe,
+			"Hamaker Probe": self.inputHamakerProbe,
+			"kc": self.inputSpringConstant,
+			"Radius": self.inputRadius,
+			"e Sample": self.inputESample,
+			"Poisson Ratio Sample": self.inputPoissonRatioSample,
+			"Hamaker Sample": self.inputHamakerSample,	
+			"Start Distance": self.inputStartDistance,
+			"Step Size": self.inputStepSize,
+			"Maximum Piezo": self.inputMaximumPiezo,
+			"Number Of Curves": self.inputNumberOfCurves,
+			"Virtual Deflection": self.inputVirtualDeflection,
+			"Topography Offset": self.inputTopographyOffset,
+			"Noise": self.inputNoise
+		}
 
 	def _set_default_probe_parameters(self, defaultProbe:str) -> None:
 		"""Set the parameters of a selected default probe material.
@@ -607,7 +572,7 @@ class MainWindow(ttk.Frame):
 			ValueError: If a parameter is not a number.
 		"""
 		for parameterName, parameterInput in self.parameterInputs.items():
-			if parameterInput.check_value() == False:
+			if parameterInput.check_for_valid_value() == False:
 				raise ValueError(
 					"Invalid value for " + parameterName + "."
 				)
@@ -646,15 +611,15 @@ class MainWindow(ttk.Frame):
 			jtc=jtc,
 		)
 		parameterMeasurement = ParameterMeasurement(
-			initialDistance=float(self.inputStartDistance.get()),
-			distanceInterval=float(self.inputStepSize.get()),
-			maximumdeflection=float(self.inputMaximumPiezo.get()),	
+			startDistance=float(self.inputStartDistance.get()),
+			stepSize=float(self.inputStepSize.get()),
+			maximumPiezo=float(self.inputMaximumPiezo.get()),	
 		)
 		parameterForceVolume = ParameterForceVolume(
 			numberOfCurves=int(self.inputNumberOfCurves.get()),
 			noise=float(self.inputNoise.get()),
 			virtualDeflection=float(self.inputVirtualDeflection.get()),
-			topography=float(self.inputTopographyOffset.get())
+			topographyOffset=float(self.inputTopographyOffset.get())
 		)
 
 		return parameterMaterial, parameterMeasurement, parameterForceVolume
@@ -686,7 +651,7 @@ class MainWindow(ttk.Frame):
 
 		self._update_dropdown_force_volumes()
 		self.activeForceVolume.set(nameForceVolume)
-		self._set_active_force_volume()
+		self._update_active_force_volume()
 
 	def _update_dropdown_force_volumes(self) -> None:
 		"""Update the list of generated force volumes in the dropdown menu."""
@@ -706,15 +671,9 @@ class MainWindow(ttk.Frame):
 
 		self._reset_calculated_parameters()
 	
-	def _set_active_force_volume(
-		self, 
-		forceVolume: str=""
-	) -> None:
-		""".
-
-		Parameters:
-			forceVolume(str): .
-		"""
+	def _update_active_force_volume(self, *args) -> None:
+		"""Update the calculated parameters and the 
+		   presentation of the active force volume"""
 		self._set_calculated_parameters(
 			self.forceVolumes[self.activeForceVolume.get()]["etot"],
 			self.forceVolumes[self.activeForceVolume.get()]["jtc"],
@@ -756,9 +715,9 @@ class MainWindow(ttk.Frame):
 		"""Set the calculated parameters of the active force volume.
 
 		Parameters:
-			etot(str): Calculated and rounded etot value.
-			jtc(str): Calculated and rounded jtc value.
-			hamaker(str): Calculated and rounded hamaker value.
+			etot(str): Rounded etot value.
+			jtc(str): Rounded jtc value.
+			hamaker(str): Rounded hamaker value.
 		"""
 		self.etot.set(
 			self._round_parameter_presentation(etot)
