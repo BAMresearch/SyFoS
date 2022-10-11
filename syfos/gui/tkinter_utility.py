@@ -24,35 +24,30 @@ class LabeledParameterInput(ttk.Frame):
 	def __init__(
 		self, 
 		root,
-		label,
-		formulaCharacter,
-		formulaCharacterSubscript,
+		inputParameters,
 		labelWidth,
-		placeholder,
-		valueBoundaries,
-		unitLabel 
 	):
 		super().__init__(root)
 
 		self.label = ParameterLabel(
 			self,
-			label,
-			formulaCharacter,
-			formulaCharacterSubscript,
+			inputParameters["label"],
+			inputParameters["formulaCharacter"],
+			inputParameters["formulaCharacterSubscript"],
 			labelWidth
 		)
 		self.label.pack(side=LEFT, fill=X, expand=YES)
 
 		self.input = CheckedInput(
 			self,
-			placeholder,
-			valueBoundaries
+			inputParameters["placeholder"],
+			inputParameters["valueBoundaries"]
 		)
 		self.input.pack(side=LEFT, fill=X, expand=YES)
 
 		self.unitLabel = UnitLabel(
 			self,
-			text=unitLabel
+			text=inputParameters["unitLabel"]
 		)
 		self.unitLabel.pack(side=LEFT, fill=X, expand=YES)
 

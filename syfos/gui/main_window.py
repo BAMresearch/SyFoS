@@ -16,6 +16,7 @@ along with SyFoS.  If not, see <http://www.gnu.org/licenses/>.
 from typing import Tuple, List, Dict
 import os
 import functools
+import platform 
 
 import numpy as np
 
@@ -30,7 +31,7 @@ matplotlib.use("TkAgg")
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-import gui.default_materials as dm
+import gui.default_parameters as dp
 from gui.tkinter_utility import LabeledParameterInput, ParameterLabel
 from gui.export_window import ExportWindow
 
@@ -55,7 +56,7 @@ def decorator_check_if_force_volume_selected(function):
 class MainWindow(ttk.Frame):
 	"""A GUI to create and compare synthetic force volumes."""
 	def __init__(self, root):
-		super().__init__(root, padding=10)
+		super().__init__(root, padding=5)
 
 		self.pack(fill=BOTH, expand=YES)
 
@@ -71,9 +72,15 @@ class MainWindow(ttk.Frame):
 
 	def _init_style_parameters(self) -> None:
 		"""Initialise all style related parameters."""
-		self.smallLabelLength = 3
-		self.normalLabelLength = 7
-		self.wideLabelLength = 15
+		if platform.system() == "Windows":
+			self.smallLabelLength = 4
+			self.normalLabelLength = 8
+			self.wideLabelLength = 20
+
+		else:
+			self.smallLabelLength = 3
+			self.normalLabelLength = 7
+			self.wideLabelLength = 15
 
 		self.colorPlot = "#e6f7f4"
 
@@ -97,7 +104,18 @@ class MainWindow(ttk.Frame):
 			text="Parameters", 
 			padding=15
 		)
-		frameParameters.pack(fill=X, expand=YES, padx=15, pady=(15, 0))
+		frameParameters.pack(fill=X, expand=YES, padx=15, pady=15)
+
+		numberOfColumns = 6
+		numberOfRows = 6
+
+		for index in range(numberOfColumns):
+			frameParameters.columnconfigure(index, weight=1)
+		for index in range(numberOfRows):
+			frameParameters.rowconfigure(index, weight=1)
+
+		paddingColumns = (0, 10)
+		paddingRows = (0, 8)
 
 		# Probe Section
 		labelProbeSection = ttk.Label(
@@ -105,78 +123,98 @@ class MainWindow(ttk.Frame):
 			text="Probe", 
 			font="bold"
 		)
-		labelProbeSection.grid(row=0, column=0, sticky=W, pady=(0, 5))
+		labelProbeSection.grid(
+			row=0, 
+			column=0, 
+			sticky=W, 
+			pady=paddingRows
+		)
 
 		self.defaultProbe = tk.StringVar(self, value="Default Probe")
 		dropdownProbe = ttk.OptionMenu(
 			frameParameters, 
 			self.defaultProbe, 
 			"",
-			*dm.defaultMaterials.keys(), 
+			*dp.defaultMaterials.keys(), 
 			command=self._set_default_probe_parameters,
 			bootstyle=""
 		)
-		dropdownProbe.grid(row=0, column=1, sticky=W, padx=(7, 0), pady=(0, 5))
+		dropdownProbe.grid(
+			row=0, 
+			column=1, 
+			sticky=W, 
+			padx=paddingColumns, 
+			pady=paddingRows
+		)
 
 		self.inputEProbe = LabeledParameterInput(
 			frameParameters,
-			"",
-			"E",
-			"tip",
-			self.smallLabelLength,
-			"1e6 - 300e9",
-			[1e6, 300e9],
-			"Pa"
+			dp.parameterInputsProbe["e"],
+			self.smallLabelLength
 		)
-		self.inputEProbe.grid(row=1, column=0, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputEProbe.grid(
+			row=1, 
+			column=0, 
+			columnspan=2, 
+			sticky=W, 
+			padx=paddingColumns, 
+			pady=paddingRows
+		)
 
 		self.inputPoissonRatioProbe = LabeledParameterInput(
 			frameParameters,
-			"",
-			"\u03BD",
-			"tip",
-			self.smallLabelLength,
-			"0 - 0.5",
-			[0, 0.5],
-			""
+			dp.parameterInputsProbe["poissonRatio"],
+			self.smallLabelLength
 		)
-		self.inputPoissonRatioProbe.grid(row=2, column=0, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputPoissonRatioProbe.grid(
+			row=2, 
+			column=0, 
+			columnspan=2, 
+			sticky=W, 
+			padx=paddingColumns,  
+			pady=paddingRows
+		)
 
 		self.inputHamakerProbe = LabeledParameterInput(
 			frameParameters,
-			"",
-			"A",
-			"tip",
+			dp.parameterInputsProbe["hamaker"],
 			self.smallLabelLength,
-			"1 - 450",
-			[1e-21, 450e-21],
-			"zJ"
 		)
-		self.inputHamakerProbe.grid(row=3, column=0, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputHamakerProbe.grid(
+			row=3, 
+			column=0, 
+			columnspan=2, 
+			sticky=W, 
+			padx=paddingColumns,  
+			pady=paddingRows
+		)
 
 		self.inputSpringConstant = LabeledParameterInput(
 			frameParameters,
-			"",
-			"k",
-			"c",
-			self.smallLabelLength,
-			"0.001 - 100",
-			[0.001, 100],
-			"N/m"
+			dp.parameterInputsProbe["springConstant"],
+			self.smallLabelLength
 		)
-		self.inputSpringConstant.grid(row=4, column=0, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputSpringConstant.grid(
+			row=4, 
+			column=0, 
+			columnspan=2, 
+			sticky=W, 
+			padx=paddingColumns,  
+			pady=paddingRows
+		)
 
 		self.inputRadius = LabeledParameterInput(
 			frameParameters,
-			"",
-			"R",
-			"",
-			self.smallLabelLength,
-			"1e-9 - 10e-6",
-			[1e-9, 10e-6],
-			"m"
+			dp.parameterInputsProbe["radius"],
+			self.smallLabelLength
 		)
-		self.inputRadius.grid(row=5, column=0, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputRadius.grid(
+			row=5, 
+			column=0, 
+			columnspan=2, 
+			sticky=W,
+			padx=paddingColumns 
+		)
 
 		# Sample Section
 		labelSampleSection = ttk.Label(
@@ -184,54 +222,70 @@ class MainWindow(ttk.Frame):
 			text="Sample", 
 			font="bold"
 		)
-		labelSampleSection.grid(row=0, column=2, sticky=W, pady=(0, 5))
+		labelSampleSection.grid(
+			row=0, 
+			column=2, 
+			sticky=W, 
+			pady=paddingRows
+		)
 
 		self.defaultSample = tk.StringVar(self, value="Default Sample")
 		dropdownSample = ttk.OptionMenu(
 			frameParameters, 
 			self.defaultSample, 
 			"",
-			*dm.defaultMaterials.keys(), 
+			*dp.defaultMaterials.keys(), 
 			command=self._set_default_sample_parameters,
 			bootstyle=""
 		)
-		dropdownSample.grid(row=0, column=3, sticky=W, padx=(7, 0), pady=(0, 5))
+		dropdownSample.grid(
+			row=0, 
+			column=3, 
+			sticky=W, 
+			padx=paddingColumns,  
+			pady=paddingRows
+		)
 
 		self.inputESample = LabeledParameterInput(
 			frameParameters,
-			"",
-			"E",
-			"sample",
-			self.normalLabelLength,
-			"1e6 - 300e9",
-			[1e6, 300e9],
-			"Pa"
+			dp.parameterInputsSample["e"],
+			self.normalLabelLength
 		)
-		self.inputESample.grid(row=1, column=2, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputESample.grid(
+			row=1, 
+			column=2, 
+			columnspan=2, 
+			sticky=W, 
+			padx=paddingColumns,  
+			pady=paddingRows
+		)
 
 		self.inputPoissonRatioSample = LabeledParameterInput(
 			frameParameters,
-			"",
-			"\u03BD",
-			"sample",
-			self.normalLabelLength,
-			"0 - 0.5",
-			[0, 0.5],
-			""
+			dp.parameterInputsSample["poissonRatio"],
+			self.normalLabelLength
 		)
-		self.inputPoissonRatioSample.grid(row=2, column=2, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputPoissonRatioSample.grid(
+			row=2, 
+			column=2, 
+			columnspan=2, 
+			sticky=W, 
+			padx=paddingColumns,  
+			pady=paddingRows
+		)
 
 		self.inputHamakerSample = LabeledParameterInput(
 			frameParameters,
-			"",
-			"A",
-			"sample",
-			self.normalLabelLength,
-			"1 - 450",
-			[1e-21, 450e-21],
-			"zJ"
+			dp.parameterInputsSample["hamaker"],
+			self.normalLabelLength
 		)
-		self.inputHamakerSample.grid(row=3, column=2, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputHamakerSample.grid(
+			row=3, 
+			column=2, 
+			columnspan=2, 
+			sticky=W,
+			padx=paddingColumns
+		)
 
 		# Force Spectroscopy Experiment section
 		labelExperiment = ttk.Label(
@@ -239,55 +293,63 @@ class MainWindow(ttk.Frame):
 			text="Force Spectroscopy Experiment", 
 			font="bold"
 		)
-		labelExperiment.grid(row=0, column=4, columnspan=2, sticky=W, pady=(0, 5))
+		labelExperiment.grid(
+			row=0, 
+			column=4, 
+			sticky=W, 
+			pady=paddingRows
+		)
 
 		self.inputStartDistance = LabeledParameterInput(
 			frameParameters,
-			"Start Distance ",
-			"Z",
-			"0",
-			self.wideLabelLength,
-			"-10e-6 - 0",
-			[-10e-6, 0],
-			"m"
+			dp.parameterInputsExperiment["startDistance"],
+			self.wideLabelLength
 		)
-		self.inputStartDistance.grid(row=1, column=4, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputStartDistance.grid(
+			row=1, 
+			column=4, 
+			sticky=W, 
+			padx=paddingColumns,  
+			pady=paddingRows
+		)
 
 		self.inputStepSize = LabeledParameterInput(
 			frameParameters,
-			"Step Size ",
-			"dZ",
-			"",
-			self.wideLabelLength,
-			"0.01e-9 - 1e-9",
-			[0.01e-9, 1e-9],
-			"m"
+			dp.parameterInputsExperiment["stepSize"],
+			self.wideLabelLength
 		)
-		self.inputStepSize.grid(row=2, column=4, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputStepSize.grid(
+			row=2, 
+			column=4, 
+			sticky=W,
+			padx=paddingColumns,  
+			pady=paddingRows
+		)
 
 		self.inputMaximumPiezo = LabeledParameterInput(
 			frameParameters,
-			"Maximum Piezo ",
-			"Z",
-			"max",
-			self.wideLabelLength,
-			"0 - 1e-6",
-			[0, 1e-6],
-			"m"
+			dp.parameterInputsExperiment["maximumPiezo"],
+			self.wideLabelLength
 		)
-		self.inputMaximumPiezo.grid(row=3, column=4, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputMaximumPiezo.grid(
+			row=3, 
+			column=4, 
+			sticky=W, 
+			padx=paddingColumns,  
+			pady=paddingRows
+		)
 
 		self.inputNumberOfCurves = LabeledParameterInput(
 			frameParameters,
-			"Number Of Curves",
-			"",
-			"",
-			self.wideLabelLength,
-			"1 - 1000",
-			[1, 1000],
-			""
+			dp.parameterInputsExperiment["numberOfCurves"],
+			self.wideLabelLength
 		)
-		self.inputNumberOfCurves.grid(row=4, column=4, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputNumberOfCurves.grid(
+			row=4, 
+			column=4, 
+			sticky=W,
+			padx=paddingColumns
+		)
 
 		# Artefact section
 		labelArtefact = ttk.Label(
@@ -295,60 +357,47 @@ class MainWindow(ttk.Frame):
 			text="Artefacts", 
 			font="bold"
 		)
-		labelArtefact.grid(row=0, column=6, columnspan=2, sticky=W, pady=(0, 5))
+		labelArtefact.grid(
+			row=0, 
+			column=5, 
+			sticky=W, 
+			pady=paddingRows
+		)
 
 		self.inputVirtualDeflection = LabeledParameterInput(
 			frameParameters,
-			"Virtual Deflection",
-			"",
-			"",
-			self.wideLabelLength,
-			"0 - 3e-6",
-			[0, 3e-6],
-			"m"
+			dp.parameterInputsArtefacts["virtualDeflection"],
+			self.wideLabelLength
 		)
-		self.inputVirtualDeflection.grid(row=1, column=6, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputVirtualDeflection.grid(
+			row=1, 
+			column=5, 
+			sticky=W, 
+			pady=paddingRows
+		)
 
 		self.inputTopographyOffset = LabeledParameterInput(
 			frameParameters,
-			"Topography Offset",
-			"",
-			"",
-			self.wideLabelLength,
-			"0 - 10e-6",
-			[0, 10e-6],
-			"m"
+			dp.parameterInputsArtefacts["topographyOffset"],
+			self.wideLabelLength
 		)
-		self.inputTopographyOffset.grid(row=2, column=6, columnspan=2, sticky=W, pady=(0, 5))
+		self.inputTopographyOffset.grid(
+			row=2, 
+			column=5, 
+			sticky=W, 
+			pady=paddingRows
+		)
 
 		self.inputNoise = LabeledParameterInput(
 			frameParameters,
-			"Noise",
-			"",
-			"",
-			self.wideLabelLength,
-			"0 - 1e-9",
-			[0, 1e-9],
-			""
+			dp.parameterInputsArtefacts["noise"],
+			self.wideLabelLength
 		)
-		self.inputNoise.grid(row=3, column=6, columnspan=2, sticky=W, pady=(0, 5))
-
-		frameParameters.grid_columnconfigure(0, weight=1, pad=3)
-		frameParameters.grid_columnconfigure(1, weight=1, pad=3)
-		frameParameters.grid_columnconfigure(2, weight=1, pad=3)
-		frameParameters.grid_columnconfigure(3, weight=1, pad=3)
-		frameParameters.grid_columnconfigure(4, weight=1, pad=3)
-		frameParameters.grid_columnconfigure(5, weight=1, pad=3)
-		frameParameters.grid_columnconfigure(6, weight=1, pad=3)
-		frameParameters.grid_columnconfigure(7, weight=1, pad=3)
-		frameParameters.grid_columnconfigure(8, weight=1, pad=3)
-
-		frameParameters.grid_rowconfigure(0, weight=1, pad=3)
-		frameParameters.grid_rowconfigure(1, weight=1, pad=3)
-		frameParameters.grid_rowconfigure(2, weight=1, pad=3)
-		frameParameters.grid_rowconfigure(3, weight=1, pad=3)
-		frameParameters.grid_rowconfigure(4, weight=1, pad=3)
-		frameParameters.grid_rowconfigure(5, weight=1, pad=3)
+		self.inputNoise.grid(
+			row=3,
+			column=5, 
+			sticky=W
+		)
 
 	def _set_test_values(self):
 		""""""
@@ -505,9 +554,9 @@ class MainWindow(ttk.Frame):
 		Parameter:
 			defaultProbe(str): Name of the chosen default probe material.
 		"""
-		self.inputEProbe.set(dm.defaultMaterials[defaultProbe]["e"])
-		self.inputPoissonRatioProbe.set(dm.defaultMaterials[defaultProbe]["poissonRatio"])
-		self.inputHamakerProbe.set(dm.defaultMaterials[defaultProbe]["hamaker"])
+		self.inputEProbe.set(dp.defaultMaterials[defaultProbe]["e"])
+		self.inputPoissonRatioProbe.set(dp.defaultMaterials[defaultProbe]["poissonRatio"])
+		self.inputHamakerProbe.set(dp.defaultMaterials[defaultProbe]["hamaker"])
 
 	def _set_default_sample_parameters(self, defaultSample:str) -> None:
 		"""Set the parameters of a selected default sample material.
@@ -515,9 +564,9 @@ class MainWindow(ttk.Frame):
 		Parameter:
 			defaultSample(str): Name of the chosen default sample material.
 		"""
-		self.inputESample.set(dm.defaultMaterials[defaultSample]["e"])
-		self.inputPoissonRatioSample.set(dm.defaultMaterials[defaultSample]["poissonRatio"])
-		self.inputHamakerSample.set(dm.defaultMaterials[defaultSample]["hamaker"])
+		self.inputESample.set(dp.defaultMaterials[defaultSample]["e"])
+		self.inputPoissonRatioSample.set(dp.defaultMaterials[defaultSample]["poissonRatio"])
+		self.inputHamakerSample.set(dp.defaultMaterials[defaultSample]["hamaker"])
 
 	def _create_force_volume(self) -> tk.messagebox:
 		"""Create a synthetic force volume with the selected parameters and display it.
