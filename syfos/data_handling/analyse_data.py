@@ -31,7 +31,7 @@ def extraxt_parameters(
 		approachParameters(): .
 		contactParameters(): .
 	"""
-	approachPart, contactPart = split_curve(idealCurve)
+	approachPart, contactPart = split_ideal_curve(idealCurve)
 
 	adjustedApproachPart, adjustedContactPart = adjusted_curve_parts(
 		approachPart,
@@ -47,7 +47,7 @@ def extraxt_parameters(
 
 	return approachParameters, contactParameters
 
-def split_curve(idealCurve: List) -> Tuple[List, List]:
+def split_ideal_curve(idealCurve: List) -> Tuple[List, List]:
 	"""Split an ideal force distance curve into its approach and contact part.
 
 	Parameters:
@@ -59,12 +59,12 @@ def split_curve(idealCurve: List) -> Tuple[List, List]:
 		contactPart(list): Piezo (x) and Deflection (y) values 
 						   of the contact part of the ideal curve.
 	"""
-	approachPart = get_approach_part(idealCurve)
-	contactPart = get_contact_part(idealCurve)
+	approachPart = get_ideal_approach_part(idealCurve)
+	contactPart = get_ideal_contact_part(idealCurve)
 
 	return approachPart, contactPart
 
-def get_approach_part(idealCurve: List) -> List:
+def get_ideal_approach_part(idealCurve: List) -> List:
 	"""Extract the approach part of the ideal curve.
 
 	Parameters:
@@ -74,9 +74,25 @@ def get_approach_part(idealCurve: List) -> List:
 		approachPart(list): Piezo (x) and Deflection (y) values 
 							of the approach part of the ideal curve.
 	"""
-	pass 
+	indexJumpToContact = np.argmin(
+		np.diff(idealCurve[1])
+	)
 
-def get_contact_part(idealCurve: List) -> List:
+	nonNegativeApproachValues = np.where(
+		idealCurve[1][:indexJumpToContact] >= 0 
+	)[0]
+
+	try: 
+		indexEndOfZeroLine = nonNegativeApproachValues[-1]
+	except IndexError:
+		raise ValueError("Could not locate the end of the zero line.")
+	else:
+		return [
+			idealCurve[0][:indexEndOfZeroLine],
+			idealCurve[1][:indexEndOfZeroLine],
+		]
+
+def get_ideal_contact_part(idealCurve: List) -> List:
 	"""Extract the contact part of the ideal curve.
 
 	Parameters:
@@ -86,8 +102,21 @@ def get_contact_part(idealCurve: List) -> List:
 		contactPart(list): Piezo (x) and Deflection (y) values 
 						   of the contact part of the ideal curve.
 	"""
-	indexContact = np.where(idealCurve >= 0)[0][-1]
-	return idealCurve[indexContact:]
+	indexMaximumForce = np.argmax(idealCurve[1])
+	
+	nonPositiveApproachValues = np.where(
+		idealCurve[1][:indexMaximumForce] <= 0
+	)[0]
+
+	try:
+		indexPointOfContact = nonPositiveApproachValues[-1]
+	except IndexError:
+		raise ValueError("Could not locate the point of contact.")
+	else:
+		return [
+			idealCurve[0][indexPointOfContact:],
+			idealCurve[1][indexPointOfContact:],
+		]
 
 def adjusted_curve_parts(
 	approachPart: List,
@@ -116,12 +145,12 @@ def adjust_approach_part(
 	approachPart: List,
 	kc: float
 ) -> List[List, List, List]:
-	"""
+	"""Adjust the x and y values of the approach part.
 
 	Parameters:
 		approachPart(list): Piezo (x) and Deflection (y) values 
 							of the approach part of the ideal curve.
-		kc(float): .
+		kc(float): The spring constant used to generate the ideal curve.
 
 	Returns:
 		adjustedApproachPart(list): TrueDistance (x), Pseudo Force (y) 
@@ -137,12 +166,12 @@ def adjust_contact_part(
 	contactPart: List,
 	kc: float
 ) -> List[List, List, List]:
-	"""
+	"""Adjust the x and y values of the contact part.
 
 	Parameters:
 		contactPart(list): Piezo (x) and Deflection (y) values 
 						   of the contact part of the ideal curve.
-		kc(float): .
+		kc(float): The spring constant used to generate the ideal curve.
 
 	Returns:
 		adjustedContactPart(list): Pseudo Force (x), Force (x) and 
@@ -162,6 +191,7 @@ def calculate_true_distance(
 	Parameters:
 
 	Returns:
+
 	"""
 	return np.asarray(approachPart[0]) - np.asarray(approachPart[1])
 
@@ -169,31 +199,71 @@ def calculate_adjusted_force(
 	curveSection: List,
 	kc: float
 ) -> np.ndarray:
-	""""""
+	"""
+	
+	Parameters:
+
+	Returns:
+	
+	"""
 	return np.asarray(curveSection[1]) * kc
 
 def calculate_adjusted_pseudo_force(
 	curveSection: List
 ) -> np.ndarray:
-	""""""
+	"""
+	
+	Parameters:
+
+	Returns:
+	
+	"""
 	return np.asarray(curveSection[1]) 
 
 def calculate_deformation(
 	contactPart: List
 ) -> np.ndarray:
-	""""""
+	"""
+	
+	Parameters:
+
+	Returns:
+	
+	"""
 	return np.asarray(contactPart[0]) - np.asarray(contactPart[1])
 
-def calculate_parameters():
-	""""""
+def calculate_parameters(
+	adjustedApproachPart,
+	adjustedContactPart,
+	inputParameters
+):
+	"""
+	
+	Parameters:
+
+	Returns:
+	
+	"""
 	pass 
 
 def calculate_approach_parameters():
-	""""""
+	"""
+	
+	Parameters:
+
+	Returns:
+	
+	"""
 	pass 
 
 def calculate_contact_parameters():
-	""""""
+	"""
+	
+	Parameters:
+
+	Returns:
+	
+	"""
 	pass 
 
 def calculate_hamaker_approach(
@@ -254,13 +324,31 @@ def calculate_kc_approach(
 	return - ((6*force*trueDistance**2) / (hamaker)) 
 
 def calculate_etot_contact():
-	""""""
+	"""
+	
+	Parameters:
+
+	Returns:
+	
+	"""
 	pass 
 
 def calculate_radius_contact():
-	""""""
+	"""
+	
+	Parameters:
+
+	Returns:
+	
+	"""
 	pass 
 
 def calculate_kc_contact():
-	""""""
+	"""
+	
+	Parameters:
+
+	Returns:
+	
+	"""
 	pass 
