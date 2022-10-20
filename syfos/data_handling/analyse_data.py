@@ -17,7 +17,7 @@ from typing import List, Tuple, NamedTuple
 
 import numpy as np
 
-def extraxt_parameters(
+def extraxt_ideal_curve_parameters(
 	idealCurve: List,
 	inputParameters: NamedTuple
 ) -> Tuple:
@@ -144,13 +144,13 @@ def adjusted_curve_parts(
 def adjust_approach_part(
 	approachPart: List,
 	kc: float
-) -> List[List, List, List]:
+) -> Tuple[List, List, List]:
 	"""Adjust the x and y values of the approach part.
 
 	Parameters:
 		approachPart(list): Piezo (x) and Deflection (y) values 
 							of the approach part of the ideal curve.
-		kc(float): The spring constant used to generate the ideal curve.
+		kc(float): Spring constant used to generate the ideal curve.
 
 	Returns:
 		adjustedApproachPart(list): TrueDistance (x), Pseudo Force (y) 
@@ -160,12 +160,12 @@ def adjust_approach_part(
 	pseudoForce = calculate_adjusted_pseudo_force(approachPart)
 	force = calculate_adjusted_force(approachPart, kc)
 
-	return [trueDistance, pseudoForce, force]
+	return trueDistance, pseudoForce, force
 
 def adjust_contact_part(
 	contactPart: List,
 	kc: float
-) -> List[List, List, List]:
+) -> Tuple[List, List, List]:
 	"""Adjust the x and y values of the contact part.
 
 	Parameters:
@@ -181,17 +181,19 @@ def adjust_contact_part(
 	force = calculate_adjusted_force(contactPart, kc)
 	deformation = calculate_deformation(contactPart)
 
-	return [pseudoForce, force, deformation]
+	return pseudoForce, force, deformation
 
 def calculate_true_distance(
 	approachPart: List
 ) -> np.ndarray:
-	"""
+	"""Adjust the x values of the approach part.
 	
 	Parameters:
+		approachPart(list): Piezo (x) and Deflection (y) values 
+							of the approach part of the ideal curve.
 
 	Returns:
-
+		trueDistance(np.ndarray): New x values for the approach part.
 	"""
 	return np.asarray(approachPart[0]) - np.asarray(approachPart[1])
 
@@ -199,84 +201,231 @@ def calculate_adjusted_force(
 	curveSection: List,
 	kc: float
 ) -> np.ndarray:
-	"""
+	"""Adjust the y values of the approach part
+	   or the x values of the contact part.
 	
 	Parameters:
+		curveSection(list): Piezo (x) and Deflection (y) values 
+							of the approach or contact part of 
+							the ideal curve.
+		kc(float): Spring constant used to generate the ideal curve.
 
 	Returns:
-	
+		force(np.ndarray): New y/x values for the approach/contact part.
 	"""
 	return np.asarray(curveSection[1]) * kc
 
 def calculate_adjusted_pseudo_force(
 	curveSection: List
 ) -> np.ndarray:
-	"""
+	"""Alternative adjustment for the y values 
+	   of the approach part or the x values 
+	   of the contact part.
 	
 	Parameters:
+		curveSection(list): Piezo (x) and Deflection (y) values 
+							of the approach or contact part of 
+							the ideal curve.
 
 	Returns:
-	
+		pseudoForce(np.ndarray): New y/x values for the approach/contact part.
 	"""
 	return np.asarray(curveSection[1]) 
 
 def calculate_deformation(
 	contactPart: List
 ) -> np.ndarray:
-	"""
+	"""Adjust the y values of the contact part.
 	
 	Parameters:
+		contactPart(list): Piezo (x) and Deflection (y) values 
+						   of the contact part of the ideal curve.
 
 	Returns:
-	
+		deformation(np.ndarray): New y values for the contact part.
 	"""
 	return np.asarray(contactPart[0]) - np.asarray(contactPart[1])
 
 def calculate_parameters(
-	adjustedApproachPart,
-	adjustedContactPart,
-	inputParameters
-):
+	adjustedApproachPart: List,
+	adjustedContactPart: List,
+	inputParameters: NamedTuple
+) -> Tuple[List, List]:
 	"""
 	
 	Parameters:
+		adjustedApproachPart(list): .
+		adjustedContactPart(list): .
+		inputParameters(namedtuple): .
 
 	Returns:
-	
+		approachParameters(list): .
+		contactParameters(list): .
 	"""
-	pass 
+	approachParameters = calculate_approach_parameters(
+		adjustedApproachPart,
+		inputParameters
+	)
+	contactParameters = calculate_contact_parameters(
+		adjustedContactPart,
+		inputParameters
+	)
 
-def calculate_approach_parameters():
+	return approachParameters, contactParameters
+
+def calculate_approach_parameters(
+	adjustedApproachPart: List,
+	inputParameters: NamedTuple
+) -> Tuple[List, List, List]:
 	"""
 	
 	Parameters:
+		adjustedApproachPart(list): .
+		inputParameters(namedtuple): .
 
 	Returns:
-	
+		springConstant(list): .
+		radius(list): .
+		hamaker(list): .
 	"""
-	pass 
+	springConstant = [
+		calculate_kc_approach(
+			trueDistance,
+			force,
+			inputParameters.hamaker,
+			inputParameters.radius
+		)
+		for trueDistance, force in zip(
+			adjustedApproachPart[0],
+			adjustedApproachPart[2],
+		)
+	]
 
-def calculate_contact_parameters():
+	radius = [
+		calculate_kc_approach(
+			trueDistance,
+			force,
+			inputParameters.hamaker,
+			inputParameters.kc
+		)
+		for trueDistance, force in zip(
+			adjustedApproachPart[0],
+			adjustedApproachPart[2],
+		)
+	]
+
+	hamaker = [
+		calculate_kc_approach(
+			trueDistance,
+			force,
+			inputParameters.radius,
+			inputParameters.kc
+		)
+		for trueDistance, force in zip(
+			adjustedApproachPart[0],
+			adjustedApproachPart[2],
+		)
+	]
+
+	return (
+		springConstant,
+		radius,
+		hamaker
+	)
+
+def calculate_contact_parameters(
+	adjustedContactPart: List,
+	inputParameters: NamedTuple
+) -> Tuple[List, List, List]:
 	"""
 	
 	Parameters:
+		adjustedApproachPart(list): .
+		inputParameters(namedtuple): .
 
 	Returns:
-	
+		springConstant(list): .
+		radius(list): .
+		etot(list): .
 	"""
-	pass 
+	springConstant = [
+		calculate_kc_contact(
+			force,
+			deformation,
+			inputParameters.etot,
+			inputParameters.radius
+		)
+		for force, deformation in zip(
+			adjustedApproachPart[1],
+			adjustedApproachPart[2],
+		)
+	]
+
+	radius = [
+		calculate_kc_contact(
+			force,
+			deformation,
+			inputParameters.etot,
+			inputParameters.kc
+		)
+		for force, deformation in zip(
+			adjustedApproachPart[1],
+			adjustedApproachPart[2],
+		)
+	]
+
+	etot = [
+		calculate_etot_contact(
+			force,
+			deformation,
+			inputParameters.radius,
+			inputParameters.kc
+		)
+		for force, deformation in zip(
+			adjustedApproachPart[1],
+			adjustedApproachPart[2],
+		)
+	]
+
+	return (
+		springConstant,
+		radius,
+		etot
+	)
+
+def wrapper_calculate_parameter(
+	calculateParameterFunction,
+	xValues,
+	yValues,
+	firstParameter,
+	secondParameter
+) -> List:
+	"""
+	"""
+	return [
+		calculateParameterFunction(
+			xValue,
+			yValue,
+			firstParameter,
+			secondParameter
+		)
+		for xValue, yValue in zip(
+			xValues,
+			yValues
+		)
+	]
 
 def calculate_hamaker_approach(
-	force: float,
 	trueDistance: float,
+	force: float,
 	radius: float,
 	kc: float
 ) -> float:
 	"""
 	
 	Parameters:
-		force(float): .
 		trueDistance(float): .
+		force(float): .
 		radius(float): .
 		kc(float): .
 
@@ -286,16 +435,16 @@ def calculate_hamaker_approach(
 	return - ((6*force*trueDistance**2) / (radius))
 
 def calculate_radius_approach(
-	force: float,
 	trueDistance: float,
+	force: float,
 	hamaker: float,
 	kc: float
 ) -> float:
 	"""
 	
 	Parameters:
-		force(float): .
 		trueDistance(float): .
+		force(float): .
 		hamaker(float): .
 		kc(float): .
 
@@ -305,16 +454,16 @@ def calculate_radius_approach(
 	return - ((6*force*trueDistance**2) / (hamaker)) 
 
 def calculate_kc_approach(
-	force: float,
 	trueDistance: float,
+	force: float,
 	hamaker: float,
 	radius: float
 ) -> float:
 	"""
 	
 	Parameters:
-		force(float): .
 		trueDistance(float): .
+		force(float): .
 		hamaker(float): .
 		radius(float): .
 
@@ -323,32 +472,59 @@ def calculate_kc_approach(
 	"""
 	return - ((6*force*trueDistance**2) / (hamaker)) 
 
-def calculate_etot_contact():
+def calculate_etot_contact(
+	force: float,
+	deformation: float,
+	radius: float, 
+	kc: float
+) -> float:
 	"""
 	
 	Parameters:
+		force(float): .
+		deformation(float): .
+		radius(float): .
+		kc(float): .
 
 	Returns:
-	
+		etot(float): .
 	"""
-	pass 
+	return (kc * force) / (np.sqrt(radius) * deformation**(3/2))
 
-def calculate_radius_contact():
+def calculate_radius_contact(
+	force: float,
+	deformation: float,
+	etot: float, 
+	kc: float
+) -> float:
 	"""
 	
 	Parameters:
+		force(float): .
+		deformation(float): .
+		etot(float): .
+		kc(float): .
 
 	Returns:
-	
+		radius(float): .
 	"""
-	pass 
+	return (kc**2 * force**2) / (etot**2 * deformation**3) 
 
-def calculate_kc_contact():
+def calculate_kc_contact(
+	force: float,
+	deformation: float,
+	etot: float, 
+	radius: float
+) -> float:
 	"""
 	
 	Parameters:
+		force(float): .
+		deformation(float): .
+		etot(float): .
+		radius(float): .
 
 	Returns:
-	
+		kc(float): .
 	"""
-	pass 
+	return (etot * np.sqrt(radius) * deformation**(2/3)) / force 
