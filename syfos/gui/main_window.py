@@ -68,7 +68,7 @@ class MainWindow(ttk.Frame):
 		self._create_main_window()
 
 		self._combine_parameter_inputs()
-		self._set_test_values()
+		self._set_default_setup_parameters()
 
 	def _init_style_parameters(self) -> None:
 		"""Initialise all style related parameters."""
@@ -399,19 +399,6 @@ class MainWindow(ttk.Frame):
 			sticky=W
 		)
 
-	def _set_test_values(self):
-		""""""
-		self.inputSpringConstant.set("1")
-		self.inputRadius.set("25e-9")
-
-		self.inputNumberOfCurves.set("4")
-		self.inputMaximumPiezo.set("30e-9")
-		self.inputStartDistance.set("-10e-9")
-		self.inputStepSize.set("0.2e-9")
-		self.inputNoise.set("1e-10")
-		self.inputVirtualDeflection.set("3e-9")		
-		self.inputTopographyOffset.set("10e-9")
-
 	def _create_frame_lineplot(self) -> None:
 		"""Define all elements within the line plot frame."""
 		frameLinePlot = ttk.Labelframe(self, text="Presentation", padding=15)
@@ -548,6 +535,19 @@ class MainWindow(ttk.Frame):
 			"Noise": self.inputNoise
 		}
 
+	def _set_default_setup_parameters(self) -> None:
+		"""Set parameters to a standard setup."""
+		self.inputSpringConstant.set("1")
+		self.inputRadius.set("25e-9")
+
+		self.inputNumberOfCurves.set("4")
+		self.inputMaximumPiezo.set("30e-9")
+		self.inputStartDistance.set("-10e-9")
+		self.inputStepSize.set("0.2e-9")
+		self.inputNoise.set("1e-10")
+		self.inputVirtualDeflection.set("3e-9")		
+		self.inputTopographyOffset.set("10e-9")
+
 	def _set_default_probe_parameters(self, defaultProbe:str) -> None:
 		"""Set the parameters of a selected default probe material.
 
@@ -603,6 +603,8 @@ class MainWindow(ttk.Frame):
 			parameterMaterial.jtc,
 			parameterMaterial.Hamaker
 		)
+
+		self._update_gui()
 
 		plot_data.plot_force_volume(
 			self.holderFigureLinePlot,
@@ -698,8 +700,11 @@ class MainWindow(ttk.Frame):
 			"hamaker": hamaker
 		}
 
-		self._update_dropdown_force_volumes()
 		self.activeForceVolume.set(nameForceVolume)
+
+	def _update_gui(self) -> None:
+		""""""
+		self._update_dropdown_force_volumes()
 		self._update_active_force_volume()
 
 	def _update_dropdown_force_volumes(self) -> None:
@@ -761,7 +766,7 @@ class MainWindow(ttk.Frame):
 		jtc: str,
 		hamaker: str
 	) -> None:
-		"""Set the calculated parameters of the active force volume.
+		"""Set the calculated parameters of a force volume.
 
 		Parameters:
 			etot(str): Rounded etot value.

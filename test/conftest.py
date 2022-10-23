@@ -99,12 +99,9 @@ def import_real_force_volume():
 
 
 	Returns
-
+		realForceVolume(np.ndarray): .
 	"""
 	pass
-	realForceVolume = 0
-
-	return realForceVolume
 
 @fixture(
 	unpack_into="syntheticApproachParameters, syntheticContactParameters"
@@ -123,7 +120,7 @@ def get_parameters_synthetic_force_volume(
 	"""
 	idealCurve = syntheticForcevolume[0]
 
-	approachParameters, contactParameters = analyse_data.extraxt_ideal_curve_parameters(idealCurve)
+	approachParameters, contactParameters = analyse_data.calculate_ideal_curve_parameters(idealCurve)
 
 	return approachParameters, contactParameters
 
@@ -136,12 +133,12 @@ def get_parameters_real_force_volume(
 	"""
 
 	Parameters:
-		realForcevolume(): .
+		realForcevolume(np.ndarray): .
 
 	Returns: 
 		approachParameters(tuple): .
 		contactParameters(tuple): .
 	"""
-	approachParameters, contactParameters = analyse_data.extraxt_ideal_curve_parameters(realForcevolume)
+	approachParameters, contactParameters = analyse_data.calculate_ideal_curve_parameters(realForcevolume)
 
 	return approachParameters, contactParameters

@@ -36,8 +36,7 @@ def decorator_check_if_file_name_selected(function):
 				"Please specify a name for the ouput file.", 
 				parent=self
 			)
-		else:
-			function(self)
+		function(self)
 
 	return wrapper_check_if_file_name_selected
 
@@ -51,13 +50,12 @@ def decorator_check_if_file_location_selected(function):
 				"Please specify a location to export your data.", 
 				parent=self
 			)
-		else:
-			function(self)
+		function(self)
 
 	return wrapper_check_if_file_location_selected
 
 class ExportWindow(ttk.Frame):
-	"""A subwindow to handle the data export."""
+	"""A subwindow to export the data of a force volume."""
 	def __init__(self, root, dataForceVolume):
 		super().__init__(root, padding=10)
 

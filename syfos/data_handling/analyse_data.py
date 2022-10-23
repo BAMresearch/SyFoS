@@ -17,7 +17,7 @@ from typing import List, Tuple, NamedTuple
 
 import numpy as np
 
-def extraxt_ideal_curve_parameters(
+def calculate_ideal_curve_parameters(
 	idealCurve: List,
 	inputParameters: NamedTuple
 ) -> Tuple:
@@ -25,11 +25,12 @@ def extraxt_ideal_curve_parameters(
 
 	Parameters:
 		idealCurve(list): Piezo (x) and Deflection (y) values of the ideal curve.
-		inputParameters(namedtuple): .
+		inputParameters(namedtuple): Contains the material parameters used to 
+									 create the ideal curve
 
 	Returns:
-		approachParameters(): .
-		contactParameters(): .
+		approachParameters(tuple): .
+		contactParameters(tuple): .
 	"""
 	approachPart, contactPart = split_ideal_curve(idealCurve)
 
@@ -251,7 +252,7 @@ def calculate_parameters(
 	adjustedContactPart: List,
 	inputParameters: NamedTuple
 ) -> Tuple[List, List]:
-	"""
+	"""Calculat the approach and contact para
 	
 	Parameters:
 		adjustedApproachPart(list): .
@@ -259,8 +260,8 @@ def calculate_parameters(
 		inputParameters(namedtuple): .
 
 	Returns:
-		approachParameters(list): .
-		contactParameters(list): .
+		approachParameters(tuple): kc radius and hamaker.
+		contactParameters(tuple): kc radius and etot.
 	"""
 	approachParameters = calculate_approach_parameters(
 		adjustedApproachPart,
@@ -400,7 +401,17 @@ def wrapper_calculate_parameter(
 	firstParameter,
 	secondParameter
 ) -> List:
-	"""
+	"""Calculates a parameter for each point of a part of the ideal curve.
+
+	Parameters:
+		calculateParameterFunction(function): Function to calculate a certain parameter.
+		xValues(): X values of a part of the ideal curve.
+		yValues(): Y values of a part of the ideal curve.
+		firstParameter(): First acutal parameter used to create the ideal curve.
+		secondParameter(): Second acutal parameter used to create the ideal curve.
+
+	Returns:
+		parameterValues(list): .
 	"""
 	return [
 		calculateParameterFunction(
@@ -415,24 +426,25 @@ def wrapper_calculate_parameter(
 		)
 	]
 
-def calculate_hamaker_approach(
+def calculate_kc_approach(
 	trueDistance: float,
 	force: float,
-	radius: float,
-	kc: float
+	hamaker: float,
+	radius: float
 ) -> float:
-	"""
+	"""Calculate the theoretical kc value for the approach 
+	   part using the actual hamaker and radius values.
 	
 	Parameters:
-		trueDistance(float): .
-		force(float): .
-		radius(float): .
-		kc(float): .
+		trueDistance(float): Adjusted x value for the approach part.
+		force(float): Adjusted y value for the approach part.
+		hamaker(float): Hamaker value used to create the ideal curve.
+		radius(float): Radius value used to create the ideal curve.
 
 	Returns:
-		hamaker(float): .
+		kc(float): Theoretical kc value.
 	"""
-	return - ((6*force*trueDistance**2) / (radius))
+	return - ((6*force*trueDistance**2) / (hamaker)) 
 
 def calculate_radius_approach(
 	trueDistance: float,
@@ -440,75 +452,39 @@ def calculate_radius_approach(
 	hamaker: float,
 	kc: float
 ) -> float:
-	"""
+	"""Calculate the theoretical radius value for the 
+	   approach part using the actual hamaker and kc values.
 	
 	Parameters:
-		trueDistance(float): .
-		force(float): .
-		hamaker(float): .
-		kc(float): .
+		trueDistance(float): Adjusted x value for the approach part.
+		force(float): Adjusted y value for the approach part.
+		hamaker(float): Hamaker value used to create the ideal curve.
+		kc(float): Kc value used to create the ideal curve.
 
 	Returns:
-		radius(float): .
+		radius(float): Theoretical radius value.
 	"""
 	return - ((6*force*trueDistance**2) / (hamaker)) 
 
-def calculate_kc_approach(
+def calculate_hamaker_approach(
 	trueDistance: float,
 	force: float,
-	hamaker: float,
-	radius: float
-) -> float:
-	"""
-	
-	Parameters:
-		trueDistance(float): .
-		force(float): .
-		hamaker(float): .
-		radius(float): .
-
-	Returns:
-		kc(float): .
-	"""
-	return - ((6*force*trueDistance**2) / (hamaker)) 
-
-def calculate_etot_contact(
-	force: float,
-	deformation: float,
-	radius: float, 
+	radius: float,
 	kc: float
 ) -> float:
-	"""
+	"""Calculate the theoretical hamaker value for the 
+	   approach part using the actual radius and kc values.
 	
 	Parameters:
-		force(float): .
-		deformation(float): .
-		radius(float): .
-		kc(float): .
+		trueDistance(float): Adjusted x value for the approach part.
+		force(float): Adjusted y value for the approach part.
+		radius(float): Radius value used to create the ideal curve.
+		kc(float): Kc value used to create the ideal curve.
 
 	Returns:
-		etot(float): .
+		hamaker(float): Theoretical hamaker value.
 	"""
-	return (kc * force) / (np.sqrt(radius) * deformation**(3/2))
-
-def calculate_radius_contact(
-	force: float,
-	deformation: float,
-	etot: float, 
-	kc: float
-) -> float:
-	"""
-	
-	Parameters:
-		force(float): .
-		deformation(float): .
-		etot(float): .
-		kc(float): .
-
-	Returns:
-		radius(float): .
-	"""
-	return (kc**2 * force**2) / (etot**2 * deformation**3) 
+	return - ((6*force*trueDistance**2) / (radius))
 
 def calculate_kc_contact(
 	force: float,
@@ -516,15 +492,56 @@ def calculate_kc_contact(
 	etot: float, 
 	radius: float
 ) -> float:
-	"""
+	"""Calculate the theoretical kc value for the contact part
+	   using the actual etot and radius values.
 	
 	Parameters:
-		force(float): .
-		deformation(float): .
-		etot(float): .
-		radius(float): .
+		force(float): Adjusted x value for the contact part.
+		deformation(float): Adjusted y value for the contact part.
+		etot(float): Etot value used to create the ideal curve.
+		radius(float): Radius value used to create the ideal curve.
 
 	Returns:
-		kc(float): .
+		kc(float): Theoretical kc value.
 	"""
 	return (etot * np.sqrt(radius) * deformation**(2/3)) / force 
+
+def calculate_radius_contact(
+	force: float,
+	deformation: float,
+	etot: float, 
+	kc: float
+) -> float:
+	"""Calculate the theoretical raidus value for the contact part
+	   using the actual etot and kc values.
+	
+	Parameters:
+		force(float): Adjusted x value for the contact part.
+		deformation(float): Adjusted y value for the contact part.
+		etot(float): Etot value used to create the ideal curve.
+		kc(float): Kc value used to create the ideal curve.
+
+	Returns:
+		radius(float): Theoretical radius value.
+	"""
+	return (kc**2 * force**2) / (etot**2 * deformation**3) 
+
+def calculate_etot_contact(
+	force: float,
+	deformation: float,
+	radius: float, 
+	kc: float
+) -> float:
+	"""Calculate the theoretical etot value for the contact part
+	   using the actual raidus and kc values.
+	
+	Parameters:
+		force(float): Adjusted x value for the contact part.
+		deformation(float): Adjusted y value for the contact part.
+		radius(float): Radius value used to create the ideal curve.
+		kc(float): Kc value used to create the ideal curve.
+
+	Returns:
+		etot(float): Theoretical etot value.
+	"""
+	return (kc * force) / (np.sqrt(radius) * deformation**(3/2))

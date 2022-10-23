@@ -62,7 +62,6 @@ parameterInputsProbe = {
 		"unitLabel": "m"
 	}
 }
-
 parameterInputsSample = {
 	"e": {
 		"label": "",
@@ -89,7 +88,6 @@ parameterInputsSample = {
 		"unitLabel": "zJ"
 	}
 }
-
 parameterInputsExperiment = {
 	"startDistance": {
 		"label": "Start Distance ",
@@ -124,7 +122,6 @@ parameterInputsExperiment = {
 		"unitLabel": ""
 	}
 }
-
 parameterInputsArtefacts = {
 	"virtualDeflection": {
 		"label": "Virtual Deflection",
