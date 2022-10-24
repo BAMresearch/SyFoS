@@ -12,6 +12,13 @@ Using SyFoS
 
    Using SyFoS <using_syfos>
 
+Parameters
+===========
+.. toctree::
+   :maxdepth: 1
+
+   Parameters <parameters>
+
 Reference
 =========
 .. toctree::

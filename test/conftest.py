@@ -7,6 +7,63 @@ import numpy as np
 import syfos.data_handling.generate_data as gen_data
 import syfos.data_handling.analyse_data as analyse_data
 
+@pytest.fixture
+def simple_ideal_curve() -> List:
+	""""""
+	piezoValues = np.array([-6.0, -5.0, -4.0, -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0])
+	deflectionValues = np.array([0.0, -0.1, 0.2, -2.2, -2.5, -1.2, 0.0, 1.0, 2.5, 4.0])
+
+	return [piezoValues, deflectionValues]
+
+@pytest.fixture
+def simple_ideal_curve_approach_part() -> List:
+	""""""
+	piezoApproach = np.array([-6.0, -5.0, -4.0])
+	deflectionApproach = np.array([0.0, -0.1, 0.2])
+
+	return [piezoApproach, deflectionApproach]
+
+@pytest.fixture
+def simple_ideal_curve_contact_part() -> List:
+	""""""
+	piezoContact = np.array([0.0, 1.0, 2.0, 3.0])
+	deflectionContact = np.array([0.0, 1.0, 2.5, 4.0])
+
+	return [piezoContact, deflectionContact]
+
+@fixture(
+	unpack_into="trueDistance, forceApproach, forceContact, deformation"
+)
+def simple_ideal_curve_values() -> Tuple: 
+	""""""
+	trueDistance = -4.0
+	forceApproach = 0.2
+	forceContact = 2.0
+	deformation = 2.5
+
+	return (
+		trueDistance,
+		forceApproach,
+		forceContact,
+		deformation
+	)
+
+@fixture(
+	unpack_into="radius, kc, etot, hamaker"
+)
+def default_silicon_to_silicon_parameters() -> Tuple: 
+	""""""
+	radius = 25e-9
+	kc = 1
+	etot = 1.2e+11
+	hamaker = 6.6e-20
+
+	return (
+		radius,
+		kc,
+		etot,
+		hamaker
+	)
 
 @fixture(
 	unpack_into="parameterMaterial, parameterMeasurement, parameterForceVolume"

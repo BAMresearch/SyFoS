@@ -21,7 +21,10 @@ def calculate_ideal_curve_parameters(
 	idealCurve: List,
 	inputParameters: NamedTuple
 ) -> Tuple:
-	"""
+	"""Calculate the theoretical parameters kc, radius, 
+	   hamaker and etot from the ideal curve. These can 
+	   be compared with the actual parameter values used 
+	   to create the ideal curve.
 
 	Parameters:
 		idealCurve(list): Piezo (x) and Deflection (y) values of the ideal curve.
@@ -29,8 +32,12 @@ def calculate_ideal_curve_parameters(
 									 create the ideal curve
 
 	Returns:
-		approachParameters(tuple): .
-		contactParameters(tuple): .
+		approachParameters(tuple): Contains the theoretical values for kc, 
+								   radius and hamaker for every point of 
+								   the approach part of the ideal curve.
+		contactParameters(tuple): Contains the theoretical values for kc, 
+								   radius and etot for every point of 
+								   the contact part of the ideal curve.
 	"""
 	approachPart, contactPart = split_ideal_curve(idealCurve)
 
@@ -80,7 +87,7 @@ def get_ideal_approach_part(idealCurve: List) -> List:
 	)
 
 	nonNegativeApproachValues = np.where(
-		idealCurve[1][:indexJumpToContact] >= 0 
+		idealCurve[1][:indexJumpToContact+1] >= 0 
 	)[0]
 
 	try: 
@@ -89,8 +96,8 @@ def get_ideal_approach_part(idealCurve: List) -> List:
 		raise ValueError("Could not locate the end of the zero line.")
 	else:
 		return [
-			idealCurve[0][:indexEndOfZeroLine],
-			idealCurve[1][:indexEndOfZeroLine],
+			idealCurve[0][:indexEndOfZeroLine+1],
+			idealCurve[1][:indexEndOfZeroLine+1],
 		]
 
 def get_ideal_contact_part(idealCurve: List) -> List:
@@ -252,16 +259,23 @@ def calculate_parameters(
 	adjustedContactPart: List,
 	inputParameters: NamedTuple
 ) -> Tuple[List, List]:
-	"""Calculat the approach and contact para
+	"""Calculate the theoretical parameters from the approach 
+	   and contact part from which the ideal curve is based.
 	
 	Parameters:
-		adjustedApproachPart(list): .
-		adjustedContactPart(list): .
-		inputParameters(namedtuple): .
+		adjustedApproachPart(list): True Distance (x) and Force (y) values 
+						   			of the approach part of the ideal curve.
+		adjustedContactPart(list): Force (x) and Deformation (y) values 
+						   		   of the contact part of the ideal curve.
+		inputParameters(namedtuple): Parameters used to create the ideal curve.
 
 	Returns:
-		approachParameters(tuple): kc radius and hamaker.
-		contactParameters(tuple): kc radius and etot.
+		approachParameters(tuple): Contains the theoretical values for kc, 
+								   radius and hamaker for every point of 
+								   the approach part of the ideal curve.
+		contactParameters(tuple): Contains the theoretical values for kc, 
+								   radius and etot for every point of 
+								   the contact part of the ideal curve.
 	"""
 	approachParameters = calculate_approach_parameters(
 		adjustedApproachPart,
@@ -278,16 +292,19 @@ def calculate_approach_parameters(
 	adjustedApproachPart: List,
 	inputParameters: NamedTuple
 ) -> Tuple[List, List, List]:
-	"""
+	"""Calculate the theoretical kc, raidus and hamaker values 
+	   for every point of the approach part of the ideal curve
+	   using the actual parameter values.
 	
 	Parameters:
-		adjustedApproachPart(list): .
-		inputParameters(namedtuple): .
+		adjustedApproachPart(list): True Distance (x) and Force (y) values 
+						   			of the approach part of the ideal curve.
+		inputParameters(namedtuple): Parameters used to create the ideal curve.
 
 	Returns:
-		springConstant(list): .
-		radius(list): .
-		hamaker(list): .
+		springConstant(list): Theoretical kc values.
+		radius(list): Theoretical radius values.
+		hamaker(list): Theoretical hamaker values.
 	"""
 	springConstant = [
 		calculate_kc_approach(
@@ -338,16 +355,19 @@ def calculate_contact_parameters(
 	adjustedContactPart: List,
 	inputParameters: NamedTuple
 ) -> Tuple[List, List, List]:
-	"""
+	"""Calculate the theoretical kc, raidus and etot values 
+	   for every point of the contact part of the ideal curve
+	   using the actual parameter values.
 	
 	Parameters:
-		adjustedApproachPart(list): .
-		inputParameters(namedtuple): .
+		adjustedContactPart(list): Force (x) and Deformation (y) values 
+						   		   of the contact part of the ideal curve.
+		inputParameters(namedtuple): Parameters used to create the ideal curve.
 
 	Returns:
-		springConstant(list): .
-		radius(list): .
-		etot(list): .
+		springConstant(list): Theoretical kc values.
+		radius(list): Theoretical radius values.
+		etot(list): Theoretical etot values.
 	"""
 	springConstant = [
 		calculate_kc_contact(
@@ -411,7 +431,8 @@ def wrapper_calculate_parameter(
 		secondParameter(): Second acutal parameter used to create the ideal curve.
 
 	Returns:
-		parameterValues(list): .
+		parameterValues(list): Parameter values for each point 
+							   of the part of the ideal curve.
 	"""
 	return [
 		calculateParameterFunction(

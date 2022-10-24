@@ -30,3 +30,6 @@ Definition and physical meaningful range of all values are given below.
 
 Creating synthetic force spectroscopy data
 ------------------------------------------
+
+Creation of the synthetic force spectroscopy data involves several steps, which are listed and explained below. Starting with calculating auxiliary parameters reduced modulus Etot (2.2.1), jump to contact JTC (2.2.2) and combined Hamaker constant Atot (2.2.3) all needed parameters are available. 
+
