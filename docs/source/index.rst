@@ -5,6 +5,13 @@ With SyFoS (**Sy**\nthetic **Fo**\rce **S**\pectroscopy) data can be created. Fo
 
 With SOFA we develop a software aiming for a robust algorithm which will be able to handle all varieties of force spectroscopy data. In order to test this capability reliable synthetic test data is required for which SyFoS was written. SyFoS mirrors the experimental acquisition of data and successively builds force spectroscopy data, taking material parameter and experimental parameter into account. All parameters can be specified by the user via a GUI (Figure 1). To achieve realistic challenges in the test data sets a noise level and data offsets are added. The software is stored in Git Hub, and published in $doi 
 
+Creating synthetic force spectroscopy data
+==========================================
+.. toctree::
+   :maxdepth: 1
+
+   Creating synthetic force spectroscopy data <creating_synthetic_force_spectroscopy_data>
+
 Using SyFoS
 ===========
 .. toctree::

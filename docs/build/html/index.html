@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Using SyFoS" href="using_syfos.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Creating synthetic force spectroscopy data" href="creating_synthetic_force_spectroscopy_data.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
         <title>Synthetic Force Volumes documentation</title>
@@ -155,11 +155,16 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
+<li class="toctree-l1"><a class="reference internal" href="creating_synthetic_force_spectroscopy_data.html">Creating synthetic force spectroscopy data</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="using_syfos.html">Using SyFoS</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="parameters.html">Input material parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameters.html#force-spectroscopy-experimental-set-up">Force spectroscopy experimental set-up</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html#artefact-parameters">Artefact parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html#auxiliary-parameters">Auxiliary Parameters</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
@@ -203,6 +208,14 @@
 <p>With SyFoS (<strong>Sy</strong>nthetic <strong>Fo</strong>rce <strong>S</strong>pectroscopy) data can be created. Force spectroscopy data is usually acquired experimentally by atomic force microscopy (AFM) and has its challenges when an automated analysis of the data is attempted, f. e. with SOFA (<strong>SO</strong>ftware for <strong>F</strong>orce <strong>A</strong>nalysis). For one it is unique to this spectroscopic data, that the shift of the abscissa is not inherently known from the measurement. An additional challenge is, that the spectrum is not monotonous. The change of regimes of attractive and repulsive forces results in a singularity JTC (jump to contact). Data in the attractive respectively repulsive regime can be described by general theories, such as van der Waals attraction and Hertz contact, but one single expression which describes the full spectroscopic range does not exist.</p>
 <p>With SOFA we develop a software aiming for a robust algorithm which will be able to handle all varieties of force spectroscopy data. In order to test this capability reliable synthetic test data is required for which SyFoS was written. SyFoS mirrors the experimental acquisition of data and successively builds force spectroscopy data, taking material parameter and experimental parameter into account. All parameters can be specified by the user via a GUI (Figure 1). To achieve realistic challenges in the test data sets a noise level and data offsets are added. The software is stored in Git Hub, and published in $doi</p>
 </section>
+<section id="creating-synthetic-force-spectroscopy-data">
+<h1>Creating synthetic force spectroscopy data<a class="headerlink" href="#creating-synthetic-force-spectroscopy-data" title="Permalink to this headline">#</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="creating_synthetic_force_spectroscopy_data.html">Creating synthetic force spectroscopy data</a></li>
+</ul>
+</div>
+</section>
 <section id="using-syfos">
 <h1>Using SyFoS<a class="headerlink" href="#using-syfos" title="Permalink to this headline">#</a></h1>
 <div class="toctree-wrapper compound">
@@ -217,6 +230,8 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="parameters.html">Input material parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameters.html#force-spectroscopy-experimental-set-up">Force spectroscopy experimental set-up</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html#artefact-parameters">Artefact parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html#auxiliary-parameters">Auxiliary Parameters</a></li>
 </ul>
 </div>
 </section>
@@ -242,12 +257,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="using_syfos.html">
+          <a class="next-page" href="creating_synthetic_force_spectroscopy_data.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Using SyFoS</div>
+                <div class="title">Creating synthetic force spectroscopy data</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -285,6 +300,7 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">About SyFoS</a></li>
+<li><a class="reference internal" href="#creating-synthetic-force-spectroscopy-data">Creating synthetic force spectroscopy data</a></li>
 <li><a class="reference internal" href="#using-syfos">Using SyFoS</a></li>
 <li><a class="reference internal" href="#parameters">Parameters</a></li>
 <li><a class="reference internal" href="#reference">Reference</a></li>
