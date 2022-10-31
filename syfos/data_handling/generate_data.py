@@ -249,6 +249,11 @@ def create_ideal_curve_approach_part(
 	deflectionApproach = [0]
 
 	while(True):
+		tipSampleDistance = calculate_tip_sample_distance(
+			piezoApproach[-1],
+			deflectionApproach[-1]
+		)
+		
 		piezoApproach.append(
 			calculate_piezo_value(
 				parameterMeasurement.startDistance,
@@ -261,12 +266,11 @@ def create_ideal_curve_approach_part(
 				parameterMaterial.Hamaker,
 				parameterMaterial.radius,
 				parameterMaterial.kc,
-				piezoApproach[-1],
-				deflectionApproach[-1]
+				tipSampleDistance
 			)
 		)
 
-		if (deflectionApproach[-1] < parameterMaterial.jtc):
+		if (np.abs(tipSampleDistance) < np.abs(parameterMaterial.jtc)):
 			break
 
 		if (piezoApproach[-1] > parameterMeasurement.maximumPiezo):
@@ -381,12 +385,26 @@ def calculate_piezo_value(
 	"""
 	return startDistance + stepSize * currentLength
 
+def calculate_tip_sample_distance(
+	piezo: float,
+	deflection: float
+) -> float:
+	"""Calculate the current tip-sample distance.
+
+	Parameters:
+		piezo(float): Current piezo value.
+		deflection(float): Current deflection value.
+
+	Returns:
+		tipSampleDistance(float): Current tip-sample distance.
+	"""
+	return piezo - deflection
+
 def calculate_deflection_approach_part(
 	hamaker: float,
 	radius: float, 
 	kc: float, 
-	currentPiezoValue: float,
-	lastDeflectionValue: float
+	tipSampleDistance: float
 ) -> float:
 	"""Calculate the current deflection while probe and sample converge,
 	   using Hooke's Law and the Hamaker constant.
@@ -395,8 +413,7 @@ def calculate_deflection_approach_part(
 		hamaker(float): Hamaker value of the given virtual system.
 		radius(float): Value for the specified tip radius.
 		kc(float): Value for the specified spring constant.
-		currentPiezoValue(float): Corresponding piezo value.
-		lastDeflectionValue(float): Previous deflection value.
+		tipSampleDistance(float): Corresponding tip-sample distance.
 
 	Returns:
 		deflectionValue(float): Current deflection value while probe and
@@ -404,8 +421,7 @@ def calculate_deflection_approach_part(
 	"""
 	return (
 		- (hamaker*radius)
-		/ (6*(lastDeflectionValue-currentPiezoValue)**2) 
-		* (1/kc)
+		/ (6*tipSampleDistance**2*kc) 
 	)
 
 def calculate_deflection_attraction_part(

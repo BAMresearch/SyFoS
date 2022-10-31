@@ -1,27 +1,39 @@
+.. _input parameters:
+
 Input material parameters 
 =========================
 
 Definition and physical meaningful range of all values are given below. 
 
-Probe's spring constant :math:`k_{c}`
+.. _spring constant:
+
+Probe's spring constant :math:`k_c`
 -------------------------------------
 
-The AFM probe’s cantilever spring constant :math:`k_{c}` describes the force :math:`F` needed to bend the cantilever by a deflection :math:`δ`. Since this is considered an elastic deflection, it is described by Hooke’s law (see Equ 1). Commercially available AFM Probes have an :math:`k_{c}` range of 0.01N/m to 100N/m. 
+The AFM probe’s cantilever spring constant :math:`k_c` describes the force :math:`F` needed to bend the cantilever by a deflection :math:`δ`. Since this is considered an elastic deflection, it is described by Hooke’s law (see Equ 1). Commercially available AFM Probes have an :math:`k_c` range of 0.01N/m to 100N/m. 
+
+.. _radius:
 
 Probe's tip radius :math:`R`
 ----------------------------
 
 The AFM probe’s tip radius :math:`R` describes the curvature at the very end of the tip. In cases of a sharp tip (:math:`R` << 100nm) the tip has a height of up to 20µm and is rather a paraboloid or a pyramid. However, for the mechanical contact (Equ 6) only the tip’s shape at the very end is of consequence. For the calculation of attractive forces this radius is usually underestimated which is accepted in SyFoS for the time being. Das et al. suggested the use of an effective radius :math:`R_{eff}` >> :math:`R` which represents the influence of the tip size more realistically in respect to the attractive forces, which might be an option in the future for SyFoS. In the case of colloidal probes (100nm < :math:`R` < 20µm) the whole tip is of spherical shape and :math:`R` represents the radius for both cases, attractive and repulsive forces, correctly. 
 
+.. _modulus:
+
 Modulus :math:`E`
 -----------------
 
 The Young’s modulus :math:`E` is a characteristic property of every material, which describes the elastic responds to applied Force :math:`F`. Since the mechanical contact of an AFM measurement involves two different materials, the Young’s modulus of the tip material :math:`E_{tip}` and the Young’s modulus of the sample’s material :math:`E_{sample}` are required parameters. 
 
+.. _poisson ratio:
+
 Poisson ratio :math:`ν`
 -----------------------
 
 The Poisson ratio :math:`ν` describes the deformation perpendicular to the direction of applied force :math:`F`. It is the negative ratio of :math:`ν=-e/e`, with :math:`e` being the relative change of dimension perpendicular to the applied force :math:`F` and :math:`e` being the relative change of dimension in direction of applied force :math:`F`. Poisson ratios of common materials are expected to be between 0 and 0.5, which are accepted values in SyFoS. There is a class of materials which exhibits negative Poisson ratios (basically getting thicker when stretched), but those are not considered in SyFoS. 
+
+.. _hamaker:
 
 Hamaker constant :math:`A`
 --------------------------
@@ -33,20 +45,28 @@ Force spectroscopy experimental set-up
 
 For creating synthetic force spectroscopy data parameters which concern the experimental acquisition of data need to be defined. 
 
-Start Distance :math:`Z_{0}`
+.. _start distance:
+
+Start Distance :math:`Z_0`
 ----------------------------
 
-The start distance :math:`Z_{0}` is the initial distance between the AFM probe and the sample surface. It also defines the beginning of the Z-scale and hence the lowest value in the abscisse of the force-distance curve. The start distance should exceed by far the distance at which attractive forces are relevant. Very common values are between -1µm and -100nm. 
+The start distance :math:`Z_0` is the initial distance between the AFM probe and the sample surface. It also defines the beginning of the Z-scale and hence the lowest value in the abscisse of the force-distance curve. The start distance should exceed by far the distance at which attractive forces are relevant. Very common values are between -1µm and -100nm. 
+
+.. _step size:
 
 Step Size :math:`dZ`
 --------------------
 
 The step size :math:`dZ` is the inverse of the point rate (nm-1) of the data. 
 
+.. _maximum piezo:
+
 Maximum piezo displacement :math:`Z_{max}`
 ------------------------------------------
 
 The maximum piezo displacement :math:`Z_{max}` marks the end of the Z-scale and hence the highest value on the abscisse of a force-distance curve. The maximum piezo displacement :math:`Z_{max}` should be chose > 0, so contact between tip and sample is established. 
+
+.. _number of curves:
 
 Size of Force Volume – number of curves
 ---------------------------------------
@@ -58,15 +78,21 @@ Artefact parameters
 
 Experimentally acquired force curves show typically artefacts, which are not present in ideal synthetic curves. These Artefacts can be added to the ideal curves in SyFoS and their magnitude can be controlled by the following parameters. 
 
+.. _virtual deflection:
+
 Virtual Deflection
 ------------------
 
 Text
 
+.. _topography offset:
+
 Topography offset
 -----------------
 
 Text
+
+.. _noise:
 
 Noise
 -----
@@ -78,6 +104,8 @@ Auxiliary Parameters
 
 From all parameters given by the user auxiliary parameters as tip-sample distance ζ (3.2), reduced modulus Etot (3.2.3), jump to contact JTC (3.2.3) and combined Hamaker constant Atot (3.2.4) can be calculated for creating a synthetic force curve. The auxiliary parameters are also given as output in the gui. 
 
+.. _tip sample distance:
+
 Tip-Sample distance
 -------------------
 
@@ -85,15 +113,21 @@ For all theories, describing the different regimes of a force distance curve the
 
 In SyFoS :math:`ζ` and :math:`D` are calculated continuously for each iterative step. Only between :math:`JTC` and start of the contact line the tip sample distance is assumed to be zero. This is a simplification but since this part of the data is not relevant for any automated analysis the effect of this simplification is neglectable. 
 
+.. _reduced modulus:
+
 Reduced modulus :math:`E_{tot}`
 -------------------------------
 
 The reduced Young’s modulus :math:`E_{tot}` is the resulting Young’s modulus of two materials - tip and sample - in contact. It is calculated from the Young’s moduli of tip and sample (3.1.3) and the Poisson ratio of tip and sample (3.1.4) with Eqn 7. 
 
+.. _jump to contact:
+
 Jump to contact :math:`JTC`
 ---------------------------
 
 The attractive forces :math:`F_{attr}` are dependent on the tip-sample distance (Eqn ). At a certain tip-sample distance the attractive forces :math:`F_{attr}` are between sample and tip increase up to a point when their gradient exceeds the spring constant kc. Figure 1(ii) jump to contact (JTC): a discontinuity where the system is not in equilibrium and the tip snaps onto the sample. 
+
+.. _combined hamaker:
 
 Combined Hamaker constant :math:`A_{tot}`
 -----------------------------------------

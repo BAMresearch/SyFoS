@@ -25,17 +25,3 @@ Parameters
    :maxdepth: 1
 
    Parameters <parameters>
-
-Reference
-=========
-.. toctree::
-   :maxdepth: 1
-
-   Reference <reference>
-
-Glossary
-========
-.. toctree::
-   :maxdepth: 1
-
-   Glossary <glossary>

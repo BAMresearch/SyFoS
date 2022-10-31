@@ -3,9 +3,23 @@ Using SyFoS
 
 After starting SyFoS a GUI is provided as shown in figure 1. In the GUI’s upper third all parameters needed for creating synthetic force spectroscopy data are listed, grouped in three vertical sections, **Probe**, **Sample**, **Force spectroscopy Experiment** and **Artefacts**. 
 
++--------------------------------------+--------------------------------------+-------------------------------------------------+------------------------------------+
+| Probe                                | Sample                               | Force Spectroscopy Experiment                   | Artefacts                          |
++-----------------+--------------+-----+--------------------+------------+----+----------------------------+----------------+---+--------------------+-----------+---+
+| :math:`E_{tip}` | 1e6 - 300e9  | Pa  | :math:`E_{sample}` | 1e6 - 300e9| Pa | Start Distance :math:`Z_0` | -10e-6 - 0     | m | Virtual Deflection | 0 – 3e-6  | m |
++-----------------+--------------+-----+--------------------+------------+----+----------------------------+----------------+---+--------------------+-----------+---+
+| :math:`ν_{tip}` | 0 - 0.5      |     | :math:`ν_{sample}` | 0 - 0.5    |    | Step Size :math:`dZ`       | 0.01e-9 - 1e-9 | m | Topography Offset  | 0 - 10e-6 | m |
++-----------------+--------------+-----+--------------------+------------+----+----------------------------+----------------+---+--------------------+-----------+---+
+| :math:`A_{tip}` | 1 - 450      | zJ  | :math:`A_{sample}` | 1 - 450    | zJ | Maximum :math:`Z_{max}`    | 0 - 1e-6       | m | Noise              | 0 - 1e-9  |   |
++-----------------+--------------+-----+--------------------+------------+----+----------------------------+----------------+---+--------------------+-----------+---+
+| :math:`k_c`     | 0.001 - 100  | N/m |                    |            |    |                            |                |   |                    |           |   |
++-----------------+--------------+-----+--------------------+------------+----+----------------------------+----------------+---+--------------------+-----------+---+
+| :math:`R`       | 1e-9 - 10e-6 | m   |                    |            |    |                            |                |   |                    |           |   |
++-----------------+--------------+-----+--------------------+------------+----+----------------------------+----------------+---+--------------------+-----------+---+
+
 All parameters can be altered and adjusted independently by the user. However, since parameters have between them a range of magnitude from 10-21 to 109 it is not advisable to start with completely arbitrary values in order to get meaningful results. For a quick start literature values for materials, which are commonly used in force spectroscopy experiments can be chosen from a dropdown menu. Parameters concerned with the experimental set-up start with a recommended value but can be adjusted as the user sees fit. 
 
-The definition and recommended range of all values and parameters are given in :ref:`input parameters and values`.
+The definition and recommended range of all values and parameters are given in :ref:`input parameters`.
 
 With a complete set of values SyFoS can be executed with **Create Force Volume** in the GUI’s control section. Creation of the synthetic force spectroscopy data involves several steps (see 2.2), as calculating auxiliary parameters (2.2.1, 2.2.2 and 2.2.3), creating an ideal data set (!!) and simulating a force volume (!!), which is group of data sets. 
 
@@ -16,20 +30,3 @@ Additional sets of synthetic data can now be added for comparison. If for exampl
 Choosing the according buttons, the plot area can be adjusted by zooming and panning. Adjustments to the plot area can be undone by, reset or back and redone by forward. 
 
 By using the options in the GUI’s control penal, one can navigate through a stack of synthetic data: choosing the active force volume, deleting, and exporting data sets. 
-
-
-.. _input parameters and values:
-
-Input parameters and values
----------------------------
-
-Definition and physical meaningful range of all values are given below.
-
-
-.. _creating synthetic force spectroscopy data:
-
-Creating synthetic force spectroscopy data
-------------------------------------------
-
-Creation of the synthetic force spectroscopy data involves several steps, which are listed and explained below. Starting with calculating auxiliary parameters reduced modulus Etot (2.2.1), jump to contact JTC (2.2.2) and combined Hamaker constant Atot (2.2.3) all needed parameters are available. 
-
