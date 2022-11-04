@@ -597,14 +597,19 @@ class MainWindow(ttk.Frame):
 				e
 			)
 
+		identifierForceVolume = self._create_identifier_force_volume()
+
 		self._cache_force_volume(
+			identifierForceVolume,
 			forceVolume,
 			parameterMaterial.Etot,
 			parameterMaterial.jtc,
 			parameterMaterial.Hamaker
 		)
 
-		self._update_gui()
+		self._set_active_force_volume(identifierForceVolume)
+		self._set_active_force_volume_parameters()
+		self._set_inactive_force_volumes()
 
 		plot_data.plot_force_volume(
 			self.holderFigureLinePlot,
@@ -615,6 +620,14 @@ class MainWindow(ttk.Frame):
 			"Success", 
 			"Added synthetic force volume."
 		)
+
+	def _delete_force_volume(self) -> None:
+		""""""
+		pass 
+
+	def _change_active_force_volume(self) -> None:
+		""""""
+		pass
 
 	def _check_parameters(self) -> None:
 		"""Check wether all input parameters are valid.
@@ -675,8 +688,17 @@ class MainWindow(ttk.Frame):
 
 		return parameterMaterial, parameterMeasurement, parameterForceVolume
 
+	def _create_identifier_force_volume(self) -> str: 
+		"""Create a identifier for caching a force volume.
+	
+		Returns:
+			identifier(str): Name of a new force volume.
+		"""
+		return "Force Volume " + str(len(self.forceVolumes) + 1)
+
 	def _cache_force_volume(
 		self,
+		identifier: str,
 		forceVolume: np.ndarray, 
 		etot: float, 
 		jtc: float,
@@ -685,22 +707,19 @@ class MainWindow(ttk.Frame):
 		"""Cache the data of a force volume.
 
 		Parameters:
+			identifier(str): Name of the force volume.
 			forceVolume(np.ndarray): Data of the force volume.
 			etot(float): etot value of the force volume.
 			jtc(float): jtc value of the force volume.
 			hamaker(float): hamaker value of the force volume.
 		"""
-		nameForceVolume = "Force Volume " + str(len(self.forceVolumes) + 1)
-
-		self.forceVolumes[nameForceVolume] = {
+		self.forceVolumes[identifier] = {
 			"data": forceVolume,
 			"lineCollection": plot_data.create_line_collection(forceVolume),
 			"etot": etot,
 			"jtc": jtc,
 			"hamaker": hamaker
 		}
-
-		self.activeForceVolume.set(nameForceVolume)
 
 	def _update_gui(self) -> None:
 		""""""
