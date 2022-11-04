@@ -597,8 +597,10 @@ class MainWindow(ttk.Frame):
 				e
 			)
 
-		identifierForceVolume = self._create_identifier_force_volume()
-
+		identifierForceVolume = self._create_identifier_force_volume(
+			self.defaultProbe.get(),
+			self.defaultSample.get()
+		)
 		self._cache_force_volume(
 			identifierForceVolume,
 			forceVolume,
@@ -606,28 +608,44 @@ class MainWindow(ttk.Frame):
 			parameterMaterial.jtc,
 			parameterMaterial.Hamaker
 		)
-
-		self._set_active_force_volume(identifierForceVolume)
-		self._set_active_force_volume_parameters()
-		self._set_inactive_force_volumes()
+		self._update_dropdown_force_volumes()
+		self._set_active_identifier(identifierForceVolume)
+		self._set_active_auxilary_parameters()
 
 		plot_data.plot_force_volume(
 			self.holderFigureLinePlot,
 			self.forceVolumes[self.activeForceVolume.get()]["lineCollection"]
 		)
+		self._update_plot()
 
 		return messagebox.showinfo(
 			"Success", 
 			"Added synthetic force volume."
 		)
 
-	def _delete_force_volume(self) -> None:
-		""""""
-		pass 
+	def _update_active_force_volume(self, activeIdentifier:str) -> None:
+		"""Update the auxilary parameters and the 
+		   presentation of the active force volume.
 
-	def _change_active_force_volume(self) -> None:
-		""""""
-		pass
+		Parameters:
+			activeIdentifier(str): Identifier of the new active force volume.
+		"""
+		self._set_active_identifier(activeIdentifier)
+		self._set_active_auxilary_parameters()
+		self._update_plot()
+
+	@decorator_check_if_force_volume_selected
+	def _delete_force_volume(self) -> None:
+		"""Delete the data and presentation of the active force volume."""	
+		plot_data.delete_force_volume_from_plot(
+			self.holderFigureLinePlot,
+			self.forceVolumes[self.activeForceVolume.get()]["lineCollection"]
+		)
+
+		del self.forceVolumes[self.activeForceVolume.get()]
+		self._update_dropdown_force_volumes()
+		self._set_active_identifier("Force Volumes")
+		self._reset_auxilary_parameters()
 
 	def _check_parameters(self) -> None:
 		"""Check wether all input parameters are valid.
@@ -688,13 +706,21 @@ class MainWindow(ttk.Frame):
 
 		return parameterMaterial, parameterMeasurement, parameterForceVolume
 
-	def _create_identifier_force_volume(self) -> str: 
-		"""Create a identifier for caching a force volume.
+	def _create_identifier_force_volume(
+		self,
+		probeMaterial: str, 
+		sampleMaterial: str
+	) -> str: 
+		"""Create a identifier for a new force volume.
+
+		Parameters:
+			probeMaterial(str): .
+			sampleMaterial(str): .
 	
 		Returns:
 			identifier(str): Name of a new force volume.
 		"""
-		return "Force Volume " + str(len(self.forceVolumes) + 1)
+		return probeMaterial + "|" + sampleMaterial + " " + str(len(self.forceVolumes) + 1)
 
 	def _cache_force_volume(
 		self,
@@ -721,38 +747,16 @@ class MainWindow(ttk.Frame):
 			"hamaker": hamaker
 		}
 
-	def _update_gui(self) -> None:
-		""""""
-		self._update_dropdown_force_volumes()
-		self._update_active_force_volume()
-
 	def _update_dropdown_force_volumes(self) -> None:
-		"""Update the list of generated force volumes in the dropdown menu."""
+		"""Update the dropdown menu options."""
 		self.dropdownForceVolumes.set_menu("", *self.forceVolumes.keys())
-	
-	@decorator_check_if_force_volume_selected
-	def _delete_force_volume(self) -> None:
-		"""Delete the active force volume with all its data."""	
-		plot_data.delete_force_volume_from_plot(
-			self.holderFigureLinePlot,
-			self.forceVolumes[self.activeForceVolume.get()]["lineCollection"]
-		)
-		# Remove force volume from cache.
-		del self.forceVolumes[self.activeForceVolume.get()]
-		self._update_dropdown_force_volumes()
-		self.activeForceVolume.set("Force Volumes")
 
-		self._reset_calculated_parameters()
+	def _set_active_identifier(self, identifier) -> None:
+		""""""
+		self.activeForceVolume.set(identifier)
 	
-	def _update_active_force_volume(self, *args) -> None:
-		"""Update the calculated parameters and the 
-		   presentation of the active force volume"""
-		self._set_calculated_parameters(
-			self.forceVolumes[self.activeForceVolume.get()]["etot"],
-			self.forceVolumes[self.activeForceVolume.get()]["jtc"],
-			self.forceVolumes[self.activeForceVolume.get()]["hamaker"]
-		)
-
+	def _update_plot(self) -> None:
+		"""Update the presentation of the active force volume."""
 		for forceVolumeName, forceVolumeData in self.forceVolumes.items():
 			if forceVolumeName == self.activeForceVolume.get():
 				plot_data.set_active_line_collection(
@@ -779,31 +783,26 @@ class MainWindow(ttk.Frame):
 		"""
 		return '{:.3e}'.format(parameterValue)
 
-	def _set_calculated_parameters(
-		self, 
-		etot: str,
-		jtc: str,
-		hamaker: str
-	) -> None:
-		"""Set the calculated parameters of a force volume.
-
-		Parameters:
-			etot(str): Rounded etot value.
-			jtc(str): Rounded jtc value.
-			hamaker(str): Rounded hamaker value.
-		"""
+	def _set_active_auxilary_parameters(self) -> None:
+		"""Set the auxilary parameters of the active force volume."""
 		self.etot.set(
-			self._round_parameter_presentation(etot)
+			self._round_parameter_presentation(
+				self.forceVolumes[self.activeForceVolume.get()]["etot"]
+			)
 		)
 		self.jtc.set(
-			self._round_parameter_presentation(jtc)
+			self._round_parameter_presentation(
+				self.forceVolumes[self.activeForceVolume.get()]["jtc"]
+			)
 		)
 		self.hamaker.set(
-			self._round_parameter_presentation(hamaker)
+			self._round_parameter_presentation(
+				self.forceVolumes[self.activeForceVolume.get()]["hamaker"]
+			)
 		)
 
-	def _reset_calculated_parameters(self) -> None:
-		"""Reset the calculated parameters if no force volume is active."""
+	def _reset_auxilary_parameters(self) -> None:
+		"""Reset the auxilary parameters."""
 		self.etot.set("")
 		self.jtc.set("")
 		self.hamaker.set("")
