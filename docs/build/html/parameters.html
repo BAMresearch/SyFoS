@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Using SyFoS" href="using_syfos.html" />
 
     <meta name="generator" content="sphinx-5.1.1, furo 2022.04.07"/>
-        <title>Input material parameters - Synthetic Force Volumes documentation</title>
+        <title>Input material parameters - SyFoS</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">Synthetic Force Volumes  documentation</div></a>
+      <a href="index.html"><div class="brand">SyFoS</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">Synthetic Force Volumes  documentation</span>
+  <span class="sidebar-brand-text">SyFoS</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -201,7 +201,7 @@
 <p>Definition and physical meaningful range of all values are given below.</p>
 <div class="section" id="probe-s-spring-constant-k-c">
 <span id="spring-constant"></span><h2>Probe’s spring constant <span class="math notranslate nohighlight">\(k_c\)</span><a class="headerlink" href="#probe-s-spring-constant-k-c" title="Permalink to this heading">#</a></h2>
-<p>The AFM probe’s cantilever spring constant <span class="math notranslate nohighlight">\(k_c\)</span> describes the force <span class="math notranslate nohighlight">\(F\)</span> needed to bend the cantilever by a deflection <span class="math notranslate nohighlight">\(δ\)</span>. Since this is considered an elastic deflection, it is described by Hooke’s law (see Equ 1). Commercially available AFM Probes have an <span class="math notranslate nohighlight">\(k_c\)</span> range of 0.01N/m to 100N/m.</p>
+<p>The AFM probe’s cantilever spring constant <span class="math notranslate nohighlight">\(k_c\)</span> describes the force <span class="math notranslate nohighlight">\(F\)</span> needed to bend the cantilever by a deflection <span class="math notranslate nohighlight">\(δ\)</span>. Since this is considered an elastic deflection, it is described by <a class="reference internal" href="creating_synthetic_force_spectroscopy_data.html#equation-hookes-law"><span class="std std-ref">Hooke’s law</span></a>. Commercially available AFM Probes have an <span class="math notranslate nohighlight">\(k_c\)</span> range of 0.01 - 100 N/m.</p>
 </div>
 <div class="section" id="probe-s-tip-radius-r">
 <span id="radius"></span><h2>Probe’s tip radius <span class="math notranslate nohighlight">\(R\)</span><a class="headerlink" href="#probe-s-tip-radius-r" title="Permalink to this heading">#</a></h2>
@@ -258,7 +258,7 @@
 </div>
 <div class="section" id="auxiliary-parameters">
 <h1>Auxiliary Parameters<a class="headerlink" href="#auxiliary-parameters" title="Permalink to this heading">#</a></h1>
-<p>From all parameters given by the user auxiliary parameters as tip-sample distance ζ (3.2), reduced modulus Etot (3.2.3), jump to contact JTC (3.2.3) and combined Hamaker constant Atot (3.2.4) can be calculated for creating a synthetic force curve. The auxiliary parameters are also given as output in the gui.</p>
+<p>From all parameters given by the user auxiliary parameters as <a class="reference internal" href="#tip-sample-distance"><span class="std std-ref">tip-sample distance</span></a> ζ, <a class="reference internal" href="#reduced-modulus"><span class="std std-ref">reduced modulus</span></a> <span class="math notranslate nohighlight">\(E_{tot}\)</span>, <a class="reference internal" href="#jump-to-contact"><span class="std std-ref">jump to contact</span></a> <span class="math notranslate nohighlight">\(JTC\)</span> and <a class="reference internal" href="#combined-hamaker"><span class="std std-ref">combined Hamaker</span></a> constant <span class="math notranslate nohighlight">\(A_{tot}\)</span> can be calculated for creating a synthetic force curve. The auxiliary parameters are also given as output in the gui.</p>
 <div class="section" id="tip-sample-distance">
 <span id="id5"></span><h2>Tip-Sample distance<a class="headerlink" href="#tip-sample-distance" title="Permalink to this heading">#</a></h2>
 <p>For all theories, describing the different regimes of a force distance curve the true tip sample distance needs to be known. During the regime of attractive forces, the cantilever deflects towards the sample surface by <span class="math notranslate nohighlight">\(δ\)</span>, thereby decreasing the tip sample distance <span class="math notranslate nohighlight">\(ζ\)</span> additionally to the z-pizo displacement <span class="math notranslate nohighlight">\(Z:ζ=δ−Z\)</span>. During the contact or the repulsive regime, the tip sample distance <span class="math notranslate nohighlight">\(ζ\)</span> should be 0, but it is actually increased by the deformation <span class="math notranslate nohighlight">\(D\)</span> that is caused by the contact between tip and sample: <span class="math notranslate nohighlight">\(D=Z−δ\)</span>.</p>
@@ -266,7 +266,7 @@
 </div>
 <div class="section" id="reduced-modulus-e-tot">
 <span id="reduced-modulus"></span><h2>Reduced modulus <span class="math notranslate nohighlight">\(E_{tot}\)</span><a class="headerlink" href="#reduced-modulus-e-tot" title="Permalink to this heading">#</a></h2>
-<p>The reduced Young’s modulus <span class="math notranslate nohighlight">\(E_{tot}\)</span> is the resulting Young’s modulus of two materials - tip and sample - in contact. It is calculated from the Young’s moduli of tip and sample (3.1.3) and the Poisson ratio of tip and sample (3.1.4) with Eqn 7.</p>
+<p>The reduced Young’s modulus <span class="math notranslate nohighlight">\(E_{tot}\)</span> is the resulting Young’s modulus of two materials - tip and sample - in contact. It is calculated from the <a class="reference internal" href="#modulus"><span class="std std-ref">Young’s moduli</span></a> of tip and sample and the <a class="reference internal" href="#poisson-ratio"><span class="std std-ref">Poisson ratio</span></a> of tip and sample with the given <a class="reference internal" href="creating_synthetic_force_spectroscopy_data.html#equation-etot"><span class="std std-ref">equation</span></a>.</p>
 </div>
 <div class="section" id="jump-to-contact-jtc">
 <span id="jump-to-contact"></span><h2>Jump to contact <span class="math notranslate nohighlight">\(JTC\)</span><a class="headerlink" href="#jump-to-contact-jtc" title="Permalink to this heading">#</a></h2>
@@ -308,6 +308,11 @@
           </div>
           <div class="right-details">
             <div class="icons">
+              <a class="muted-link " href="https://github.com/2Puck/syfos/tree/main" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
               
             </div>
           </div>

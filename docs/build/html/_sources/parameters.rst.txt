@@ -10,7 +10,7 @@ Definition and physical meaningful range of all values are given below.
 Probe's spring constant :math:`k_c`
 -------------------------------------
 
-The AFM probe’s cantilever spring constant :math:`k_c` describes the force :math:`F` needed to bend the cantilever by a deflection :math:`δ`. Since this is considered an elastic deflection, it is described by Hooke’s law (see Equ 1). Commercially available AFM Probes have an :math:`k_c` range of 0.01N/m to 100N/m. 
+The AFM probe’s cantilever spring constant :math:`k_c` describes the force :math:`F` needed to bend the cantilever by a deflection :math:`δ`. Since this is considered an elastic deflection, it is described by :ref:`Hooke’s law <equation hookes law>`. Commercially available AFM Probes have an :math:`k_c` range of 0.01 - 100 N/m. 
 
 .. _radius:
 
@@ -102,7 +102,7 @@ Text
 Auxiliary Parameters
 ====================
 
-From all parameters given by the user auxiliary parameters as tip-sample distance ζ (3.2), reduced modulus Etot (3.2.3), jump to contact JTC (3.2.3) and combined Hamaker constant Atot (3.2.4) can be calculated for creating a synthetic force curve. The auxiliary parameters are also given as output in the gui. 
+From all parameters given by the user auxiliary parameters as :ref:`tip-sample distance <tip sample distance>` ζ, :ref:`reduced modulus <reduced modulus>` :math:`E_{tot}`, :ref:`jump to contact <jump to contact>` :math:`JTC` and :ref:`combined Hamaker <combined hamaker>` constant :math:`A_{tot}` can be calculated for creating a synthetic force curve. The auxiliary parameters are also given as output in the gui. 
 
 .. _tip sample distance:
 
@@ -118,7 +118,7 @@ In SyFoS :math:`ζ` and :math:`D` are calculated continuously for each iterative
 Reduced modulus :math:`E_{tot}`
 -------------------------------
 
-The reduced Young’s modulus :math:`E_{tot}` is the resulting Young’s modulus of two materials - tip and sample - in contact. It is calculated from the Young’s moduli of tip and sample (3.1.3) and the Poisson ratio of tip and sample (3.1.4) with Eqn 7. 
+The reduced Young’s modulus :math:`E_{tot}` is the resulting Young’s modulus of two materials - tip and sample - in contact. It is calculated from the :ref:`Young’s moduli <modulus>` of tip and sample and the :ref:`Poisson ratio <poisson ratio>` of tip and sample with the given :ref:`equation <equation etot>`. 
 
 .. _jump to contact:
 

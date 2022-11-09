@@ -2,10 +2,10 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Using SyFoS" href="using_syfos.html" /><link rel="prev" title="Introduction" href="introduction.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Using SyFoS" href="using_syfos.html" /><link rel="prev" title="SyFoS" href="index.html" />
 
     <meta name="generator" content="sphinx-5.1.1, furo 2022.04.07"/>
-        <title>Creating synthetic force spectroscopy data - SyFoS</title>
+        <title>Introduction - SyFoS</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -153,11 +153,9 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-</ul>
-<ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Creating synthetic force spectroscopy data</a></li>
+  <ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#creating-synthetic-force-spectroscopy-data">Creating synthetic force spectroscopy data</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="using_syfos.html">Using SyFoS</a></li>
@@ -199,7 +197,12 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="creating-synthetic-force-spectroscopy-data">
+          <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h1>
+<p>Force spectroscopy data is usually acquired experimentally by atomic force microscopy (AFM) and has its challenges when an automated analysis of the data is attempted, f. e. with SOFA (<strong>SO</strong>ftware for <strong>F</strong>orce <strong>A</strong>nalysis). For one it is unique to this spectroscopic data, that the shift of the abscissa is not inherently known from the measurement. An additional challenge is, that the spectrum is not monotonous. The change of regimes of attractive and repulsive forces results in a singularity JTC (jump to contact). Data in the attractive respectively repulsive regime can be described by general theories, such as van der Waals attraction and Hertz contact, but one single expression which describes the full spectroscopic range does not exist.</p>
+<p>With SOFA we develop a software aiming for a robust algorithm which will be able to handle all varieties of force spectroscopy data. In order to test this capability reliable synthetic test data is required for which SyFoS was written. SyFoS mirrors the experimental acquisition of data and successively builds force spectroscopy data, taking material parameter and experimental parameter into account. All parameters can be specified by the user via a graphical user interface. To achieve realistic challenges in the test data sets a noise level and data offsets are added. The software is stored in <a class="reference external" href="https://github.com/2Puck/syfos/tree/main">Git Hub</a>, and published in $doi</p>
+</div>
+<div class="section" id="creating-synthetic-force-spectroscopy-data">
 <h1>Creating synthetic force spectroscopy data<a class="headerlink" href="#creating-synthetic-force-spectroscopy-data" title="Permalink to this heading">#</a></h1>
 <p>Under the umbrella term of force spectroscopy usually force curves, such as force distance curves (FDC) are understood. The process of generating an ideal curve is explained in <a class="reference internal" href="#creation-of-ideal-force-curves"><span class="std std-ref">Creation of ideal force curves</span></a>. In <a class="reference internal" href="#creating-force-curves-with-artefacts"><span class="std std-ref">Creating force curves with artefacts</span></a> the most common sources of deviation of real force curves from an ideal force curve are shown, which can be added to the ideal curve in SyFoS. Since it is very common in an experiment to record more than one force curve, for example in a series or in an array (also called force volume) this option is also given in SyFoS (<a class="reference internal" href="#creating-force-curve-arrays"><span class="std std-ref">Creating force curve arrays</span></a>).</p>
 <div class="section" id="creation-of-ideal-force-curves">
@@ -289,14 +292,14 @@ Figure 1(III) contact line: upon further approach the repulsive forces are domin
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="introduction.html">
+          <a class="prev-page" href="index.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Introduction</div>
+                <div class="title">Home</div>
                 
               </div>
             </a>
@@ -337,7 +340,8 @@ Figure 1(III) contact line: upon further approach the repulsive forces are domin
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Creating synthetic force spectroscopy data</a><ul>
+<li><a class="reference internal" href="#">Introduction</a></li>
+<li><a class="reference internal" href="#creating-synthetic-force-spectroscopy-data">Creating synthetic force spectroscopy data</a><ul>
 <li><a class="reference internal" href="#creation-of-ideal-force-curves">Creation of ideal force curves</a></li>
 <li><a class="reference internal" href="#creating-force-curves-with-artefacts">Creating force curves with artefacts</a></li>
 <li><a class="reference internal" href="#creating-force-curve-arrays">Creating force curve arrays</a></li>

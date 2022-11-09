@@ -1,3 +1,10 @@
+Introduction
+============
+
+Force spectroscopy data is usually acquired experimentally by atomic force microscopy (AFM) and has its challenges when an automated analysis of the data is attempted, f. e. with SOFA (**SO**\ftware for **F**\orce **A**\nalysis). For one it is unique to this spectroscopic data, that the shift of the abscissa is not inherently known from the measurement. An additional challenge is, that the spectrum is not monotonous. The change of regimes of attractive and repulsive forces results in a singularity JTC (jump to contact). Data in the attractive respectively repulsive regime can be described by general theories, such as van der Waals attraction and Hertz contact, but one single expression which describes the full spectroscopic range does not exist. 
+
+With SOFA we develop a software aiming for a robust algorithm which will be able to handle all varieties of force spectroscopy data. In order to test this capability reliable synthetic test data is required for which SyFoS was written. SyFoS mirrors the experimental acquisition of data and successively builds force spectroscopy data, taking material parameter and experimental parameter into account. All parameters can be specified by the user via a graphical user interface. To achieve realistic challenges in the test data sets a noise level and data offsets are added. The software is stored in `Git Hub <https://github.com/2Puck/syfos/tree/main>`_, and published in $doi 
+
 Creating synthetic force spectroscopy data
 ==========================================
 
@@ -21,7 +28,7 @@ During the acquisition of a FDC the AFM probe, a paraboloid shaped tip with :ref
 	
 .. _equation hookes law:
 
-	:math:`F=k_{c}δ` 
+	:math:`F=k_{c}δ` (1)
 
 with force :math:`F`, :ref:`spring constant  <spring constant>` of the cantilever :math:`k_c` and cantilever deflection :math:`δ`. In this way the forces acting on the tip are measured by recording the deflection :math:`δ` of the cantilever. While decreasing the distance between tip and sample, the cantilever deflects toward the sample (attractive forces) or away (repulsive forces), depending on which interacting forces are dominant. 
 
@@ -77,7 +84,9 @@ In order to calculate the correct deformation :math:`D` a theory of continuums m
 
 With applied force :math:`F`, tip :ref:`radius <radius>` :math:`R` and the reduced Young’s modulus :math:`E_{tot}`.
 
-	:math:`\frac{1}{E_{tot}}=\frac{3}{4}\frac{1-ν^{2}_{tip}}{E_{tip}}+\frac{1-ν^2}{E}`
+.. _equation etot:
+
+	:math:`\frac{1}{E_{tot}}=\frac{3}{4}\frac{1-ν^{2}_{tip}}{E_{tip}}+\frac{1-ν_{sample}^2}{E_{sample}}`
 
 with the Young’s modulus of the two materials :math:`E_{tip}` and :math:`E` (3.1.3) and their poisson ratios :math:`ν_{tip}` and :math:`ν` (3.1.4). 
 

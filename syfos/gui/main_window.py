@@ -569,7 +569,7 @@ class MainWindow(ttk.Frame):
 		self.inputHamakerSample.set(dp.defaultMaterials[defaultSample]["hamaker"])
 
 	def _create_force_volume(self) -> tk.messagebox:
-		"""Create a synthetic force volume with the selected parameters and display it.
+		"""Create a synthetic force volume with the selected parameters, chache and display it.
 
 		Returns:
 			userFeedback(tk.messagebox): Informs the user whether the force volume could be created or not.
@@ -625,7 +625,7 @@ class MainWindow(ttk.Frame):
 
 	def _update_active_force_volume(self, activeIdentifier:str) -> None:
 		"""Update the auxilary parameters and the 
-		   presentation of the active force volume.
+		   presentation of the new active force volume.
 
 		Parameters:
 			activeIdentifier(str): Identifier of the new active force volume.
@@ -643,6 +643,7 @@ class MainWindow(ttk.Frame):
 		)
 
 		del self.forceVolumes[self.activeForceVolume.get()]
+
 		self._update_dropdown_force_volumes()
 		self._set_active_identifier("Force Volumes")
 		self._reset_auxilary_parameters()
@@ -714,11 +715,13 @@ class MainWindow(ttk.Frame):
 		"""Create a identifier for a new force volume.
 
 		Parameters:
-			probeMaterial(str): .
-			sampleMaterial(str): .
+			probeMaterial(str): Type of probe used to create the force volume.
+			sampleMaterial(str): Type of sample used to create the force volume.
 	
 		Returns:
-			identifier(str): Name of a new force volume.
+			identifier(str): Identifier for the new force volume containing
+							 information about the type of probe and sample
+							 used to create the force volume.
 		"""
 		return probeMaterial + "|" + sampleMaterial + " " + str(len(self.forceVolumes) + 1)
 
@@ -733,7 +736,7 @@ class MainWindow(ttk.Frame):
 		"""Cache the data of a force volume.
 
 		Parameters:
-			identifier(str): Name of the force volume.
+			identifier(str): Identifier of the force volume.
 			forceVolume(np.ndarray): Data of the force volume.
 			etot(float): etot value of the force volume.
 			jtc(float): jtc value of the force volume.
@@ -751,8 +754,12 @@ class MainWindow(ttk.Frame):
 		"""Update the dropdown menu options."""
 		self.dropdownForceVolumes.set_menu("", *self.forceVolumes.keys())
 
-	def _set_active_identifier(self, identifier) -> None:
-		""""""
+	def _set_active_identifier(self, identifier:str) -> None:
+		"""Update the identifier of the active force volume.
+
+		Parameters:
+			identifier(str): Identifier of the force volume.
+		"""
 		self.activeForceVolume.set(identifier)
 	
 	def _update_plot(self) -> None:
