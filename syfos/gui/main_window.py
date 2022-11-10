@@ -501,7 +501,7 @@ class MainWindow(ttk.Frame):
 
 		buttonSaveForceVolume = ttk.Button(
 			frameControl,
-			text="Save Force Volume",
+			text="Export Force Volume",
 			command=self._export_force_volume,
 			width=20
 		)
@@ -817,7 +817,7 @@ class MainWindow(ttk.Frame):
 	@decorator_check_if_force_volume_selected
 	def _export_force_volume(self) -> None:
 		"""Open a window to export the data of the active force volume."""
-		exportWindow = ttk.Toplevel("Export Force Curve")
+		exportWindow = ttk.Toplevel("Export Force Volume")
 		ExportWindow(
 			exportWindow,
 			self.forceVolumes[self.activeForceVolume.get()]

@@ -1,11 +1,12 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Input material parameters" href="parameters.html" /><link rel="prev" title="Creating synthetic force spectroscopy data" href="creating_synthetic_force_spectroscopy_data.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Material parameters" href="parameters.html" /><link rel="prev" title="Introduction" href="synthetic_force_spectroscopy_data.html" />
 
-    <meta name="generator" content="sphinx-5.1.1, furo 2022.04.07"/>
-        <title>Using SyFoS - SyFoS</title>
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+        <title>Parameter selection - SyFoS</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -133,7 +134,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -154,13 +155,17 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
-<li class="toctree-l1"><a class="reference internal" href="creating_synthetic_force_spectroscopy_data.html">Creating synthetic force spectroscopy data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="synthetic_force_spectroscopy_data.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="synthetic_force_spectroscopy_data.html#creating-synthetic-force-spectroscopy-data">Creating synthetic force spectroscopy data</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Using SyFoS</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Parameter selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#create-a-synthetic-force-volume">Create a synthetic force volume</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#data-presentation">Data presentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#export-data">Export Data</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">Input material parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Material parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameters.html#force-spectroscopy-experimental-set-up">Force spectroscopy experimental set-up</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameters.html#artefact-parameters">Artefact parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameters.html#auxiliary-parameters">Auxiliary Parameters</a></li>
@@ -190,15 +195,13 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <div class="section" id="using-syfos">
-<h1>Using SyFoS<a class="headerlink" href="#using-syfos" title="Permalink to this heading">#</a></h1>
-<p>After starting SyFoS a GUI is provided as shown in figure 1. In the GUI’s upper third all parameters needed for creating synthetic force spectroscopy data are listed, grouped in three vertical sections, <strong>Probe</strong>, <strong>Sample</strong>, <strong>Force spectroscopy Experiment</strong> and <strong>Artefacts</strong>.</p>
+          <p>After starting SyFoS a GUI is provided as shown in figure 1. In the GUI’s upper third all parameters needed for creating synthetic force spectroscopy data are listed, grouped in four vertical sections, <strong>Probe</strong>, <strong>Sample</strong>, <strong>Force Spectroscopy Experiment</strong> and <strong>Artefacts</strong>.</p>
 <div class="table-wrapper"><table class="docutils align-default">
 <colgroup>
 <col style="width: 11%"/>
@@ -287,14 +290,29 @@
 </tr>
 </tbody>
 </table></div>
-<p>All parameters can be altered and adjusted independently by the user. However, since parameters have between them a range of magnitude from 10-21 to 109 it is not advisable to start with completely arbitrary values in order to get meaningful results. For a quick start literature values for materials, which are commonly used in force spectroscopy experiments can be chosen from a dropdown menu. Parameters concerned with the experimental set-up start with a recommended value but can be adjusted as the user sees fit.</p>
-<p>The definition and recommended range of all values and parameters are given in <a class="reference internal" href="parameters.html#input-parameters"><span class="std std-ref">Input material parameters</span></a>.</p>
-<p>With a complete set of values SyFoS can be executed with <strong>Create Force Volume</strong> in the GUI’s control section. Creation of the synthetic force spectroscopy data involves several steps (see 2.2), as calculating auxiliary parameters (2.2.1, 2.2.2 and 2.2.3), creating an ideal data set (!!) and simulating a force volume (!!), which is group of data sets.</p>
+<p>All parameters can be altered and adjusted within their value range. For a quick start literature values for materials, which are commonly used in force spectroscopy experiments can be chosen from a dropdown menu. Parameters concerned with the experimental set-up start with a recommended value but can be adjusted as the user sees fit.</p>
+<p>The definition and recommended range of all values and parameters are given in <a class="reference internal" href="parameters.html#material-parameters"><span class="std std-ref">Material parameters</span></a>.</p>
+<p>With a complete set of values SyFoS can be executed with <span class="guilabel">Create Force Volume</span> in the GUI’s control section. Creation of the synthetic force spectroscopy data involves several steps (see 2.2), as calculating auxiliary parameters (2.2.1, 2.2.2 and 2.2.3), creating an ideal data set (!!) and simulating a force volume (!!), which is group of data sets.</p>
 <p>Upon successful execution auxiliary parameters and synthetic data are shown in the GUI’s presentation field. Synthetic force spectroscopy data is plotted as force curves, i. e. deflection δ as a function of the piezo displacement Z, mirroring real force spectroscopy results as those two data sets would be the raw data acquired in such measurements. Two types of curves are plotted: one ideal synthetic curve and a group of curves (number equals the number of curves given in the input mask, see also 2.1.9 ) which have additional artefacts, being shifted out of the origin (see 2.1.10, 2.1.11) and have noise (see 2.1.12). These artefacts reflect inaccuracies which cannot be avoided during real force volumes and therefore are also present in test data, for which SyFoS is primarily used.</p>
 <p>Additional sets of synthetic data can now be added for comparison. If for example the influence of the probes spring constant <span class="math notranslate nohighlight">\(k_c\)</span> (2.1.1) is of interest this parameter can be changed and SyFos again executed by Create Force Volume. The according auxiliar parameters are shown and curves are now plotted on top of the first force volume.</p>
 <p>Choosing the according buttons, the plot area can be adjusted by zooming and panning. Adjustments to the plot area can be undone by, reset or back and redone by forward.</p>
 <p>By using the options in the GUI’s control penal, one can navigate through a stack of synthetic data: choosing the active force volume, deleting, and exporting data sets.</p>
-</div>
+<section id="parameter-selection">
+<h1>Parameter selection<a class="headerlink" href="#parameter-selection" title="Permalink to this headline">#</a></h1>
+<p>Text</p>
+</section>
+<section id="create-a-synthetic-force-volume">
+<h1>Create a synthetic force volume<a class="headerlink" href="#create-a-synthetic-force-volume" title="Permalink to this headline">#</a></h1>
+<p>Text</p>
+</section>
+<section id="data-presentation">
+<h1>Data presentation<a class="headerlink" href="#data-presentation" title="Permalink to this headline">#</a></h1>
+<p>Text</p>
+</section>
+<section id="export-data">
+<h1>Export Data<a class="headerlink" href="#export-data" title="Permalink to this headline">#</a></h1>
+<p>Text</p>
+</section>
 
         </article>
       </div>
@@ -306,18 +324,18 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Input material parameters</div>
+                <div class="title">Material parameters</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="creating_synthetic_force_spectroscopy_data.html">
+          <a class="prev-page" href="synthetic_force_spectroscopy_data.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Creating synthetic force spectroscopy data</div>
+                <div class="title">Introduction</div>
                 
               </div>
             </a>
@@ -346,8 +364,27 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Parameter selection</a></li>
+<li><a class="reference internal" href="#create-a-synthetic-force-volume">Create a synthetic force volume</a></li>
+<li><a class="reference internal" href="#data-presentation">Data presentation</a></li>
+<li><a class="reference internal" href="#export-data">Export Data</a></li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -355,7 +392,6 @@
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
