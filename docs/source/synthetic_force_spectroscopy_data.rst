@@ -5,6 +5,8 @@ Force spectroscopy data is usually acquired experimentally by atomic force micro
 
 With SOFA we develop a software aiming for a robust algorithm which will be able to handle all varieties of force spectroscopy data. In order to test this capability reliable synthetic test data is required for which SyFoS was written. SyFoS mirrors the experimental acquisition of data and successively builds force spectroscopy data, taking material parameter and experimental parameter into account. All parameters can be specified by the user via a graphical user interface. To achieve realistic challenges in the test data sets a noise level and data offsets are added. The software is stored in `Git Hub <https://github.com/2Puck/syfos/tree/main>`_, and published in $doi 
 
+.. _creating synthetic force spectroscopy data:
+
 Creating synthetic force spectroscopy data
 ==========================================
 
@@ -52,6 +54,9 @@ Due to the sum of all interacting forces, a FDC shows three typical regimes upon
 
 This experiment is mirrored in SyFoS, by assigning the according cantilever deflection :math:`δ_i` to a given piezo displacement :math:`Z_i` for a range of :math:`Z` values starting from :math:`Z_0` and increasing by :math:`dZ` until :math:`Z_{max}` is reached (see :ref:`experimental set-up <parameters experiment>` for more detailed information about the parameters). Due to the discontinuity of the JTC SyFoS creates the synthetic data by a case-by-case analysis, starting in the zero line and attractive regime. 
 
+Approach Part
+^^^^^^^^^^^^^
+
 For every given piezo displacement at point :math:`i` :math:`Z_i` (:math:`Z_0 ≤ Z_i << Z=0`) the actual tip-sample distance :math:`ζ_i` is calculated: 
 
 .. math:: ζ=δ−Z
@@ -71,13 +76,19 @@ This continues until the condition for JTC is met, which is the case when the gr
 .. math:: \frac{𝜕}{𝜕ζ}-\frac{A}{6}\frac{R}{ζ^2}=\frac{AR}{3ζ^3}\equiv k_c \to ζJTC=\sqrt[3]{\frac{AR}{3k_c}}
    :label: test
 
+Attractive Part
+^^^^^^^^^^^^^^^
+
 In this case SyFoS sets the tip-sample distance to :math:`ζ≡0` and assigns the according :math:`δ_{JTC}` to the piezo displacement :math:`Z_i` with :math:`δ_{JTC}<0`. 
 
 This is continued for :math:`Z_i` until :math:`Z_i=0` and :math:`δ(Z_i)=0`. 
 
-We want to point out, that in the region from JTC to contact (see :ref:`Figure 1 <figure 1>`), a mixture of attractive and repulsive forces acts on the tip-sample system, which cannot be correctly described without taking time-dependent parameters into account. Since this part of the force curve is not subject to any subsequent use as test data, there is no attempt to implement the necessary theory on the cost of over-complicating the acquisition of synthetic force curves. For this we refer to [nanohub link]. 
+We want to point out, that in the region from JTC to contact (see :ref:`Figure 1 <figure 1>` II), a mixture of attractive and repulsive forces acts on the tip-sample system, which cannot be correctly described without taking time-dependent parameters into account. Since this part of the force curve is not subject to any subsequent use as test data, there is no attempt to implement the necessary theory on the cost of over-complicating the acquisition of synthetic force curves. For this we refer to [nanohub link]. 
 
-For all :math:`Z_i (Z=0 ≤ Zi ≤ Zmax)` the dominance of repulsive forces (contact line, Figure 1(III)) is assumed. Here, instead of a tip-sample distance :math:`ζ` the deformation :math:`D` has to be considered, which is calculated by:
+Contact Part
+^^^^^^^^^^^^
+
+For all :math:`Z_i (Z=0 ≤ Zi ≤ Zmax)` the dominance of repulsive forces (see :ref:`Figure 1 <figure 1>` III) is assumed. Here, instead of a tip-sample distance :math:`ζ` the deformation :math:`D` has to be considered, which is calculated by:
 
 .. math:: D=Z-δ
    :label: deformation
