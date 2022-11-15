@@ -442,7 +442,7 @@ def calculate_deflection_attraction_part(
 def calculate_deflection_contact_part(
 	parameterSubstitut: float,
 	currentPiezoValue: float
-) -> float:	
+) -> np.float64:	
 	"""Calculate the current deflection after probe and sample are in contact,
 	   using the Hertzian contact theory.
 
@@ -454,29 +454,88 @@ def calculate_deflection_contact_part(
 		deflectionValue(float): Current deflection value while the probe 
 							    is in contact.
 	"""
+	return np.real(
+		calculate_deflection_contact_first_term(
+			parameterSubstitut,
+			currentPiezoValue
+		)
+		+
+		calculate_deflection_contact_second_term(
+			parameterSubstitut,
+			currentPiezoValue
+		)
+		-
+		calculate_deflection_contact_third_term(
+			parameterSubstitut,
+			currentPiezoValue
+		)
+	)
+
+def calculate_deflection_contact_first_term(
+	parameterSubstitut: float,
+	currentPiezoValue: float
+) -> float: 
+	"""Helper function for calculate_deflection_contact_part.
+
+	Parameters:
+		parameterSubstitut(float): Interim result from kc, radius and etot.
+		currentPiezoValue(float): Corresponding piezo value.
+
+	Returns:
+		firstTerm(float): Interim result for calculate_deflection_contact_part.
+	"""
 	return (
-		1 / 3 
-		* (
-			3 * currentPiezoValue
-			- parameterSubstitut**2
-		)
-		+ calculate_cubic_root(parameterSubstitut, currentPiezoValue)
-		/ (3 * np.cbrt(2))
-		- (
-			np.cbrt(2)
-			* (
-				6 * parameterSubstitut**2
-				* currentPiezoValue
-				- parameterSubstitut**4
-			)
-		)
-		/ 3 * calculate_cubic_root(parameterSubstitut, currentPiezoValue)
+		(1/3) * (3*currentPiezoValue - parameterSubstitut**2)
+	)
+
+def calculate_deflection_contact_second_term(
+	parameterSubstitut: float,
+	currentPiezoValue: float
+) -> np.complex128: 
+	"""Helper function for calculate_deflection_contact_part.
+
+	Parameters:
+		parameterSubstitut(float): Interim result from kc, radius and etot.
+		currentPiezoValue(float): Corresponding piezo value.
+
+	Returns:
+		secondTerm(float): Interim result for calculate_deflection_contact_part.
+	"""
+	return (
+		calculate_cubic_root(
+			parameterSubstitut, 
+			currentPiezoValue
+		) / (3*np.cbrt(2))
+	)
+
+def calculate_deflection_contact_third_term(
+	parameterSubstitut: float,
+	currentPiezoValue: float
+) -> np.complex128: 
+	"""Helper function for calculate_deflection_contact_part.
+
+	Parameters:
+		parameterSubstitut(float): Interim result from kc, radius and etot.
+		currentPiezoValue(float): Corresponding piezo value.
+
+	Returns:
+		thirdTerm(float): Interim result for calculate_deflection_contact_part.
+	"""
+	return (
+		np.cbrt(2) * (
+			6 * parameterSubstitut**2
+			* currentPiezoValue
+			- parameterSubstitut**4
+		) / (3 * calculate_cubic_root(
+			parameterSubstitut,
+			currentPiezoValue
+		))
 	)
 
 def calculate_cubic_root(
 	parameterSubstitut: float,
 	currentPiezoValue: float
-) -> float:
+) -> np.complex128:
 	"""Helper function for calculate_deflection_contact_part.
 
 	Parameters:
@@ -486,20 +545,20 @@ def calculate_cubic_root(
 	Returns:
 		cubicRoot(float): Interim result for calculate_deflection_contact_part.
 	"""
-	return np.cbrt(
+	return np.clongdouble(
 		- 2 * parameterSubstitut**6
 		+ 18 * parameterSubstitut**4
 		* currentPiezoValue
 		- 27 * parameterSubstitut**2
 		* currentPiezoValue**2
 		+ 3 * np.sqrt(3)
-		* calculate_inner_root(parameterSubstitut, currentPiezoValue)	
-	)
+		* calculate_inner_root(parameterSubstitut, currentPiezoValue)
+	) ** (1/3)
 
 def calculate_inner_root(
 	parameterSubstitut: float,
 	currentPiezoValue: float
-) -> float:
+) -> np.complex128:
 	"""Helper function for calculate_cubic_root.
 
 	Parameters:
@@ -509,12 +568,12 @@ def calculate_inner_root(
 	Returns:
 		innerRoot(float): Interim result for calculate_cubic_root.
 	"""
-	return np.sqrt(
+	return np.clongdouble(
 		27 * parameterSubstitut**4 
 		* currentPiezoValue**4 
 		- 4 * parameterSubstitut**6 
 		* currentPiezoValue**3
-	)	
+	) ** (1/2)
 
 def shift_ideal_curve(
 	piezo: List,

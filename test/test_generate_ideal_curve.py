@@ -177,7 +177,27 @@ def test_create_ideal_curve_attraction_part():
 
 def test_create_ideal_curve_contact_part():
 	""""""
-	pass
+	parameterSubstitut = 7.6731e-05
+	currentPiezoValue = 1e-11
+
+	result = gen_data.calculate_deflection_contact_part(
+		parameterSubstitut,
+		currentPiezoValue
+	)
+	
+	assert np.isclose(result, 3.88352e-13)
+
+def test_create_ideal_curve_contact_part_2():
+	""""""
+	parameterSubstitut = 7.6731e-05
+	currentPiezoValue = 4e-11
+
+	result = gen_data.calculate_deflection_contact_part(
+		parameterSubstitut,
+		currentPiezoValue
+	)
+	
+	assert np.isclose(result, 2.94024e-12)
 
 def test_create_ideal_curve():
 	""""""
