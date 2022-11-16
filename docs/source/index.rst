@@ -3,23 +3,17 @@ SyFoS
 
 A graphical user interface to create **Sy**\nthetic **Fo**\rce **S**\pectroscopy data.
 
-Force spectroscopy data
------------------------
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    synthetic_force_spectroscopy_data
 
-Using SyFoS
------------
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    using_syfos
 
-Parameters
-----------
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    parameters

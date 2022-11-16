@@ -31,48 +31,63 @@ def test_calculate_piezo_default_values():
 	
 	assert np.isclose(result, 1.99e-9)
 
+def test_calculate_tip_sample_distance_simple_values():
+	""""""
+	piezo = 4
+	deflection = 2
+
+	result = gen_data.calculate_tip_sample_distance(
+		piezo, 
+		deflection
+	)
+	
+	assert np.isclose(result, 2)
+
+def test_calculate_tip_sample_distance_default_values():
+	""""""
+	piezo = 1e-11
+	deflection = 3.88352e-13
+
+	result = gen_data.calculate_tip_sample_distance(
+		piezo, 
+		deflection
+	)
+	
+	assert np.isclose(result, 9.612e-12)
+
 def test_calculate_deflection_approach_part_simple_values():
 	"""Test calculate_deflection_approach_part with simple values."""
-	'''
 	hamaker = 5
 	radius = 2
 	kc = 100
-	currentPiezoValue = -0.5
-	lastDeflectionValue = -0.1
+	tipSampleDistance = -0.4
 
 	result = gen_data.calculate_deflection_approach_part(
 		hamaker,
 		radius,
 		kc,
-		currentPiezoValue,
-		lastDeflectionValue
+		tipSampleDistance
 	)
 
 	assert np.isclose(result, -0.104166)
-	'''
-	assert True
+	
 
 def test_calculate_deflection_approach_part_default_values():
 	"""Test calculate_deflection_approach_part with default values
 	   for silicon against silicon."""
-	'''
 	hamaker = 6.6e-20
 	radius = 25e-9
 	kc = 1
-	currentPiezoValue = 1.99e-9
-	lastDeflectionValue = 0
+	tipSampleDistance = 1.99e-9
 
 	result = gen_data.calculate_deflection_approach_part(
 		hamaker,
 		radius,
 		kc,
-		currentPiezoValue,
-		lastDeflectionValue
+		tipSampleDistance
 	)
 
 	assert np.isclose(result, -6.94426e-11)
-	'''
-	assert True
 
 def test_calculate_deflection_attraction_part_simple_values():
 	"""Test calculate_deflection_attraction_part with simple values."""
@@ -104,7 +119,7 @@ def test_calculate_deflection_contact_part_simple_values():
 		currentPiezoValue
 	)
 
-	assert np.isclose(result, -11.8541969)
+	assert np.isclose(result, 0.999, rtol=1e-02)
 
 def test_calculate_deflection_contact_part_default_values():
 	"""Test calculate_deflection_contact_part with default values
@@ -118,6 +133,42 @@ def test_calculate_deflection_contact_part_default_values():
 	)
 
 	assert np.isclose(result, 1.9901664e-09)
+
+def test_calculate_deflection_contact_first_term_simple_values():
+	""""""
+	parameterSubstitut = 1
+	currentPiezoValue = 2
+
+	result = gen_data.calculate_deflection_contact_first_term(
+		parameterSubstitut,
+		currentPiezoValue
+	)
+
+	assert np.isclose(result, 1.6666, rtol=1e-04)
+
+def test_calculate_deflection_contact_second_term_simple_values():
+	""""""
+	parameterSubstitut = 1
+	currentPiezoValue = 2
+
+	result = gen_data.calculate_deflection_contact_second_term(
+		parameterSubstitut,
+		currentPiezoValue
+	)
+
+	assert np.isclose(np.real(result), 0.8214, rtol=1e-04)
+
+def test_calculate_deflection_contact_third_term_simple_values():
+	""""""
+	parameterSubstitut = 1
+	currentPiezoValue = 2
+
+	result = gen_data.calculate_deflection_contact_third_term(
+		parameterSubstitut,
+		currentPiezoValue
+	)
+
+	assert np.isclose(np.real(result), 1.488, rtol=1e-04)
 
 def test_calculate_cubic_root_simple_values():
 	""""""

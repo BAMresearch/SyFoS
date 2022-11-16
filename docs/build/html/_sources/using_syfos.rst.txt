@@ -1,3 +1,7 @@
+===========
+Using SyFoS
+===========
+
 .. _parameter selection:
 
 Parameter selection

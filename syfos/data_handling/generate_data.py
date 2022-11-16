@@ -442,7 +442,7 @@ def calculate_deflection_attraction_part(
 def calculate_deflection_contact_part(
 	parameterSubstitut: float,
 	currentPiezoValue: float
-) -> np.float64:	
+) -> float:	
 	"""Calculate the current deflection after probe and sample are in contact,
 	   using the Hertzian contact theory.
 
@@ -454,7 +454,7 @@ def calculate_deflection_contact_part(
 		deflectionValue(float): Current deflection value while the probe 
 							    is in contact.
 	"""
-	return np.real(
+	return float(np.real(
 		calculate_deflection_contact_first_term(
 			parameterSubstitut,
 			currentPiezoValue
@@ -469,7 +469,7 @@ def calculate_deflection_contact_part(
 			parameterSubstitut,
 			currentPiezoValue
 		)
-	)
+	))
 
 def calculate_deflection_contact_first_term(
 	parameterSubstitut: float,
@@ -491,7 +491,7 @@ def calculate_deflection_contact_first_term(
 def calculate_deflection_contact_second_term(
 	parameterSubstitut: float,
 	currentPiezoValue: float
-) -> np.complex128: 
+) -> np.complex256: 
 	"""Helper function for calculate_deflection_contact_part.
 
 	Parameters:
@@ -511,7 +511,7 @@ def calculate_deflection_contact_second_term(
 def calculate_deflection_contact_third_term(
 	parameterSubstitut: float,
 	currentPiezoValue: float
-) -> np.complex128: 
+) -> np.complex256: 
 	"""Helper function for calculate_deflection_contact_part.
 
 	Parameters:
@@ -535,15 +535,17 @@ def calculate_deflection_contact_third_term(
 def calculate_cubic_root(
 	parameterSubstitut: float,
 	currentPiezoValue: float
-) -> np.complex128:
-	"""Helper function for calculate_deflection_contact_part.
+) -> np.complex256:
+	"""Helper function for the second and third term 
+	   of calculate_deflection_contact_part.
 
 	Parameters:
 		parameterSubstitut(float): Interim result from kc, radius and etot.
 		currentPiezoValue(float): Corresponding piezo value.
 
 	Returns:
-		cubicRoot(float): Interim result for calculate_deflection_contact_part.
+		cubicRoot(float): Interim result for the calculation of the second 
+						  and third term.
 	"""
 	return np.clongdouble(
 		- 2 * parameterSubstitut**6
@@ -558,7 +560,7 @@ def calculate_cubic_root(
 def calculate_inner_root(
 	parameterSubstitut: float,
 	currentPiezoValue: float
-) -> np.complex128:
+) -> np.complex256:
 	"""Helper function for calculate_cubic_root.
 
 	Parameters:
