@@ -7,10 +7,14 @@ def test_shift_ideal_curve():
 	""""""
 	pass
 
-def test_arrange_curves_in_forcevolume():
+def test_multiply_and_apply_noise_to_deflection():
 	""""""
 	pass
 
-def test_create_synthetic_force_volume():
+def test_create_synthetic_curves():
+	""""""
+	pass
+
+def test_arrange_curves_in_force_volume():
 	""""""
 	pass
