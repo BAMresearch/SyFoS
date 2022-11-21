@@ -7,7 +7,7 @@ SyFoS is a Graphical User Interface to create, display and export synthetic forc
 
 Documentation
 -------------
-For more detailed information and examples of how SyFoS can be used, read the documentation at (link).
+For more detailed information and examples of how SyFoS can be used, read the `documentation <https://2puck.github.io/syfos/>`_.
 
 Installation
 ------------
