@@ -50,4 +50,4 @@ To inspect the data more closly the plot comes with a simpflied toolbar, which a
 Export data
 ===========
 
-To export the data of the currently active force volume the user has to specify a name and location for the data files. Currently SyFoS supports the data types *csv* and *xlsx* as output format. These files will contain the piezo (x) and deflection (y) values of the ideal curve, the shifted ideal curve and the curves that make up the force volume. Additionaly the parameters used to generate the force volume and the auxilary parameters are exported as well.
+To export the data of the currently active force volume the user has to specify a name and location for the data files. Currently SyFoS supports the data types *csv* and *xlsx* as output format. These files will contain the piezo (x) and deflection (y) values of the ideal curve, the shifted ideal curve and the curves that make up the force volume. Additionaly the auxilary parameters are exported as well.
