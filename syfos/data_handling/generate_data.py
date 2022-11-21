@@ -601,14 +601,14 @@ def shift_ideal_curve(
 	return shiftedPiezo, shiftedDeflection
 
 def multiply_and_apply_noise_to_deflection(
-	shiftedDeflection: List, 
+	shiftedDeflection: np.ndarray, 
 	parameterForceVolume: NamedTuple
 ) -> List[np.ndarray]:
 	"""Multiplies the deflection (y) values of the shifted 
 	   ideal curve and applies noise to each copy.
 
 	Parameters:
-		shiftedDeflection(list): Shifted deflection (y) values of the ideal curve.
+		shiftedDeflection(np.ndarray): Shifted deflection (y) values of the ideal curve.
 		parameterForceVolume(namedtupel): Contains the number of synthetic curves, the noise
 										  level and the virtual deflection and topography offset.
 
@@ -646,14 +646,14 @@ def apply_noise_to_deflection(
 	return shiftedDeflection + noiseValues
 
 def create_synthetic_curves(
-	shiftedPiezo: List,
+	shiftedPiezo: np.ndarray,
 	syntheticDeflectionValues: List
 ) -> List:
 	"""Combines the shifted piezo (x) values with the 
 	   corresponding synthetic deflection (y) values.
 	
 	Parameters:
-		shiftedPiezo(list): Shifted piezo (x) values of the ideal curve.
+		shiftedPiezo(np.ndarray): Shifted piezo (x) values of the ideal curve.
 		syntheticDeflectionValues(list): List of synthetic deflection values.
 
 	Returns:

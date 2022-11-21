@@ -171,7 +171,7 @@ def test_calculate_deflection_contact_third_term_simple_values():
 	assert np.isclose(np.real(result), 1.488, rtol=1e-04)
 
 def test_calculate_cubic_root_simple_values():
-	"""Test calculate_deflection_contact_third_term with simple values."""
+	"""Test calculate_cubic_root with simple values."""
 	parameterSubstitut = 1
 	currentPiezoValue = 2
 
@@ -183,7 +183,7 @@ def test_calculate_cubic_root_simple_values():
 	assert np.isclose(result, 3.1045734) 
 
 def test_calculate_cubic_root_default_values():
-	"""Test calculate_deflection_contact_third_term with simple values."""
+	"""Test calculate_cubic_root with default values."""
 	parameterSubstitut = 5.31028994150e-8
 	currentPiezoValue = 1.99e-9 
 
@@ -195,7 +195,7 @@ def test_calculate_cubic_root_default_values():
 	assert np.isclose(result, 6.3262833e-13)
 
 def test_calculate_inner_root_simple_values():
-	"""Test calculate_deflection_contact_third_term with simple values."""
+	"""Test calculate_inner_root with simple values."""
 	parameterSubstitut = 1
 	currentPiezoValue = 2
 
@@ -207,7 +207,7 @@ def test_calculate_inner_root_simple_values():
 	assert np.isclose(result, 20)
 
 def test_calculate_inner_root_default_values():
-	"""Test calculate_deflection_contact_third_term with simple values."""
+	"""Test calculate_inner_root with default values."""
 	parameterSubstitut = 5.31028994e-8
 	currentPiezoValue = 1.99e-9
 
@@ -231,7 +231,7 @@ def test_create_ideal_curve_approach_part(
 	tipSampleDistance: float,
 	expectedResult: float
 ):
-	"""Test calculate_deflection_approach_part."""
+	"""Test calculate_deflection_approach_part with ciritcal values."""
 	result = gen_data.calculate_deflection_approach_part(
 		hamaker,
 		radius,
@@ -240,7 +240,7 @@ def test_create_ideal_curve_approach_part(
 	)
 	
 	assert np.isclose(result, expectedResult)
-
+'''
 @pytest.mark.parametrize(
     "currentPiezoValue, expectedResult",
     [
@@ -253,13 +253,13 @@ def test_create_ideal_curve_attraction_part(
 	currentPiezoValue: float,
 	expectedResult: float
 ):
-	"""Test calculate_deflection_attraction_part."""
+	"""Test calculate_deflection_attraction_part with ciritcal values."""
 	result = gen_data.calculate_deflection_attraction_part(
 		currentPiezoValue
 	)
 	
 	assert np.isclose(result, expectedResult)
-'''
+
 @pytest.mark.parametrize(
     "parameterSubstitut, currentPiezoValue, expectedResult",
     [

@@ -9,7 +9,12 @@ import syfos.data_handling.analyse_data as analyse_data
 
 @pytest.fixture
 def simple_ideal_curve() -> List:
-	""""""
+	"""Define a simple ideal curve.
+
+	Returns
+		simpleIdealCurve(list): Piezo (x) and deflection (y) values
+							    of a simple ideal curve.
+	"""
 	piezoValues = np.array([-6.0, -5.0, -4.0, -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0])
 	deflectionValues = np.array([0.0, -0.1, 0.2, -2.2, -2.5, -1.2, 0.0, 1.0, 2.5, 4.0])
 
@@ -17,7 +22,13 @@ def simple_ideal_curve() -> List:
 
 @pytest.fixture
 def simple_ideal_curve_approach_part() -> List:
-	""""""
+	"""Define the approach part of a simple ideal curve.
+
+	Returns
+		simpleIdealCurveApproach(list): Piezo (x) and deflection (y) values
+									    from the approach part of a simple
+									    ideal curve.
+	"""
 	piezoApproach = np.array([-6.0, -5.0, -4.0])
 	deflectionApproach = np.array([0.0, -0.1, 0.2])
 
@@ -25,7 +36,13 @@ def simple_ideal_curve_approach_part() -> List:
 
 @pytest.fixture
 def simple_ideal_curve_contact_part() -> List:
-	""""""
+	"""Define the contact part of a simple ideal curve.
+
+	Returns
+		simpleIdealCurveContact(list): Piezo (x) and deflection (y) values
+									   from the contact part of a simple
+									   ideal curve.
+	"""
 	piezoContact = np.array([0.0, 1.0, 2.0, 3.0])
 	deflectionContact = np.array([0.0, 1.0, 2.5, 4.0])
 
@@ -34,8 +51,15 @@ def simple_ideal_curve_contact_part() -> List:
 @fixture(
 	unpack_into="trueDistance, forceApproach, forceContact, deformation"
 )
-def simple_ideal_curve_values() -> Tuple: 
-	""""""
+def simple_ideal_curve_adjusted_values() -> Tuple: 
+	"""Define simple adjusted parameters from an ideal curve.
+
+	Returns:
+		trueDistance(float): Adjusted x value of the approach part.
+		forceApproach(float): Adjusted y value of the approach part.
+		forceContact(float): Adjusted x value of the contact part.
+		deformation(float): Adjusted y value of the contact part.
+	"""
 	trueDistance = -4.0
 	forceApproach = 0.2
 	forceContact = 2.0
@@ -52,7 +76,14 @@ def simple_ideal_curve_values() -> Tuple:
 	unpack_into="radius, kc, etot, hamaker"
 )
 def default_silicon_to_silicon_parameters() -> Tuple: 
-	""""""
+	"""Define parameters from a default silicon/silicon setup.
+
+	Returns:
+		radius(float): Default value for the probe's radius.
+		kc(float): Default value for the probe's spring constant.
+		etot(float): Reduced modulus value from a silicon/silicon setup.
+		hamaker(float): Combined hamaker value from a silicon/silicon setup.
+	"""
 	radius = 25e-9
 	kc = 1
 	etot = 1.2e+11
@@ -149,53 +180,29 @@ def create_synthetic_test_force_volume(
 	return syntheticForcevolume
 
 @fixture(
-	unpack_into="realForcevolume"
-)
-def import_real_force_volume():
-	"""Import real data from a from an afm measurment using glass and ... .
-
-
-	Returns
-		realForceVolume(np.ndarray): .
-	"""
-	pass
-
-@fixture(
 	unpack_into="syntheticApproachParameters, syntheticContactParameters"
 )
 def get_parameters_synthetic_force_volume(
 	syntheticForcevolume: np.ndarray
 ) -> Tuple:
-	"""
+	"""Calculate the theoretical parameters kc, radius, 
+	   hamaker and etot from the ideal curve of the 
+	   synthetic force volume.
 
 	Parameters:
-		syntheticForcevolume(np.ndarray): Set of generated synthetic force distance curves.
+		syntheticForcevolume(np.ndarray): Set of generated synthetic force distance curves
+										  from a silicon/gold setup.
 
 	Returns: 
-		approachParameters(tuple): .
-		contactParameters(tuple): .
+		approachParameters(tuple): Contains the theoretical values for kc, 
+								   radius and hamaker for every point of 
+								   the approach part of the ideal curve.
+		contactParameters(tuple): Contains the theoretical values for kc, 
+								   radius and etot for every point of 
+								   the contact part of the ideal curve.
 	"""
 	idealCurve = syntheticForcevolume[0]
 
 	approachParameters, contactParameters = analyse_data.calculate_ideal_curve_parameters(idealCurve)
-
-	return approachParameters, contactParameters
-
-@fixture(
-	unpack_into="realApproachParameters, realContactParameters"
-)
-def get_parameters_real_force_volume(
-	realForcevolume
-) -> Tuple:
-	"""
-
-	Parameters:
-		realForcevolume(np.ndarray): .
-
-	Returns: 
-		approachParameters(tuple): .
-		contactParameters(tuple): .
-	"""
-	approachParameters, contactParameters = analyse_data.calculate_ideal_curve_parameters(realForcevolume)
 
 	return approachParameters, contactParameters

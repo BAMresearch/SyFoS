@@ -465,7 +465,7 @@ def calculate_kc_approach(
 	Returns:
 		kc(float): Theoretical kc value.
 	"""
-	return - ((6*force*trueDistance**2) / (hamaker)) 
+	return - ((hamaker*radius) / (6*trueDistance**2*force)) 
 
 def calculate_radius_approach(
 	trueDistance: float,
@@ -485,7 +485,7 @@ def calculate_radius_approach(
 	Returns:
 		radius(float): Theoretical radius value.
 	"""
-	return - ((6*force*trueDistance**2) / (hamaker)) 
+	return - ((kc*6*force*trueDistance**2) / (hamaker)) 
 
 def calculate_hamaker_approach(
 	trueDistance: float,
@@ -505,7 +505,7 @@ def calculate_hamaker_approach(
 	Returns:
 		hamaker(float): Theoretical hamaker value.
 	"""
-	return - ((6*force*trueDistance**2) / (radius))
+	return - ((kc*6*force*trueDistance**2) / (radius))
 
 def calculate_kc_contact(
 	force: float,

@@ -7,7 +7,7 @@ Introduction
 
 Force spectroscopy data is usually acquired experimentally by atomic force microscopy (AFM) and has its challenges when an automated analysis of the data is attempted, f. e. with SOFA (**SO**\ftware for **F**\orce **A**\nalysis). For one it is unique to this spectroscopic data, that the shift of the abscissa is not inherently known from the measurement. An additional challenge is, that the spectrum is not monotonous. The change of regimes of attractive and repulsive forces results in a singularity JTC (jump to contact). Data in the attractive respectively repulsive regime can be described by general theories, such as van der Waals attraction and Hertz contact, but one single expression which describes the full spectroscopic range does not exist. 
 
-With SOFA we develop a software aiming for a robust algorithm which will be able to handle all varieties of force spectroscopy data. In order to test this capability reliable synthetic test data is required for which SyFoS was written. SyFoS mirrors the experimental acquisition of data and successively builds force spectroscopy data, taking material parameter and experimental parameter into account. All parameters can be specified by the user via a graphical user interface. To achieve realistic challenges in the test data sets a noise level and data offsets are added. The software is stored in `GitHub <https://github.com/2Puck/syfos/tree/main>`_, and published in $doi 
+With SOFA we develop a software aiming for a robust algorithm which will be able to handle all varieties of force spectroscopy data. In order to test this capability reliable synthetic test data is required for which SyFoS was written. SyFoS mirrors the experimental acquisition of data and successively builds force spectroscopy data, taking material parameter and experimental parameter into account. All parameters can be specified by the user via a graphical user interface. To achieve realistic challenges in the test data sets a noise level and data offsets are added. The software is stored in `GitHub <https://github.com/2Puck/syfos/tree/main>`_.
 
 .. _creating synthetic force spectroscopy data:
 
@@ -68,7 +68,7 @@ For every given piezo displacement at point :math:`i` :math:`Z_i` (:math:`Z_0 �
 
 For the given tip-sample distance :math:`ζ_i` the van der Waals interaction :math:`F_{vdW,i}` and is calculated by: 
 
-.. math:: F_{vdW}=-\frac{A}{6}\frac{R}{δ-Z^2}=-\frac{A}{6}\frac{R}{ζ^2}
+.. math:: F_{vdW}=-\frac{A}{6}\frac{R}{(δ-Z)^2}=-\frac{A}{6}\frac{R}{ζ^2}
    :label: van der waals
 
 with :ref:`Hamaker constant <hamaker>` :math:`A`, tip :ref:`radius <radius>` :math:`R`, deflection :math:`δ`, piezo displacement :math:`Z` and :ref:`tip-sample distance <tip sample distance>` :math:`ζ`.

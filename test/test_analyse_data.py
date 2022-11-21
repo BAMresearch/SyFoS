@@ -1,13 +1,15 @@
+from typing import List
+
 import pytest
 import numpy as np
 
 import syfos.data_handling.analyse_data as analyse_data
 
 def test_get_approach_part_simple_ideal_curve(
-	simple_ideal_curve,
-	simple_ideal_curve_approach_part
+	simple_ideal_curve: List,
+	simple_ideal_curve_approach_part: List
 ):
-	""""""
+	"""Test get_ideal_approach_part with a simple ideal curve."""
 	piezoApproach, deflectionApproach = analyse_data.get_ideal_approach_part(
 		simple_ideal_curve
 	)
@@ -18,10 +20,10 @@ def test_get_approach_part_simple_ideal_curve(
 	)
 
 def test_get_contact_part_simple_ideal_curve(
-	simple_ideal_curve,
-	simple_ideal_curve_contact_part
+	simple_ideal_curve: List,
+	simple_ideal_curve_contact_part: List
 ):
-	""""""
+	"""Test get_ideal_contact_part with a simple ideal curve."""
 	piezoContact, deflectionContact = analyse_data.get_ideal_contact_part(
 		simple_ideal_curve
 	)
@@ -32,9 +34,9 @@ def test_get_contact_part_simple_ideal_curve(
 	)
 
 def test_calculate_true_distance(
-	simple_ideal_curve_approach_part
+	simple_ideal_curve_approach_part: List
 ):
-	""""""
+	"""Test calculate_true_distance with a simple ideal curve."""
 	trueDistance = analyse_data.calculate_true_distance(
 		simple_ideal_curve_approach_part
 	)
@@ -47,9 +49,9 @@ def test_calculate_true_distance(
 	)
 
 def test_calculate_adjusted_force(
-	simple_ideal_curve_approach_part
+	simple_ideal_curve_approach_part: List
 ):
-	""""""
+	"""Test calculate_adjusted_force with a simple ideal curve."""
 	force = analyse_data.calculate_adjusted_force(
 		simple_ideal_curve_approach_part,
 		2
@@ -63,9 +65,9 @@ def test_calculate_adjusted_force(
 	)
 
 def test_calculate_adjusted_pseudo_force(
-	simple_ideal_curve_contact_part
+	simple_ideal_curve_contact_part: List
 ):
-	""""""
+	"""Test calculate_adjusted_pseudo_force with a simple ideal curve."""
 	pseudoForce = analyse_data.calculate_adjusted_pseudo_force(
 		simple_ideal_curve_contact_part
 	)
@@ -78,9 +80,9 @@ def test_calculate_adjusted_pseudo_force(
 	)
 
 def test_calculate_deformation(
-	simple_ideal_curve_contact_part
+	simple_ideal_curve_contact_part: List
 ):
-	""""""
+	"""Test calculate_deformation with a simple ideal curve."""
 	deformation = analyse_data.calculate_deformation(
 		simple_ideal_curve_contact_part
 	)
@@ -93,13 +95,12 @@ def test_calculate_deformation(
 	)
 
 def test_calculate_kc_approach(
-	trueDistance,
-	forceApproach,
-	hamaker,
-	radius
+	trueDistance: float,
+	forceApproach: float,
+	hamaker: float,
+	radius: float
 ):
-	""""""
-	'''
+	"""Test calculate_kc_approach with simple values."""
 	kc = analyse_data.calculate_kc_approach(
 		trueDistance,
 		forceApproach,
@@ -107,20 +108,17 @@ def test_calculate_kc_approach(
 		radius
 	)
 
-	expectedKc = 0
+	expectedKc = -8.5937499e-29
 
 	assert np.isclose(kc, expectedKc)
-	'''
-	assert True
 
 def test_calculate_radius_approach(
-	trueDistance,
-	forceApproach,
-	hamaker,
-	kc
+	trueDistance: float,
+	forceApproach: float,
+	hamaker: float,
+	kc: float
 ):
-	""""""
-	'''
+	"""Test calculate_radius_approach with simple values."""
 	radius = analyse_data.calculate_radius_approach(
 		trueDistance,
 		forceApproach,
@@ -128,20 +126,17 @@ def test_calculate_radius_approach(
 		kc
 	)
 
-	expectedRadius = 0
+	expectedRadius = -2.9090909e+20
 
 	assert np.isclose(radius, expectedRadius)
-	'''
-	assert True
 
 def test_calculate_hamaker_approach(
-	trueDistance,
-	forceApproach,
-	radius,
-	kc
+	trueDistance: float,
+	forceApproach: float,
+	radius: float,
+	kc: float
 ):
-	""""""
-	'''
+	"""Test calculate_hamaker_approach with simple values."""
 	hamaker = analyse_data.calculate_hamaker_approach(
 		trueDistance,
 		forceApproach,
@@ -149,19 +144,17 @@ def test_calculate_hamaker_approach(
 		kc
 	)
 
-	expectedHamaker = 0
+	expectedHamaker = -768000000
 
 	assert np.isclose(hamaker, expectedHamaker)
-	'''
-	assert True
 
 def test_calculate_kc_contact(
-	forceContact,
-	deformation,
-	etot,
-	radius
+	forceContact: float,
+	deformation: float,
+	etot: float,
+	radius: float
 ):
-	""""""
+	"""Test calculate_kc_contact with simple values."""
 	kc = analyse_data.calculate_kc_contact(
 		forceContact,
 		deformation,
@@ -174,12 +167,12 @@ def test_calculate_kc_contact(
 	assert np.isclose(kc, expectedKc)
 
 def test_calculate_radius_contact(
-	forceContact,
-	deformation,
-	etot,
-	kc
+	forceContact: float,
+	deformation: float,
+	etot: float,
+	kc: float
 ):
-	""""""
+	"""Test calculate_radius_contact with simple values."""
 	radius = analyse_data.calculate_radius_contact(
 		forceContact,
 		deformation,
@@ -192,12 +185,12 @@ def test_calculate_radius_contact(
 	assert np.isclose(radius, expectedRadius)
 
 def test_calculate_etot_contact(
-	forceContact,
-	deformation,
-	radius,
-	kc
+	forceContact: float,
+	deformation: float,
+	radius: float,
+	kc: float
 ):
-	""""""
+	"""Test calculate_etot_contact with simple values."""
 	etot = analyse_data.calculate_etot_contact(
 		forceContact,
 		deformation,
@@ -208,7 +201,3 @@ def test_calculate_etot_contact(
 	expectedEtot = 3200
 
 	assert np.isclose(etot, expectedEtot)
-
-def test_wrapper_calculate_parameter():
-	""""""
-	pass
