@@ -491,7 +491,7 @@ def calculate_deflection_contact_first_term(
 def calculate_deflection_contact_second_term(
 	parameterSubstitut: float,
 	currentPiezoValue: float
-) -> np.complex256: 
+) -> np.clongdouble: 
 	"""Helper function for calculate_deflection_contact_part.
 
 	Parameters:
@@ -511,7 +511,7 @@ def calculate_deflection_contact_second_term(
 def calculate_deflection_contact_third_term(
 	parameterSubstitut: float,
 	currentPiezoValue: float
-) -> np.complex256: 
+) -> np.clongdouble: 
 	"""Helper function for calculate_deflection_contact_part.
 
 	Parameters:
@@ -535,7 +535,7 @@ def calculate_deflection_contact_third_term(
 def calculate_cubic_root(
 	parameterSubstitut: float,
 	currentPiezoValue: float
-) -> np.complex256:
+) -> np.clongdouble:
 	"""Helper function for the second and third term 
 	   of calculate_deflection_contact_part.
 
@@ -560,7 +560,7 @@ def calculate_cubic_root(
 def calculate_inner_root(
 	parameterSubstitut: float,
 	currentPiezoValue: float
-) -> np.complex256:
+) -> np.clongdouble:
 	"""Helper function for calculate_cubic_root.
 
 	Parameters:
