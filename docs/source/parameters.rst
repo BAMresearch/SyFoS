@@ -91,21 +91,21 @@ Experimentally acquired force curves show typically artefacts, which are not pre
 Virtual Deflection
 ------------------
 
-Text
+Text in progress.
 
 .. _topography offset:
 
 Topography offset
 -----------------
 
-Text
+Text in progress.
 
 .. _noise:
 
 Noise
 -----
 
-Text 
+Text in progress. 
 
 Auxiliary Parameters
 ====================
@@ -140,4 +140,4 @@ The attractive forces :math:`F_{attr}` are dependent on the tip-sample distance 
 Combined Hamaker constant :math:`A_{tot}`
 -----------------------------------------
 
-Text
+Text in progress.
