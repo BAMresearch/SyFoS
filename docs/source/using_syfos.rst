@@ -2,6 +2,11 @@
 Using SyFoS
 ===========
 
+.. figure:: images/syfos_gui.png
+	:alt: Image of the SyFoS GUI
+
+	The graphical user interface of SyFoS after generating two synthetic force volumes.
+
 .. _parameter selection:
 
 Parameter selection
