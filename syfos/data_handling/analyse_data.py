@@ -383,7 +383,7 @@ def calculate_contact_parameters(
 	]
 
 	radius = [
-		calculate_kc_contact(
+		calculate_radius_contact(
 			force,
 			deformation,
 			inputParameters.etot,
