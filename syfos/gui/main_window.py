@@ -537,11 +537,11 @@ class MainWindow(ttk.Frame):
 
 	def _set_default_setup_parameters(self) -> None:
 		"""Set parameters to a standard setup."""
-		self.inputSpringConstant.set("40")
+		self.inputSpringConstant.set("1")
 		self.inputRadius.set("25e-9")
 
-		self.inputNumberOfCurves.set("1")
-		self.inputMaximumPiezo.set("10e-9")
+		self.inputNumberOfCurves.set("4")
+		self.inputMaximumPiezo.set("30e-9")
 		self.inputStartDistance.set("-10e-9")
 		self.inputStepSize.set("0.01e-9")
 		self.inputNoise.set("1e-10")
