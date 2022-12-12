@@ -43,7 +43,7 @@ parameterInputsProbe = {
 		"formulaCharacterSubscript": "tip",
 		"placeholder": "1 - 450",
 		"valueBoundaries": [1e-21, 450e-21],
-		"unitLabel": "zJ"
+		"unitLabel": "J"
 	},
 	"springConstant": {
 		"label": "",
@@ -85,7 +85,7 @@ parameterInputsSample = {
 		"formulaCharacterSubscript": "sample",
 		"placeholder": "1 - 450",
 		"valueBoundaries": [1e-21, 450e-21],
-		"unitLabel": "zJ"
+		"unitLabel": "J"
 	}
 }
 parameterInputsExperiment = {
