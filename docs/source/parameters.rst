@@ -42,7 +42,7 @@ The Poisson ratio :math:`ν` describes the deformation perpendicular to the dire
 Hamaker constant :math:`A`
 --------------------------
 
-Van der Waals described the force needed to bring single neutral molecules from infinte to finite separation, now well known as van der Waals force :math:`F_{vdW}`. Hamaker transferred this concept to bulk materials by using pairwise summation approximation. This way the interactions and attractive forces of bodies can be described for different geometries, such as sphere/plane as appropriate for AFM measurements (tip/sample), by means of the Hamaker constant, which ranges from 1 to 450 zJ. 
+Van der Waals described the force needed to bring single neutral molecules from infinte to finite separation, now well known as van der Waals force :math:`F_{vdW}`. Hamaker transferred this concept to bulk materials by using pairwise summation approximation. This way the interactions and attractive forces of bodies can be described for different geometries, such as sphere/plane as appropriate for AFM measurements (tip/sample), by means of the Hamaker constant, which ranges from 1 to 450 zJ. All material specific Hamaker constants in SyFoS are for ambient conditions.
 
 .. _parameters experiment:
 
@@ -91,26 +91,26 @@ Experimentally acquired force curves show typically artefacts, which are not pre
 Virtual Deflection
 ------------------
 
-Text
+In a force spectroscopy experiment deflection is assumed to be :math:`δ≡0` when the cantilver is in its equilibrium position. Due to either thermal drift, creep, offset of deflection by AFM software or interference of the laser with the sample surface an additional value for the deflection is superimposed, the virtual deflection. In SyFoS this is simulated by an offset :math:`Δδ`. In real experiments this can be also a function of Z :math:`Δδ(Z)`. 
 
 .. _topography offset:
 
 Topography offset
 -----------------
 
-Text
+In a realistic force spectroscopy experiment the distnce between AFM tip and sample surface can differ, depending on the x,y position on the sample. Is is due to the samples topography. Even smooth smaples are tilted in respect to the normal plane (X,Y-plane) or show a certain roughness in the nanometer range. Considering selfassempled or cut samples the topography's roughness is in the range of micrometer. Therefore the point of contact :math:`Z≡0` is not known when the tip starts to approach the sample, merely estimated. This leeds to an offset :math:`ΔZ` of the point of contact due to sample topography. In SyFoS this offset is a constant :math:`ΔZ`, since it is a control value for the subsequently tested correction.
 
 .. _noise:
 
 Noise
 -----
 
-Text 
+In AFM measurements signal to noise ratio is an important factor, since thermal noise of the probe and the sample stage can not be avoided when working at ambient conditions and is in the range of the measured values. In SyFoS this noise can be simulated by adding Gaussian noise to the synthetic data. The propability density function of the noise equals the normal distribution with the standard deviation σ, which can be varied by the user. 
 
 Auxiliary Parameters
 ====================
 
-From all parameters given by the user auxiliary parameters as :ref:`tip-sample distance <tip sample distance>` ζ, :ref:`reduced modulus <reduced modulus>` :math:`E_{tot}`, :ref:`jump to contact <jump to contact>` :math:`JTC` and :ref:`combined Hamaker <combined hamaker>` constant :math:`A_{tot}` can be calculated for creating a synthetic force curve. The auxiliary parameters are also given as output in the gui. 
+From all parameters given by the user auxiliary parameters as :ref:`tip-sample distance <tip sample distance>` ζ, :ref:`reduced modulus <reduced modulus>` :math:`E_{tot}`, :ref:`jump to contact <jump to contact>` JTC and :ref:`combined Hamaker <combined hamaker>` constant :math:`A_{tot}` can be calculated for creating a synthetic force curve. The auxiliary parameters are also given as output in the gui. 
 
 .. _tip sample distance:
 
@@ -119,7 +119,7 @@ Tip-Sample distance
 
 For all theories, describing the different regimes of a force distance curve the true tip sample distance needs to be known. During the regime of attractive forces, the cantilever deflects towards the sample surface by :math:`δ`, thereby decreasing the tip sample distance :math:`ζ` additionally to the z-pizo displacement :math:`Z:ζ=δ−Z`. During the contact or the repulsive regime, the tip sample distance :math:`ζ` should be 0, but it is actually increased by the deformation :math:`D` that is caused by the contact between tip and sample: :math:`D=Z−δ`.
 
-In SyFoS :math:`ζ` and :math:`D` are calculated continuously for each iterative step. Only between :math:`JTC` and contact the tip sample distance is assumed to be zero. This is a simplification but since this part of the data is not relevant for any automated analysis the effect of this simplification is neglectable. 
+In SyFoS :math:`ζ` and :math:`D` are calculated continuously for each iterative step. Only between JTC and contact the tip sample distance is assumed to be zero. This is a simplification but since this part of the data is not relevant for any automated analysis the effect of this simplification is neglectable. 
 
 .. _reduced modulus:
 
@@ -130,7 +130,7 @@ The reduced Young’s modulus :math:`E_{tot}` is the resulting Young’s modulus
 
 .. _jump to contact:
 
-Jump to contact :math:`JTC`
+Jump to contact
 ---------------------------
 
 The attractive forces :math:`F_{attr}` are dependent on the tip-sample distance (Eqn ). At a certain tip-sample distance the attractive forces :math:`F_{attr}` between sample and tip increase up to a point when their gradient exceeds the spring constant kc. Figure 1(ii) jump to contact (JTC): a discontinuity where the system is not in equilibrium and the tip snaps onto the sample. 
@@ -140,4 +140,4 @@ The attractive forces :math:`F_{attr}` are dependent on the tip-sample distance 
 Combined Hamaker constant :math:`A_{tot}`
 -----------------------------------------
 
-Text
+The Hamaker constant A describes the attractive forces acting between matter depending on its distance, in case the distance is much smaller than the size of the bodies and is specific for a material pairing. Only if two bodies are of the same material, the Hamaker constant is considered material specific. In case SyFoS needs to estimate the Hamaker constant for a mixed pairing of tip and sample material it calculates the combined Hamaker constant: in the case of an Si-tip versus a PMMA-sample the combined Hamaker constant would be calculated as :math:`A_{SI,PMMA} = A_{Si}^2 * A_{PMMA}^2`.
