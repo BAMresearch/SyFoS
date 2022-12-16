@@ -61,6 +61,7 @@ class MainWindow(ttk.Frame):
 		self.pack(fill=BOTH, expand=YES)
 
 		self.forceVolumes = {}
+		self.numberOfGeneratedForceVolumes = 0
 
 		self._init_style_parameters()
 		self._init_parameter_variables()
@@ -590,13 +591,15 @@ class MainWindow(ttk.Frame):
 				parameterMeasurement, 
 				parameterForceVolume
 			)
-		except ValueError as e:
+		except ValueError as error:
 			self._reset_parameters()
 			return messagebox.showerror(
 				"Error", 
-				e
+				error
 			)
-
+		else:
+			self.numberOfGeneratedForceVolumes += 1
+		
 		identifierForceVolume = self._create_identifier_force_volume(
 			self.defaultProbe.get(),
 			self.defaultSample.get()
@@ -723,7 +726,7 @@ class MainWindow(ttk.Frame):
 							 information about the type of probe and sample
 							 used to create the force volume.
 		"""
-		return probeMaterial + "|" + sampleMaterial + " " + str(len(self.forceVolumes) + 1)
+		return probeMaterial + "|" + sampleMaterial + " " + str(self.numberOfGeneratedForceVolumes)
 
 	def _cache_force_volume(
 		self,
