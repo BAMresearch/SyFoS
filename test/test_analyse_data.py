@@ -162,7 +162,7 @@ def test_calculate_kc_contact(
 		radius
 	)
 
-	expectedKc = 17474895.76
+	expectedKc = 37500000
 
 	assert np.isclose(kc, expectedKc)
 
