@@ -21,7 +21,7 @@ The AFM probe’s cantilever spring constant :math:`k_c` describes the force :ma
 Probe's tip radius :math:`R`
 ----------------------------
 
-The AFM probe’s tip radius :math:`R` describes the curvature at the very end of the tip. In cases of a sharp tip (:math:`R` << 100nm) the tip has a height of up to 20µm and is rather a paraboloid or a pyramid. However, for the mechanical contact :eq:`hertz contact` only the tip’s shape at the very end is of consequence. For the calculation of attractive forces this radius is usually underestimated which is accepted in SyFoS for the time being. Das et al. suggested the use of an effective radius :math:`R_{eff}` >> :math:`R` which represents the influence of the tip size more realistically in respect to the attractive forces, which might be an option in the future for SyFoS. In the case of colloidal probes (100nm < :math:`R` < 20µm) the whole tip is of spherical shape and :math:`R` represents the radius for both cases, attractive and repulsive forces, correctly. 
+The AFM probe’s tip radius :math:`R` describes the curvature at the very end of the tip. In cases of a sharp tip (:math:`R` << 100nm) the tip has a height of up to 20µm and is rather a paraboloid or a pyramid. However, for the mechanical contact :eq:`hertz contact` only the tip’s shape at the very end is of consequence. For the calculation of attractive forces this radius is usually underestimated which is accepted in SyFoS for the time being. **Das et al.** suggested the use of an effective radius :math:`R_{eff}` >> :math:`R` which represents the influence of the tip size more realistically in respect to the attractive forces, which might be an option in the future for SyFoS. In the case of colloidal probes (100nm < :math:`R` < 20µm) the whole tip is of spherical shape and :math:`R` represents the radius for both cases, attractive and repulsive forces, correctly. 
 
 .. _modulus:
 
@@ -84,7 +84,7 @@ It is very common to record force distance curves in a x-y grid (mapping, also c
 Artefact parameters
 ===================
 
-Experimentally acquired force curves show typically artefacts, which are not present in ideal synthetic curves. These Artefacts can be added to the ideal curves in SyFoS and their magnitude can be controlled by the following parameters. 
+Experimentally acquired force curves show typically artefacts, which are not present in ideal synthetic curves. These artefacts can be added to the ideal curves in SyFoS and their magnitude can be controlled by the following parameters. 
 
 .. _virtual deflection:
 
@@ -117,7 +117,7 @@ From all parameters given by the user auxiliary parameters as :ref:`tip-sample d
 Tip-Sample distance
 -------------------
 
-For all theories, describing the different regimes of a force distance curve the true tip sample distance needs to be known. During the regime of attractive forces, the cantilever deflects towards the sample surface by :math:`δ`, thereby decreasing the tip sample distance :math:`ζ` additionally to the z-pizo displacement :math:`Z:ζ=δ−Z`. During the contact or the repulsive regime, the tip sample distance :math:`ζ` should be 0, but it is actually increased by the deformation :math:`D` that is caused by the contact between tip and sample: :math:`D=Z−δ`.
+For all theories, describing the different regimes of a force distance curve the true tip sample distance needs to be known. During the regime of attractive forces, the cantilever deflects towards the sample surface by :math:`δ`, thereby decreasing the tip sample distance :math:`ζ` additionally to the z-pizo displacement, as described by equation :eq:`tip sample distance`. During the contact or the repulsive regime, the tip sample distance :math:`ζ` should be 0, but it is actually increased by the deformation :math:`D` that is caused by the contact between tip and sample, see equation :eq:`deformation`.
 
 In SyFoS :math:`ζ` and :math:`D` are calculated continuously for each iterative step. Only between JTC and contact the tip sample distance is assumed to be zero. This is a simplification but since this part of the data is not relevant for any automated analysis the effect of this simplification is neglectable. 
 
@@ -133,11 +133,11 @@ The reduced Young’s modulus :math:`E_{tot}` is the resulting Young’s modulus
 Jump to contact
 ---------------------------
 
-The attractive forces :math:`F_{attr}` are dependent on the tip-sample distance (Eqn ). At a certain tip-sample distance the attractive forces :math:`F_{attr}` between sample and tip increase up to a point when their gradient exceeds the spring constant kc. Figure 1(ii) jump to contact (JTC): a discontinuity where the system is not in equilibrium and the tip snaps onto the sample. 
+The attractive forces :math:`F_{attr}` are dependent on the tip-sample distance :eq:`tip sample distance`. At a certain tip-sample distance the attractive forces :math:`F_{attr}` between sample and tip increase up to a point when their gradient exceeds the spring constant kc. :ref:`Figure 1 <figure 1>` (ii) jump to contact (JTC): a discontinuity where the system is not in equilibrium and the tip snaps onto the sample. 
 
 .. _combined hamaker:
 
 Combined Hamaker constant :math:`A_{tot}`
 -----------------------------------------
 
-The Hamaker constant A describes the attractive forces acting between matter depending on its distance, in case the distance is much smaller than the size of the bodies and is specific for a material pairing. Only if two bodies are of the same material, the Hamaker constant is considered material specific. In case SyFoS needs to estimate the Hamaker constant for a mixed pairing of tip and sample material it calculates the combined Hamaker constant: in the case of an Si-tip versus a PMMA-sample the combined Hamaker constant would be calculated as :math:`A_{SI,PMMA} = A_{Si}^2 * A_{PMMA}^2`.
+The Hamaker constant A describes the attractive forces acting between matter depending on its distance, in case the distance is much smaller than the size of the bodies and is specific for a material pairing. Only if two bodies are of the same material, the Hamaker constant is considered material specific. In case SyFoS needs to estimate the Hamaker constant for a mixed pairing of tip and sample material it calculates the combined Hamaker constant: in the case of an Si-tip versus a PMMA-sample the combined Hamaker constant would be calculated as :math:`A_{SI,PMMA} = \sqrt{A_{Si}} * \sqrt{A_{PMMA}}`.

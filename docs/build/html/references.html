@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Parameters" href="parameters.html" /><link rel="prev" title="Force spectroscopy data" href="synthetic_force_spectroscopy_data.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Parameters" href="parameters.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
-        <title>Using SyFoS - SyFoS</title>
+        <title>References - SyFoS</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -134,7 +134,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -157,14 +157,14 @@
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="synthetic_force_spectroscopy_data.html">Force spectroscopy data</a></li>
 </ul>
-<ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Using SyFoS</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="using_syfos.html">Using SyFoS</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">References</a></li>
 </ul>
 
 </div>
@@ -191,128 +191,15 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <section id="using-syfos">
-<h1>Using SyFoS<a class="headerlink" href="#using-syfos" title="Permalink to this headline">#</a></h1>
-<figure class="align-default" id="id5">
-<img alt="Image of the SyFoS GUI" src="_images/syfos_gui.png"/>
-<figcaption>
-<p><span class="caption-text">The graphical user interface of SyFoS after generating two synthetic force volumes.</span><a class="headerlink" href="#id5" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
-<section id="parameter-selection">
-<span id="id1"></span><h2>Parameter selection<a class="headerlink" href="#parameter-selection" title="Permalink to this headline">#</a></h2>
-<p>To generate synthetic force spectroscopy data SyFoS need’s a couple of parameters which describe the experimental setup. They are divided into four sections <strong>Probe</strong>, <strong>Sample</strong>, <strong>Force Spectroscopy Experiment</strong> and <strong>Artefacts</strong>. The following table lists all the different parameters with their value range and unit.</p>
-<div class="table-wrapper"><table class="docutils align-default">
-<colgroup>
-<col style="width: 11%"/>
-<col style="width: 9%"/>
-<col style="width: 3%"/>
-<col style="width: 13%"/>
-<col style="width: 8%"/>
-<col style="width: 3%"/>
-<col style="width: 18%"/>
-<col style="width: 10%"/>
-<col style="width: 2%"/>
-<col style="width: 13%"/>
-<col style="width: 7%"/>
-<col style="width: 2%"/>
-</colgroup>
-<tbody>
-<tr class="row-odd"><td colspan="3"><p>Probe</p></td>
-<td colspan="3"><p>Sample</p></td>
-<td colspan="3"><p>Force Spectroscopy Experiment</p></td>
-<td colspan="3"><p>Artefacts</p></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(E_{tip}\)</span></p></td>
-<td><p>1e6 - 300e9</p></td>
-<td><p>Pa</p></td>
-<td><p><span class="math notranslate nohighlight">\(E_{sample}\)</span></p></td>
-<td><p>1e6 - 300e9</p></td>
-<td><p>Pa</p></td>
-<td><p>Start Distance <span class="math notranslate nohighlight">\(Z_0\)</span></p></td>
-<td><p>-10e-6 - 0</p></td>
-<td><p>m</p></td>
-<td><p>Virtual Deflection</p></td>
-<td><p>0 – 3e-6</p></td>
-<td><p>m</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(ν_{tip}\)</span></p></td>
-<td><p>0 - 0.5</p></td>
-<td></td>
-<td><p><span class="math notranslate nohighlight">\(ν_{sample}\)</span></p></td>
-<td><p>0 - 0.5</p></td>
-<td></td>
-<td><p>Step Size <span class="math notranslate nohighlight">\(dZ\)</span></p></td>
-<td><p>0.01e-9 - 1e-9</p></td>
-<td><p>m</p></td>
-<td><p>Topography Offset</p></td>
-<td><p>0 - 10e-6</p></td>
-<td><p>m</p></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(A_{tip}\)</span></p></td>
-<td><p>1 - 450</p></td>
-<td><p>zJ</p></td>
-<td><p><span class="math notranslate nohighlight">\(A_{sample}\)</span></p></td>
-<td><p>1 - 450</p></td>
-<td><p>zJ</p></td>
-<td><p>Maximum <span class="math notranslate nohighlight">\(Z_{max}\)</span></p></td>
-<td><p>0 - 1e-6</p></td>
-<td><p>m</p></td>
-<td><p>Noise</p></td>
-<td><p>0 - 1e-9</p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(k_c\)</span></p></td>
-<td><p>0.001 - 100</p></td>
-<td><p>N/m</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>Number of Curves</p></td>
-<td><p>1 - 1000</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(R\)</span></p></td>
-<td><p>1e-9 - 10e-6</p></td>
-<td><p>m</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table></div>
-<p>All parameters can be altered and adjusted within their value range. For a quick start literature values for materials, which are commonly used in force spectroscopy experiments can be chosen from a dropdown menu. Parameters concerned with the experimental set-up start with a recommended value but can be adjusted as the user sees fit.</p>
-<p>The definition and recommended range of all values and parameters are given in <a class="reference internal" href="parameters.html#material-parameters"><span class="std std-ref">Material parameters</span></a>.</p>
-</section>
-<section id="generate-data">
-<span id="id2"></span><h2>Generate data<a class="headerlink" href="#generate-data" title="Permalink to this headline">#</a></h2>
-<p>With a complete set of valid parameters SyFoS can generate the synthetic data by clicking <span class="guilabel">Create Force Volume</span> in the GUI’s control section. This process involves several steps as described in <a class="reference internal" href="synthetic_force_spectroscopy_data.html#creating-synthetic-force-spectroscopy-data"><span class="std std-ref">creating synthetic force spectroscopy data</span></a>. A dialog box will inform the user whether the data could be generated or not.</p>
-<p>To test the influence of the different parameters or generate data in a desired form additional sets of data can be created. Every generated force volume is added to the <span class="guilabel">Force Volumes</span> dropdown menu, via which an active force volume can be selected. This will update the displayed auxiliary parameters and the <a class="reference internal" href="#data-presentation"><span class="std std-ref">presentaion of the data</span></a>. The active force volume can be deleted by clicking <span class="guilabel">Delete Force Volume</span> or <a class="reference internal" href="#export-data"><span class="std std-ref">exported</span></a> by clicking <span class="guilabel">Export Force Volume</span>.</p>
-</section>
-<section id="data-presentation">
-<span id="id3"></span><h2>Data presentation<a class="headerlink" href="#data-presentation" title="Permalink to this headline">#</a></h2>
-<p>The calculated auxiliary parameters and data of a synthetic force volume are shown in the GUI’s presentation field. Synthetic force spectroscopy data is plotted as force curves, i. e. deflection δ as a function of the piezo displacement Z, mirroring real force spectroscopy results as those two data sets would be the raw data acquired in such measurements. Two types of curves are plotted: two ideal synthetic curves and a group of curves (their number can be specified via the Number of curves argument) which have additional artefacts, being shifted out of the origin and have noise (see <a class="reference internal" href="synthetic_force_spectroscopy_data.html#creating-force-curves-with-artefacts"><span class="std std-ref">creating force curves with artefacts</span></a>). These artefacts reflect inaccuracies which cannot be avoided during real force volumes and therefore are also present in test data, for which SyFoS is primarily used.</p>
-<p>To inspect the data more closly the plot comes with a simpflied toolbar, which allows the user to zoom in and out or move the plot.</p>
-</section>
-<section id="export-data">
-<span id="id4"></span><h2>Export data<a class="headerlink" href="#export-data" title="Permalink to this headline">#</a></h2>
-<p>To export the data of the currently active force volume the user has to specify a name and location for the data files. Currently SyFoS supports the data types <em>csv</em> and <em>xlsx</em> as output format. These files will contain the piezo (x) and deflection (y) values of the ideal curve, the shifted ideal curve and the curves that make up the force volume. Additionaly the auxilary parameters are exported as well.</p>
-</section>
+          <section id="references">
+<h1>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h1>
+<p>text</p>
 </section>
 
         </article>
@@ -320,23 +207,15 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="parameters.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Parameters</div>
-              </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="synthetic_force_spectroscopy_data.html">
+          
+          <a class="prev-page" href="parameters.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Force spectroscopy data</div>
+                <div class="title">Parameters</div>
                 
               </div>
             </a>
@@ -365,30 +244,8 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            Contents
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Using SyFoS</a><ul>
-<li><a class="reference internal" href="#parameter-selection">Parameter selection</a></li>
-<li><a class="reference internal" href="#generate-data">Generate data</a></li>
-<li><a class="reference internal" href="#data-presentation">Data presentation</a></li>
-<li><a class="reference internal" href="#export-data">Export data</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>
@@ -398,6 +255,5 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>
