@@ -1,11 +1,10 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="References" href="references.html" /><link rel="prev" title="Using SyFoS" href="using_syfos.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="References" href="references.html" /><link rel="prev" title="Using SyFoS" href="using_syfos.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.1.1, furo 2022.04.07"/>
         <title>Parameters - SyFoS</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
@@ -197,90 +196,90 @@
           </label>
         </div>
         <article role="main">
-          <section id="parameters">
-<h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">#</a></h1>
-<section id="material-parameters">
-<span id="id1"></span><h2>Material parameters<a class="headerlink" href="#material-parameters" title="Permalink to this headline">#</a></h2>
+          <div class="section" id="parameters">
+<h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h1>
+<div class="section" id="material-parameters">
+<span id="id1"></span><h2>Material parameters<a class="headerlink" href="#material-parameters" title="Permalink to this heading">#</a></h2>
 <p>Definition and physical meaningful range of all material parameters.</p>
-<section id="probe-s-spring-constant-k-c">
-<span id="spring-constant"></span><h3>Probe’s spring constant <span class="math notranslate nohighlight">\(k_c\)</span><a class="headerlink" href="#probe-s-spring-constant-k-c" title="Permalink to this headline">#</a></h3>
+<div class="section" id="probe-s-spring-constant-k-c">
+<span id="spring-constant"></span><h3>Probe’s spring constant <span class="math notranslate nohighlight">\(k_c\)</span><a class="headerlink" href="#probe-s-spring-constant-k-c" title="Permalink to this heading">#</a></h3>
 <p>The AFM probe’s cantilever spring constant <span class="math notranslate nohighlight">\(k_c\)</span> describes the force <span class="math notranslate nohighlight">\(F\)</span> needed to bend the cantilever by a deflection <span class="math notranslate nohighlight">\(δ\)</span>. Since this is considered an elastic deflection, it is described by Hooke’s law <a class="reference internal" href="synthetic_force_spectroscopy_data.html#equation-hookes-law">(1)</a>. Commercially available AFM Probes have an <span class="math notranslate nohighlight">\(k_c\)</span> range of 0.01 - 100 N/m.</p>
-</section>
-<section id="probe-s-tip-radius-r">
-<span id="radius"></span><h3>Probe’s tip radius <span class="math notranslate nohighlight">\(R\)</span><a class="headerlink" href="#probe-s-tip-radius-r" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="probe-s-tip-radius-r">
+<span id="radius"></span><h3>Probe’s tip radius <span class="math notranslate nohighlight">\(R\)</span><a class="headerlink" href="#probe-s-tip-radius-r" title="Permalink to this heading">#</a></h3>
 <p>The AFM probe’s tip radius <span class="math notranslate nohighlight">\(R\)</span> describes the curvature at the very end of the tip. In cases of a sharp tip (<span class="math notranslate nohighlight">\(R\)</span> &lt;&lt; 100nm) the tip has a height of up to 20µm and is rather a paraboloid or a pyramid. However, for the mechanical contact <a class="reference internal" href="synthetic_force_spectroscopy_data.html#equation-hertz-contact">(6)</a> only the tip’s shape at the very end is of consequence. For the calculation of attractive forces this radius is usually underestimated which is accepted in SyFoS for the time being. <strong>Das et al.</strong> suggested the use of an effective radius <span class="math notranslate nohighlight">\(R_{eff}\)</span> &gt;&gt; <span class="math notranslate nohighlight">\(R\)</span> which represents the influence of the tip size more realistically in respect to the attractive forces, which might be an option in the future for SyFoS. In the case of colloidal probes (100nm &lt; <span class="math notranslate nohighlight">\(R\)</span> &lt; 20µm) the whole tip is of spherical shape and <span class="math notranslate nohighlight">\(R\)</span> represents the radius for both cases, attractive and repulsive forces, correctly.</p>
-</section>
-<section id="modulus-e">
-<span id="modulus"></span><h3>Modulus <span class="math notranslate nohighlight">\(E\)</span><a class="headerlink" href="#modulus-e" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="modulus-e">
+<span id="modulus"></span><h3>Modulus <span class="math notranslate nohighlight">\(E\)</span><a class="headerlink" href="#modulus-e" title="Permalink to this heading">#</a></h3>
 <p>The Young’s modulus <span class="math notranslate nohighlight">\(E\)</span> is a characteristic property of every material, which describes the elastic responds to applied Force <span class="math notranslate nohighlight">\(F\)</span>. Since the mechanical contact of an AFM measurement involves two different materials, the Young’s modulus of the tip material <span class="math notranslate nohighlight">\(E_{tip}\)</span> and the Young’s modulus of the sample’s material <span class="math notranslate nohighlight">\(E_{sample}\)</span> are required parameters.</p>
-</section>
-<section id="poisson-ratio">
-<span id="id2"></span><h3>Poisson ratio <span class="math notranslate nohighlight">\(ν\)</span><a class="headerlink" href="#poisson-ratio" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="poisson-ratio">
+<span id="id2"></span><h3>Poisson ratio <span class="math notranslate nohighlight">\(ν\)</span><a class="headerlink" href="#poisson-ratio" title="Permalink to this heading">#</a></h3>
 <p>The Poisson ratio <span class="math notranslate nohighlight">\(ν\)</span> describes the deformation perpendicular to the direction of applied force <span class="math notranslate nohighlight">\(F\)</span>. It is the negative ratio of <span class="math notranslate nohighlight">\(ν=-\frac{e_\perp}{e_\parallel}\)</span>, with <span class="math notranslate nohighlight">\(e_\perp\)</span> being the relative change of dimension perpendicular to the applied force <span class="math notranslate nohighlight">\(F\)</span> and <span class="math notranslate nohighlight">\(e_\parallel\)</span> being the relative change of dimension in direction of applied force <span class="math notranslate nohighlight">\(F\)</span>. Poisson ratios of common materials are expected to be between 0 and 0.5, which are accepted values in SyFoS. There is a class of materials which exhibits negative Poisson ratios (basically getting thicker when stretched), but those are not considered in SyFoS.</p>
-</section>
-<section id="hamaker-constant-a">
-<span id="hamaker"></span><h3>Hamaker constant <span class="math notranslate nohighlight">\(A\)</span><a class="headerlink" href="#hamaker-constant-a" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="hamaker-constant-a">
+<span id="hamaker"></span><h3>Hamaker constant <span class="math notranslate nohighlight">\(A\)</span><a class="headerlink" href="#hamaker-constant-a" title="Permalink to this heading">#</a></h3>
 <p>Van der Waals described the force needed to bring single neutral molecules from infinte to finite separation, now well known as van der Waals force <span class="math notranslate nohighlight">\(F_{vdW}\)</span>. Hamaker transferred this concept to bulk materials by using pairwise summation approximation. This way the interactions and attractive forces of bodies can be described for different geometries, such as sphere/plane as appropriate for AFM measurements (tip/sample), by means of the Hamaker constant, which ranges from 1 to 450 zJ. All material specific Hamaker constants in SyFoS are for ambient conditions.</p>
-</section>
-</section>
-<section id="force-spectroscopy-experimental-set-up">
-<span id="parameters-experiment"></span><h2>Force spectroscopy experimental set-up<a class="headerlink" href="#force-spectroscopy-experimental-set-up" title="Permalink to this headline">#</a></h2>
+</div>
+</div>
+<div class="section" id="force-spectroscopy-experimental-set-up">
+<span id="parameters-experiment"></span><h2>Force spectroscopy experimental set-up<a class="headerlink" href="#force-spectroscopy-experimental-set-up" title="Permalink to this heading">#</a></h2>
 <p>For creating synthetic force spectroscopy data parameters which concern the experimental acquisition of data need to be defined.</p>
-<section id="start-distance-z-0">
-<span id="start-distance"></span><h3>Start Distance <span class="math notranslate nohighlight">\(Z_0\)</span><a class="headerlink" href="#start-distance-z-0" title="Permalink to this headline">#</a></h3>
+<div class="section" id="start-distance-z-0">
+<span id="start-distance"></span><h3>Start Distance <span class="math notranslate nohighlight">\(Z_0\)</span><a class="headerlink" href="#start-distance-z-0" title="Permalink to this heading">#</a></h3>
 <p>The start distance <span class="math notranslate nohighlight">\(Z_0\)</span> is the initial distance between the AFM probe and the sample surface. It also defines the beginning of the Z-scale and hence the lowest value in the abscisse of the force-distance curve. The start distance should exceed by far the distance at which attractive forces are relevant. Very common values are between -1µm and -100nm.</p>
-</section>
-<section id="step-size-dz">
-<span id="step-size"></span><h3>Step Size <span class="math notranslate nohighlight">\(dZ\)</span><a class="headerlink" href="#step-size-dz" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="step-size-dz">
+<span id="step-size"></span><h3>Step Size <span class="math notranslate nohighlight">\(dZ\)</span><a class="headerlink" href="#step-size-dz" title="Permalink to this heading">#</a></h3>
 <p>The step size <span class="math notranslate nohighlight">\(dZ\)</span> is the inverse of the point rate (<span class="math notranslate nohighlight">\(nm^{-1}\)</span>) of the data.</p>
-</section>
-<section id="maximum-piezo-displacement-z-max">
-<span id="maximum-piezo"></span><h3>Maximum piezo displacement <span class="math notranslate nohighlight">\(Z_{max}\)</span><a class="headerlink" href="#maximum-piezo-displacement-z-max" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="maximum-piezo-displacement-z-max">
+<span id="maximum-piezo"></span><h3>Maximum piezo displacement <span class="math notranslate nohighlight">\(Z_{max}\)</span><a class="headerlink" href="#maximum-piezo-displacement-z-max" title="Permalink to this heading">#</a></h3>
 <p>The maximum piezo displacement <span class="math notranslate nohighlight">\(Z_{max}\)</span> marks the end of the Z-scale and hence the highest value on the abscisse of a force-distance curve. As the maximum piezo displacement <span class="math notranslate nohighlight">\(Z_{max}\)</span> a positive value should be chosen, so contact between tip and sample is established.</p>
-</section>
-<section id="size-of-force-volume-number-of-curves">
-<span id="number-of-curves"></span><h3>Size of Force Volume – number of curves<a class="headerlink" href="#size-of-force-volume-number-of-curves" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="size-of-force-volume-number-of-curves">
+<span id="number-of-curves"></span><h3>Size of Force Volume – number of curves<a class="headerlink" href="#size-of-force-volume-number-of-curves" title="Permalink to this heading">#</a></h3>
 <p>It is very common to record force distance curves in a x-y grid (mapping, also called force volume) rather than having single force-distance curves at arbitrary points. When recorded in a grid, the force spectroscopy data has an additional spatial information which is important for inhomogeneous samples. It is also useful for homogeneous samples because one acquires an array of curves which can be averaged and statistically treated for errors. In order to achieve a reasonable signal to noise ratio between 30 and 100 curves are averaged.</p>
-</section>
-</section>
-<section id="artefact-parameters">
-<span id="id3"></span><h2>Artefact parameters<a class="headerlink" href="#artefact-parameters" title="Permalink to this headline">#</a></h2>
+</div>
+</div>
+<div class="section" id="artefact-parameters">
+<span id="id3"></span><h2>Artefact parameters<a class="headerlink" href="#artefact-parameters" title="Permalink to this heading">#</a></h2>
 <p>Experimentally acquired force curves show typically artefacts, which are not present in ideal synthetic curves. These artefacts can be added to the ideal curves in SyFoS and their magnitude can be controlled by the following parameters.</p>
-<section id="virtual-deflection">
-<span id="id4"></span><h3>Virtual Deflection<a class="headerlink" href="#virtual-deflection" title="Permalink to this headline">#</a></h3>
+<div class="section" id="virtual-deflection">
+<span id="id4"></span><h3>Virtual Deflection<a class="headerlink" href="#virtual-deflection" title="Permalink to this heading">#</a></h3>
 <p>In a force spectroscopy experiment deflection is assumed to be <span class="math notranslate nohighlight">\(δ≡0\)</span> when the cantilver is in its equilibrium position. Due to either thermal drift, creep, offset of deflection by AFM software or interference of the laser with the sample surface an additional value for the deflection is superimposed, the virtual deflection. In SyFoS this is simulated by an offset <span class="math notranslate nohighlight">\(Δδ\)</span>. In real experiments this can be also a function of Z <span class="math notranslate nohighlight">\(Δδ(Z)\)</span>.</p>
-</section>
-<section id="topography-offset">
-<span id="id5"></span><h3>Topography offset<a class="headerlink" href="#topography-offset" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="topography-offset">
+<span id="id5"></span><h3>Topography offset<a class="headerlink" href="#topography-offset" title="Permalink to this heading">#</a></h3>
 <p>In a realistic force spectroscopy experiment the distnce between AFM tip and sample surface can differ, depending on the x,y position on the sample. Is is due to the samples topography. Even smooth smaples are tilted in respect to the normal plane (X,Y-plane) or show a certain roughness in the nanometer range. Considering selfassempled or cut samples the topography’s roughness is in the range of micrometer. Therefore the point of contact <span class="math notranslate nohighlight">\(Z≡0\)</span> is not known when the tip starts to approach the sample, merely estimated. This leeds to an offset <span class="math notranslate nohighlight">\(ΔZ\)</span> of the point of contact due to sample topography. In SyFoS this offset is a constant <span class="math notranslate nohighlight">\(ΔZ\)</span>, since it is a control value for the subsequently tested correction.</p>
-</section>
-<section id="noise">
-<span id="id6"></span><h3>Noise<a class="headerlink" href="#noise" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="noise">
+<span id="id6"></span><h3>Noise<a class="headerlink" href="#noise" title="Permalink to this heading">#</a></h3>
 <p>In AFM measurements signal to noise ratio is an important factor, since thermal noise of the probe and the sample stage can not be avoided when working at ambient conditions and is in the range of the measured values. In SyFoS this noise can be simulated by adding Gaussian noise to the synthetic data. The propability density function of the noise equals the normal distribution with the standard deviation σ, which can be varied by the user.</p>
-</section>
-</section>
-<section id="auxiliary-parameters">
-<h2>Auxiliary Parameters<a class="headerlink" href="#auxiliary-parameters" title="Permalink to this headline">#</a></h2>
+</div>
+</div>
+<div class="section" id="auxiliary-parameters">
+<h2>Auxiliary Parameters<a class="headerlink" href="#auxiliary-parameters" title="Permalink to this heading">#</a></h2>
 <p>From all parameters given by the user auxiliary parameters as <a class="reference internal" href="#tip-sample-distance"><span class="std std-ref">tip-sample distance</span></a> ζ, <a class="reference internal" href="#reduced-modulus"><span class="std std-ref">reduced modulus</span></a> <span class="math notranslate nohighlight">\(E_{tot}\)</span>, <a class="reference internal" href="#jump-to-contact"><span class="std std-ref">jump to contact</span></a> JTC and <a class="reference internal" href="#combined-hamaker"><span class="std std-ref">combined Hamaker</span></a> constant <span class="math notranslate nohighlight">\(A_{tot}\)</span> can be calculated for creating a synthetic force curve. The auxiliary parameters are also given as output in the gui.</p>
-<section id="tip-sample-distance">
-<span id="id7"></span><h3>Tip-Sample distance<a class="headerlink" href="#tip-sample-distance" title="Permalink to this headline">#</a></h3>
+<div class="section" id="tip-sample-distance">
+<span id="id7"></span><h3>Tip-Sample distance<a class="headerlink" href="#tip-sample-distance" title="Permalink to this heading">#</a></h3>
 <p>For all theories, describing the different regimes of a force distance curve the true tip sample distance needs to be known. During the regime of attractive forces, the cantilever deflects towards the sample surface by <span class="math notranslate nohighlight">\(δ\)</span>, thereby decreasing the tip sample distance <span class="math notranslate nohighlight">\(ζ\)</span> additionally to the z-pizo displacement, as described by equation <a class="reference internal" href="synthetic_force_spectroscopy_data.html#equation-tip-sample-distance">(2)</a>. During the contact or the repulsive regime, the tip sample distance <span class="math notranslate nohighlight">\(ζ\)</span> should be 0, but it is actually increased by the deformation <span class="math notranslate nohighlight">\(D\)</span> that is caused by the contact between tip and sample, see equation <a class="reference internal" href="synthetic_force_spectroscopy_data.html#equation-deformation">(5)</a>.</p>
 <p>In SyFoS <span class="math notranslate nohighlight">\(ζ\)</span> and <span class="math notranslate nohighlight">\(D\)</span> are calculated continuously for each iterative step. Only between JTC and contact the tip sample distance is assumed to be zero. This is a simplification but since this part of the data is not relevant for any automated analysis the effect of this simplification is neglectable.</p>
-</section>
-<section id="reduced-modulus-e-tot">
-<span id="reduced-modulus"></span><h3>Reduced modulus <span class="math notranslate nohighlight">\(E_{tot}\)</span><a class="headerlink" href="#reduced-modulus-e-tot" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="reduced-modulus-e-tot">
+<span id="reduced-modulus"></span><h3>Reduced modulus <span class="math notranslate nohighlight">\(E_{tot}\)</span><a class="headerlink" href="#reduced-modulus-e-tot" title="Permalink to this heading">#</a></h3>
 <p>The reduced Young’s modulus <span class="math notranslate nohighlight">\(E_{tot}\)</span> is the resulting Young’s modulus of two materials - tip and sample - in contact. It is calculated from the <a class="reference internal" href="#modulus"><span class="std std-ref">Young’s moduli</span></a> of tip and sample and the <a class="reference internal" href="#poisson-ratio"><span class="std std-ref">Poisson ratio</span></a> of tip and sample with the given equation <a class="reference internal" href="synthetic_force_spectroscopy_data.html#equation-etot">(7)</a>.</p>
-</section>
-<section id="jump-to-contact">
-<span id="id8"></span><h3>Jump to contact<a class="headerlink" href="#jump-to-contact" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="jump-to-contact">
+<span id="id8"></span><h3>Jump to contact<a class="headerlink" href="#jump-to-contact" title="Permalink to this heading">#</a></h3>
 <p>The attractive forces <span class="math notranslate nohighlight">\(F_{attr}\)</span> are dependent on the tip-sample distance <a class="reference internal" href="synthetic_force_spectroscopy_data.html#equation-tip-sample-distance">(2)</a>. At a certain tip-sample distance the attractive forces <span class="math notranslate nohighlight">\(F_{attr}\)</span> between sample and tip increase up to a point when their gradient exceeds the spring constant kc. <a class="reference internal" href="synthetic_force_spectroscopy_data.html#figure-1"><span class="std std-ref">Figure 1</span></a> (ii) jump to contact (JTC): a discontinuity where the system is not in equilibrium and the tip snaps onto the sample.</p>
-</section>
-<section id="combined-hamaker-constant-a-tot">
-<span id="combined-hamaker"></span><h3>Combined Hamaker constant <span class="math notranslate nohighlight">\(A_{tot}\)</span><a class="headerlink" href="#combined-hamaker-constant-a-tot" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="combined-hamaker-constant-a-tot">
+<span id="combined-hamaker"></span><h3>Combined Hamaker constant <span class="math notranslate nohighlight">\(A_{tot}\)</span><a class="headerlink" href="#combined-hamaker-constant-a-tot" title="Permalink to this heading">#</a></h3>
 <p>The Hamaker constant A describes the attractive forces acting between matter depending on its distance, in case the distance is much smaller than the size of the bodies and is specific for a material pairing. Only if two bodies are of the same material, the Hamaker constant is considered material specific. In case SyFoS needs to estimate the Hamaker constant for a mixed pairing of tip and sample material it calculates the combined Hamaker constant: in the case of an Si-tip versus a PMMA-sample the combined Hamaker constant would be calculated as <span class="math notranslate nohighlight">\(A_{SI,PMMA} = \sqrt{A_{Si}} * \sqrt{A_{PMMA}}\)</span>.</p>
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
 
         </article>
       </div>
@@ -320,7 +319,7 @@
           </div>
           <div class="right-details">
             <div class="icons">
-              <a class="muted-link " href="https://github.com/2Puck/syfos/tree/main" aria-label="GitHub">
+              <a class="muted-link " href="https://github.com/BAMresearch/SyFoS/tree/main" aria-label="GitHub">
                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
                 </svg>
@@ -387,6 +386,7 @@
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
