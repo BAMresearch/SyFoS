@@ -21,19 +21,35 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import matplotlib
 from matplotlib.lines import Line2D
+import matplotlib.lines as mlines
 
 colorActiveIdealCurve = "#fc0008"
 colorActiveCurves = "#00c3ff"
 colorInactiveCurves = "#b0b0b0"
+
+def decorator_label_plot_once(function):
+	"""Add labels and a legend to plot once."""
+	@functools.wraps(function)
+	def wrapper_label_plot_once(*args, **kwargs):
+		if not wrapper_label_plot_once.hasRun:
+			holder = args[0]
+			axes = get_axes(holder)
+			label_plot(axes)
+			wrapper_label_plot_once.hasRun = True
+
+		function(*args, **kwargs)
+
+	wrapper_label_plot_once.hasRun = False
+	return wrapper_label_plot_once
 
 def decorator_update_plot(function):
 	"""Get axes, update view limits and redraw the holder of a plot."""
 	@functools.wraps(function)
 	def wrapper_update_plot(*args, **kwargs):
 		holder = args[0]
-		ax = get_axes(holder)
-		function(ax, *args, **kwargs)
-		set_current_view_limits(ax)
+		axes = get_axes(holder)
+		function(axes, *args, **kwargs)
+		set_current_view_limits(axes)
 		holder.draw()
 
 	return wrapper_update_plot
@@ -84,39 +100,67 @@ def get_axes(
 	except IndexError:
 		return holder.figure.add_subplot(111)
 
-def set_current_view_limits(
-	ax: matplotlib.axes
-) -> None:
-	"""Rescale the current view limits of a plot."""
-	ax.relim()
-	ax.autoscale_view()
+def label_plot(axes: matplotlib.axes) -> None: 
+	"""Add x and y labels as well as a legend to the plot.
 
+	Parameters:
+		axes(matplotlib.axes): Axes of a line plot.
+	"""
+	axes.set_xlabel("Piezo [nm]")
+	axes.set_ylabel("Deflection [nm]")
+	# Create proxy lines for the legend of the plot.
+	idealCurve = mlines.Line2D(
+		[], [], 
+		color=colorActiveIdealCurve, linewidth=0.5, label="ideal curve"
+	)
+	curve = mlines.Line2D(
+		[], [], 
+		color=colorActiveCurves, linewidth=0.5, label="force volume"
+	)
+	inactiveCurve = mlines.Line2D(
+		[], [], 
+		color=colorInactiveCurves, linewidth=0.5, label="inactive"
+	)
+	axes.legend(handles=[idealCurve, curve, inactiveCurve])
+
+def set_current_view_limits(
+	axes: matplotlib.axes
+) -> None:
+	"""Rescale the current view limits of a plot.
+
+	Parameters:
+		axes(matplotlib.axes): Axes of a line plot.
+	"""
+	axes.relim()
+	axes.autoscale_view()
+
+@decorator_label_plot_once
 @decorator_update_plot
 def plot_force_volume( 
-	ax: matplotlib.axes,
+	axes: matplotlib.axes,
 	holder: matplotlib.backends.backend_tkagg.FigureCanvasTkAgg,
 	lineCollection: List[Line2D]
 ) -> None:
 	"""Add every line of a force volume to a line plot.
 
 	Parameters:
-		ax(matplotlib.axes): Axes of a line plot.
+		axes(matplotlib.axes): Axes of a line plot.
 		holder(matplotlib.FigureCanvasTkAgg): Embedds the figure into the GUI.
 		lineCollection(list): Contains every line of the force volume.
 	"""
 	for line in lineCollection:
-		ax.add_line(line)
+		axes.add_line(line)
 
 @decorator_update_plot	
 def delete_force_volume_from_plot(
-	ax: matplotlib.axes,
+	axes: matplotlib.axes,
 	holder: matplotlib.backends.backend_tkagg.FigureCanvasTkAgg,
 	lineCollection: List[Line2D]
 ) -> None:
 	"""Remove all lines of a force volume from a line plot.
 
 	Parameters:
-		ax(matplotlib.axes): Axes of a line plot.
+		axes(matplotlib.axes): Axes of a line plot.
 		holder(matplotlib.FigureCanvasTkAgg): Embedds the figure into the GUI.
 		lineCollection(list): Contains every line of the force volume.
 	"""

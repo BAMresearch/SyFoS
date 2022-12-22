@@ -217,48 +217,6 @@ def test_calculate_inner_root_default_values():
 	)
 
 	assert np.isclose(result, 5.80262437e-32)
-'''
-@pytest.mark.parametrize(
-    "hamaker, radius, kc, tipSampleDistance, expectedResult",
-    [
-    	(1, 1, 1, 1, 1), 
-    ],
-)
-def test_create_ideal_curve_approach_part(
-	hamaker: float,
-	radius: float, 
-	kc: float, 
-	tipSampleDistance: float,
-	expectedResult: float
-):
-	"""Test calculate_deflection_approach_part with ciritcal values."""
-	result = gen_data.calculate_deflection_approach_part(
-		hamaker,
-		radius,
-		kc,
-		tipSampleDistance
-	)
-	
-	assert np.isclose(result, expectedResult)
-'''
-@pytest.mark.parametrize(
-    "currentPiezoValue, expectedResult",
-    [
-    	(1e-11, 1e-11), 
-    	(2e-11, 2e-11),
-    	(3e-11, 3e-11),
-    ],
-)
-def test_create_ideal_curve_attraction_part(
-	currentPiezoValue: float,
-	expectedResult: float
-):
-	"""Test calculate_deflection_attraction_part with ciritcal values."""
-	result = gen_data.calculate_deflection_attraction_part(
-		currentPiezoValue
-	)
-	
-	assert np.isclose(result, expectedResult)
 
 @pytest.mark.parametrize(
     "parameterSubstitut, currentPiezoValue, expectedResult",

@@ -52,8 +52,8 @@ def export_data(
 
 	if exportParameters.exportToExcel:
 		export_to_excel(
-			dataFrameMetaData,
-			dataFrameForceVolume, 
+			dataFrameForceVolume,
+			dataFrameMetaData, 
 			exportParameters.pathOutputFile
 		)
 		update_progressbar(newLabel="Exporting to Excel")
