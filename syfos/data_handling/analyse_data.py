@@ -320,7 +320,7 @@ def calculate_approach_parameters(
 	]
 
 	radius = [
-		calculate_kc_approach(
+		calculate_radius_approach(
 			trueDistance,
 			force,
 			inputParameters.hamaker,
@@ -333,7 +333,7 @@ def calculate_approach_parameters(
 	]
 
 	hamaker = [
-		calculate_kc_approach(
+		calculate_hamaker_approach(
 			trueDistance,
 			force,
 			inputParameters.radius,
