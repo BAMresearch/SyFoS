@@ -17,8 +17,3 @@ A graphical user interface to create **Sy**\nthetic **Fo**\rce **S**\pectroscopy
    :maxdepth: 2
 
    parameters
-
-.. toctree::
-   :maxdepth: 1
-
-   references
